@@ -3,131 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InDeStore // ADIDAS MASTERPIECE v5.0</title>
+    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
     <style>
         :root { 
-            --black: #000000;
-            --white: #ffffff;
-            --gray-light: #f5f5f5;
-            --gray-dark: #767677;
+            --mint-light: #eaf7f5;
+            --mint-bg: #f3faf9;
+            --emerald-dark: #164e43;
+            --emerald-soft: #2a6f64;
+            --text-color: #2c3e50;
             --shopee-color: #ea501f;
         }
         
         body { 
-            font-family: 'AdihausDIN', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
             margin: 0; padding: 0; 
-            background-color: var(--white); 
-            color: var(--black);
+            background-color: var(--mint-bg); 
+            color: var(--text-color);
             -webkit-font-smoothing: antialiased;
         }
 
         .top-bar {
-            background: var(--black); color: var(--white);
-            text-align: center; font-size: 11px; letter-spacing: 2px;
-            padding: 8px 0; font-weight: bold; text-transform: uppercase;
+            background: var(--emerald-dark); color: #ffffff;
+            text-align: center; font-size: 12px; letter-spacing: 1px;
+            padding: 8px 0; font-weight: 500;
         }
         
         header { 
-            background: var(--white); border-bottom: 1px solid #e5e5e5;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            border-bottom: 1px solid #dbebe8;
             position: sticky; top: 0; z-index: 100; 
         }
         .nav-container { 
-            max-width: 1300px; margin: 0 auto; 
+            max-width: 1200px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px 20px; 
+            padding: 10px 20px; 
         }
         .logo-box span { 
-            font-weight: 900; font-size: 24px; 
-            letter-spacing: -1px; text-transform: uppercase; font-style: italic;
+            font-weight: 700; font-size: 22px; color: var(--emerald-dark);
         }
 
-        .menu-categories { display: flex; gap: 25px; list-style: none; margin: 0; padding: 0; }
+        /* Menu danh mục bo tròn mộc mạc */
+        .menu-categories { display: flex; gap: 12px; list-style: none; margin: 0; padding: 0; }
         .menu-item { 
-            font-weight: 700; font-size: 14px; text-transform: uppercase; 
-            letter-spacing: 1px; cursor: pointer; padding-bottom: 5px;
-            border-bottom: 2px solid transparent; transition: all 0.2s ease;
+            font-weight: 600; font-size: 14px; cursor: pointer; 
+            padding: 8px 16px; border-radius: 20px; background: #ffffff;
+            border: 1px solid #dbebe8; transition: all 0.2s ease; color: var(--emerald-soft);
         }
-        .menu-item.active, .menu-item:hover { border-bottom: 2px solid var(--black); }
+        .menu-item.active, .menu-item:hover { 
+            background: var(--emerald-dark); color: #ffffff; border-color: var(--emerald-dark);
+        }
         
+        /* Banner Màu Nước Xinh Xắn */
         .hero-banner { 
-            background: var(--black); color: var(--white);
-            text-align: left; padding: 60px 10%;
+            max-width: 1200px; margin: 20px auto 0; padding: 0 20px; box-sizing: border-box;
         }
-        .hero-banner h1 { 
-            margin: 0 0 10px; font-size: 40px; font-weight: 900; 
-            text-transform: uppercase; letter-spacing: -1px; font-style: italic;
+        .banner-img-box {
+            width: 100%; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 8px 24px rgba(22, 78, 67, 0.08);
+            border: 4px solid #ffffff; box-sizing: border-box;
         }
-        .hero-banner p { margin: 0; color: var(--gray-dark); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .banner-img-box img { width: 100%; height: auto; display: block; }
 
-        .main-content { max-width: 1300px; width: 100%; margin: 40px auto; padding: 0 20px; box-sizing: border-box; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        /* Danh sách sản phẩm dạng lưới bo tròn */
+        .main-content { max-width: 1200px; width: 100%; margin: 30px auto; padding: 0 20px; box-sizing: border-box; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
         
+        /* Card sản phẩm kiểu thơ mộng */
         .product-card { 
-            background: var(--white); border: 1px solid transparent;
-            transition: all 0.2s ease; cursor: pointer; display: flex; flex-direction: column; position: relative;
+            background: #ffffff; border-radius: 16px; border: 1px solid #e3f0ee;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); 
+            cursor: pointer; display: flex; flex-direction: column; position: relative;
+            overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
-        .product-card:hover { border: 1px solid var(--black); }
-        .product-card:hover .product-img { transform: scale(1.02); }
+        .product-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 24px rgba(22, 78, 67, 0.08);
+            border-color: #c2e2dd;
+        }
         
-        .product-img-wrapper { width: 100%; height: 320px; background: var(--gray-light); overflow: hidden; position: relative; }
-        .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .product-img-wrapper { width: 100%; height: 260px; background: var(--mint-light); overflow: hidden; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; }
         
-        .product-info { padding: 12px 5px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-title { font-size: 15px; margin: 0 0 5px 0; font-weight: 700; text-transform: uppercase; }
-        .product-desc { font-size: 13px; color: var(--gray-dark); margin: 0 0 10px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .product-price { font-size: 14px; font-weight: 700; }
+        .product-info { padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-title { font-size: 16px; margin: 0 0 6px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; }
+        .product-desc { font-size: 13px; color: #7f8c8d; margin: 0 0 12px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+        .product-price { font-size: 15px; font-weight: 700; color: var(--emerald-soft); }
 
         .badge-status { 
-            position: absolute; top: 10px; left: 10px; 
-            background: var(--black); color: var(--white); 
-            padding: 5px 12px; font-size: 10px; font-weight: 700; 
-            text-transform: uppercase; z-index: 2; letter-spacing: 1px;
+            position: absolute; top: 12px; left: 12px; 
+            background: rgba(22, 78, 67, 0.9); color: #ffffff; 
+            padding: 4px 10px; font-size: 11px; font-weight: 600; 
+            border-radius: 20px; z-index: 2; backdrop-filter: blur(5px);
         }
-        .status-preorder { background: var(--gray-dark); }
+        .status-preorder { background: rgba(118, 118, 119, 0.9); }
 
-        /* Modal Popup Adidas */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: var(--white); width: 100%; max-width: 850px; display: flex; max-height: 85vh; overflow: hidden; border: 2px solid var(--black); }
-        .modal-left { width: 50%; background: var(--gray-light); padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .modal-right { width: 50%; padding: 30px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; position: relative; }
+        /* Modal mềm mại, bo góc */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 35, 30, 0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #ffffff; width: 100%; max-width: 800px; display: flex; max-height: 85vh; overflow: hidden; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .modal-left { width: 45%; background: var(--mint-light); padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .modal-right { width: 55%; padding: 30px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; position: relative; }
         
-        .close-btn { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 28px; font-weight: 300; z-index: 10; }
+        .close-btn { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 26px; color: #95a5a6; }
         
-        .variant-group { display: flex; flex-direction: column; gap: 5px; }
-        label { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-        select, input, textarea { padding: 10px; border: 1px solid var(--black); font-size: 14px; width: 100%; box-sizing: border-box; border-radius: 0; }
+        .variant-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-weight: 700; font-size: 12px; color: var(--emerald-dark); letter-spacing: 0.5px; }
+        select, input, textarea { padding: 10px 14px; border: 1px solid #c2e2dd; font-size: 14px; width: 100%; box-sizing: border-box; border-radius: 8px; background: var(--mint-bg); color: var(--text-color); }
+        select:focus, input:focus, textarea:focus { border-color: var(--emerald-soft); outline: none; }
         
         .btn-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
         .btn-order { 
-            background: var(--black); color: var(--white); border: none; 
-            padding: 14px; font-weight: 700; cursor: pointer; font-size: 13px; 
-            text-transform: uppercase; letter-spacing: 1px; width: 100%; 
-            display: flex; justify-content: space-between; align-items: center;
+            background: var(--emerald-dark); color: #ffffff; border: none; 
+            padding: 14px; font-weight: 700; cursor: pointer; font-size: 14px; 
+            border-radius: 8px; width: 100%; text-align: center;
+            transition: background 0.2s ease;
         }
-        .btn-order:hover { background: #333333; }
+        .btn-order:hover { background: var(--emerald-soft); }
         
         .btn-shopee {
-            background: var(--white); color: var(--shopee-color); border: 1px solid var(--shopee-color);
-            padding: 12px; font-weight: 700; cursor: pointer; font-size: 13px;
-            text-transform: uppercase; letter-spacing: 1px; text-align: center; text-decoration: none;
+            background: #ffffff; color: var(--shopee-color); border: 1px solid var(--shopee-color);
+            padding: 12px; font-weight: 700; cursor: pointer; font-size: 13px; border-radius: 8px;
+            text-align: center; text-decoration: none; transition: background 0.2s ease;
         }
         .btn-shopee:hover { background: #fff5f2; }
 
         @media (max-width: 768px) {
             .modal-content { flex-direction: column; max-height: 90vh; }
             .modal-left, .modal-right { width: 100%; }
-            .modal-left { height: 220px; }
+            .modal-left { height: 200px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="top-bar">IN ẤN & THIẾT KẾ THEO YÊU CẦU // CUSTOM STORE</div>
+    <div class="top-bar">🌸 CỬA HÀNG VÔ TRI // CREATIVE HANDMADE & PRINTING 🌸</div>
 
     <header>
         <div class="nav-container">
             <div class="logo-box">
-                <span id="shop-name-txt">INDESTORE //</span>
+                <span id="shop-name-txt">CỬA HÀNG VÔ TRI</span>
             </div>
             <nav>
                 <ul class="menu-categories" id="menu-categories-list">
@@ -138,8 +151,10 @@
     </header>
 
     <div class="hero-banner">
-        <h1 id="banner-title">INDE STORE</h1>
-        <p id="banner-subtitle">Hệ thống sản phẩm cá nhân hóa thương hiệu của bạn</p>
+        <div class="banner-img-box" id="banner-box-display">
+            <!-- Tự động ưu tiên lấy banner cỏ 4 lá xinh xắn của bạn -->
+            <img src="https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=https://docs.google.com/uc?export=view%26id=1m-zQQk6jPiMFVEvV4K9qSDrgX7atgB4u" alt="Banner">
+        </div>
     </div>
 
     <div class="main-content">
@@ -150,21 +165,21 @@
     <div class="modal" id="order-modal">
         <div class="modal-content">
             <div class="modal-left">
-                <img id="modal-img" src="" style="width:100%; object-fit:contain; max-height:300px;">
+                <img id="modal-img" src="" style="width:100%; border-radius:12px; object-fit:contain; max-height:280px;">
             </div>
             <div class="modal-right">
                 <span class="close-btn" onclick="closeModal()">&times;</span>
-                <h3 id="modal-title" style="margin: 0; font-size: 22px; font-weight:900; text-transform:uppercase;"></h3>
-                <p id="modal-desc" style="margin:0; font-size:13px; color:var(--gray-dark); line-height:1.4;"></p>
-                <div id="modal-material" style="font-size:12px; font-weight:bold; color:var(--black); margin-top:5px;"></div>
+                <h3 id="modal-title" style="margin: 0; font-size: 20px; font-weight:700; color:var(--emerald-dark);"></h3>
+                <p id="modal-desc" style="margin:5px 0 0 0; font-size:13px; color:#7f8c8d; line-height:1.4;"></p>
+                <div id="modal-material" style="font-size:12px; font-weight:bold; color:var(--emerald-soft); margin-top:5px;"></div>
                 
-                <div style="font-size:22px; font-weight:900; margin: 5px 0 15px 0; border-top: 1px solid #eee; padding-top:10px;" id="calculated-price">0 đ</div>
+                <div style="font-size:22px; font-weight:700; color:var(--emerald-dark); margin: 10px 0; border-top: 1px dashed #c2e2dd; padding-top:10px;" id="calculated-price">0 đ</div>
                 
                 <div id="dynamic-variants" style="display:flex; flex-direction:column; gap:12px;"></div>
 
                 <div class="variant-group">
                     <label>TÊN NGƯỜI NHẬN</label>
-                    <input type="text" id="cus-name" placeholder="NGUYỄN VĂN A">
+                    <input type="text" id="cus-name" placeholder="Nguyễn Văn A">
                 </div>
                 <div class="variant-group">
                     <label>SỐ ĐIỆN THOẠI</label>
@@ -172,11 +187,11 @@
                 </div>
                 <div class="variant-group">
                     <label>ĐỊA CHỈ GIAO HÀNG</label>
-                    <textarea id="cus-address" rows="2" placeholder="SỐ NHÀ, TÊN ĐƯỜNG..."></textarea>
+                    <textarea id="cus-address" rows="2" placeholder="Số nhà, tên đường..."></textarea>
                 </div>
                 
                 <div class="btn-actions">
-                    <button class="btn-order" id="btn-submit-action" onclick="submitOrder()">MUA QUA ZALO SHOP <span>→</span></button>
+                    <button class="btn-order" id="btn-submit-action" onclick="submitOrder()">GỬI ĐƠN QUA ZALO SHOP</button>
                     <a href="#" id="btn-shopee-link" target="_blank" class="btn-shopee" style="display:none;">MUA TRÊN SHOPEE MALL</a>
                 </div>
             </div>
@@ -219,8 +234,11 @@
             });
 
             if(storeData.config['Ten_Shop']) {
-                document.getElementById('shop-name-txt').innerText = storeData.config['Ten_Shop'].toUpperCase() + ' //';
-                document.getElementById('banner-title').innerText = storeData.config['Ten_Shop'].toUpperCase();
+                document.getElementById('shop-name-txt').innerText = storeData.config['Ten_Shop'];
+            }
+            // Nếu trong sheet có link Banner 1 thì lấy, không thì giữ mặc định banner cỏ 4 lá của PO gửi
+            if(storeData.config['Banner_1']) {
+                document.getElementById('banner-box-display').innerHTML = `<img src="${cleanDriveUrl(storeData.config['Banner_1'])}" alt="Banner">`;
             }
 
             const prodRows = await fetchSheetData('Danh_Sach_SanPham');
@@ -264,7 +282,7 @@
                 const li = document.createElement('li');
                 li.className = 'menu-item';
                 li.setAttribute('data-cat', cat);
-                li.innerText = cat.toUpperCase();
+                li.innerText = cat;
                 li.onclick = () => filterCategory(cat);
                 menuContainer.appendChild(li);
             });
@@ -278,7 +296,6 @@
                 if(item.getAttribute('data-cat') === cat || (cat === 'All' && !item.getAttribute('data-cat'))) {
                     item.classList.add('active');
                 } else {
-                    item.classList.remove('remove');
                     item.classList.remove('active');
                 }
             });
@@ -290,7 +307,7 @@
             const filtered = currentCategory === 'All' ? storeData.products : storeData.products.filter(p => p.category === currentCategory);
             
             if(filtered.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 60px 0; font-weight: bold; letter-spacing:1px;">KHÔNG CÓ SẢN PHẨM NÀO KHỚP.</div>`;
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 60px 0; font-weight: bold; color: var(--emerald-soft);">Không tìm thấy sản phẩm nào trong danh mục này.</div>`;
                 return;
             }
 
@@ -298,14 +315,14 @@
                 const isPre = p.stock.toLowerCase().includes('trước');
                 return `
                     <div class="product-card" onclick="openModal(${p.id})">
-                        <span class="badge-status ${isPre ? 'status-preorder' : ''}">${p.stock.toUpperCase()}</span>
+                        <span class="badge-status ${isPre ? 'status-preorder' : ''}">${p.stock}</span>
                         <div class="product-img-wrapper">
-                            <img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400?text=Image+In+Queue'">
+                            <img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400?text=Hình+ảnh+đang+cập+nhật'">
                         </div>
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
                             <p class="product-desc">${p.desc || p.material || ''}</p>
-                            <div class="product-price">${p.configTable ? 'GIÁ THEO YÊU CẦU' : Number(p.basePrice).toLocaleString('vi-VN') + ' đ'}</div>
+                            <div class="product-price">${p.configTable ? 'Giá theo yêu cầu' : Number(p.basePrice).toLocaleString('vi-VN') + ' đ'}</div>
                         </div>
                     </div>
                 `;
@@ -317,10 +334,10 @@
             document.getElementById('modal-img').src = currentProduct.img;
             document.getElementById('modal-title').innerText = currentProduct.name;
             document.getElementById('modal-desc').innerText = currentProduct.desc || '';
-            document.getElementById('modal-material').innerText = currentProduct.material ? `CHẤT LIỆU: ${currentProduct.material.toUpperCase()}` : '';
+            document.getElementById('modal-material').innerText = currentProduct.material ? `Chất liệu: ${currentProduct.material}` : '';
             
             const orderBtn = document.getElementById('btn-submit-action');
-            orderBtn.innerText = currentProduct.stock.toLowerCase().includes('trước') ? "ĐẶT TRƯỚC HÀNG (ZALO)" : "MUA QUA ZALO SHOP <span>→</span>";
+            orderBtn.innerText = currentProduct.stock.toLowerCase().includes('trước') ? "ĐẶT TRƯỚC SẢN PHẨM QUA ZALO" : "GỬI ĐƠN QUA ZALO SHOP";
 
             const shopeeBtn = document.getElementById('btn-shopee-link');
             if(currentProduct.shopee && currentProduct.shopee.startsWith('http')) {
@@ -334,7 +351,7 @@
             variantContainer.innerHTML = '';
 
             if(currentProduct.configTable) {
-                document.getElementById('calculated-price').innerText = "ĐANG ĐỒNG BỘ BẢNG GIÁ...";
+                document.getElementById('calculated-price').innerText = "Đang đồng bộ bảng giá...";
                 if(!storeData.matrices[currentProduct.configTable]) {
                     const matrixRows = await fetchSheetData(currentProduct.configTable);
                     if(matrixRows && matrixRows.length > 5) {
@@ -359,16 +376,11 @@
             }
 
             let html = '';
-
-            // KIỂM TRA PHÂN LOẠI TAB THEO TIÊU ĐỀ CỘT THỰC TẾ
             const isThiepTable = matrix.headers[0] && matrix.headers[0].toLowerCase().includes('kieu');
 
             if (isThiepTable) {
-                // XỬ LÝ RIÊNG BIỆT CHO BẢNG GIA_THIEP (Cấu trúc: Kieu_In, Kich_Thuoc, Giay_Ford_...)
                 const kieuIns = [...new Set(matrix.data.map(r => r[0]).filter(Boolean))];
                 const kichThuocs = [...new Set(matrix.data.map(r => r[1]).filter(Boolean))];
-                
-                // Lấy danh sách các cột giấy (bắt đầu từ cột index 2 trở đi)
                 const giayCols = matrix.headers.slice(2).filter(Boolean);
 
                 html = `
@@ -396,7 +408,6 @@
                     </div>
                 `;
             } else {
-                // XỬ LÝ CHO CÁC BẢNG CARD HOẶC STICKER THÔNG THƯỜNG
                 const sizes = [...new Set(matrix.data.map(r => r[0]).filter(Boolean))];
                 const hasFaceColumn = matrix.headers.some(h => h && h.toLowerCase().includes('mat'));
 
@@ -463,7 +474,6 @@
             const isThiepTable = matrix.headers[0] && matrix.headers[0].toLowerCase().includes('kieu');
 
             if (isThiepTable) {
-                // TÍNH GIÁ MA TRẬN CHO THIỆP
                 const kieuInVal = document.getElementById('sel-kieuin').value;
                 const sizeVal = document.getElementById('sel-size').value;
                 const giayHeader = document.getElementById('sel-giay').value;
@@ -471,7 +481,6 @@
                 let colIndex = matrix.headers.findIndex(h => h && h.toLowerCase() === giayHeader.toLowerCase());
                 if(colIndex === -1) colIndex = 2;
 
-                // Tìm dòng khớp cả 2 tiêu chí: Kiểu in (cột A) VÀ Kích thước (cột B)
                 const rowData = matrix.data.find(r => 
                     r[0] && r[0].toString().trim() === kieuInVal.toString().trim() &&
                     r[1] && r[1].toString().trim() === sizeVal.toString().trim()
@@ -481,7 +490,6 @@
                     unitPrice = parseFloat(String(rowData[colIndex]).replace(/[^0-9.-]+/g, "")) || 0;
                 }
             } else {
-                // TÍNH GIÁ MA TRẬN CHO CARD/STICKER
                 const sizeVal = document.getElementById('sel-size').value;
                 const faceEl = document.getElementById('sel-face');
                 const filmEl = document.getElementById('sel-film');
@@ -509,10 +517,10 @@
         function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
         function submitOrder() {
-            const name = document.getElementById('cus-name').value.trim().toUpperCase();
+            const name = document.getElementById('cus-name').value.trim();
             const phone = document.getElementById('cus-phone').value.trim();
-            const addr = document.getElementById('cus-address').value.trim().toUpperCase();
-            if(!name || !phone || !addr) { alert('VUI LÒNG ĐIỀN ĐẦY ĐỦ THÔNG TIN ĐẶT HÀNG!'); return; }
+            const addr = document.getElementById('cus-address').value.trim();
+            if(!name || !phone || !addr) { alert('Vui lòng điền đầy đủ thông tin đặt hàng nhé!'); return; }
 
             let detailSpec = '';
             if(currentProduct.configTable) {
@@ -522,12 +530,12 @@
 
                 if (kieuInEl) {
                     const g = document.getElementById('sel-giay').value.replace(/_/g, ' ');
-                    detailSpec = `\n- CẤU HÌNH: ${kieuInEl.value}\n- KÍCH THƯỚC: ${sizeVal}\n- CHẤT LIỆU: ${g}\n- SỐ LƯỢNG: ${q} Bộ`;
+                    detailSpec = `\n- Cấu hình: ${kieuInEl.value}\n- Kích thước: ${sizeVal}\n- Giấy: ${g}\n- Số lượng: ${q} Bộ`;
                 } else {
                     const faceEl = document.getElementById('sel-face');
-                    const m = document.getElementById('sel-film').value.toLowerCase().includes('co') ? 'CÓ CÁN MÀNG' : 'KHÔNG CÁN MÀNG';
-                    let faceTxt = faceEl ? `, ${faceEl.value === '1' ? 'IN 1 MẶT' : 'IN 2 MẶT'}` : '';
-                    detailSpec = `\n- CẤU HÌNH: Kích thước ${sizeVal}${faceTxt}, Quy cách ${m}\n- SỐ LƯỢNG IN: ${q} tờ A3`;
+                    const m = document.getElementById('sel-film').value.toLowerCase().includes('co') ? 'Có cán màng' : 'Không cán màng';
+                    let faceTxt = faceEl ? `, ${faceEl.value === '1' ? 'In 1 mặt' : 'In 2 mặt'}` : '';
+                    detailSpec = `\n- Cấu hình: Kích thước ${sizeVal}${faceTxt}, Quy cách ${m}\n- Số lượng: ${q} tờ A3`;
                 }
             }
 
@@ -539,7 +547,7 @@
                 if(matchPhone && matchPhone[1]) shopPhone = matchPhone[1];
             }
 
-            const textMsg = `ĐƠN ĐẶT HÀNG MỚI [MASTERPIECE v5.0]:\n====================\n🛍️ SẢN PHẨM: ${currentProduct.name.toUpperCase()}\n🆔 MÃ SP: ${currentProduct.code}${detailSpec}\n💰 TỔNG GIÁ ĐƠN: ${price}\n🚚 LOẠI ĐƠN: ${currentProduct.stock.toUpperCase()}\n\n👤 NGƯỜI NHẬN: ${name}\n📞 SĐT KHÁCH: ${phone}\n📍 ĐỊA CHỈ: ${addr}`;
+            const textMsg = `ĐƠN ĐẶT HÀNG MỚI [HANDMADE v6.0]:\n====================\n🛍️ Sản phẩm: ${currentProduct.name}\n🆔 Mã SP: ${currentProduct.code}${detailSpec}\n💰 Tổng giá: ${price}\n🚚 Phân loại: ${currentProduct.stock}\n\n👤 Người nhận: ${name}\n📞 SĐT: ${phone}\n📍 Địa chỉ: ${addr}`;
             window.open(`https://zalo.me/${shopPhone}?text=${encodeURIComponent(textMsg)}`, '_blank');
         }
         window.onload = initStore;
