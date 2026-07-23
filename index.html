@@ -6,10 +6,10 @@
     <title>Cửa Hàng Vô Tri // Creative Handmade</title>
     <style>
         :root { 
-            --mint-light: #eaf7f5;
-            --mint-bg: #f3faf9;
-            --emerald-dark: #164e43;
-            --emerald-soft: #2a6f64;
+            --mint-light: #f0f7f5;
+            --mint-bg: #f9fbfb; /* Màu nền sữa nhạt giúp nổi bật sản phẩm */
+            --emerald-dark: #1f4e45; /* Màu chữ chuẩn lục bảo theo logo */
+            --emerald-soft: #387a6f;
             --text-color: #2c3e50;
             --shopee-color: #ea501f;
         }
@@ -32,106 +32,108 @@
         }
         
         header { 
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            border-bottom: 1px solid #dbebe8;
+            background: #ffffff;
+            border-bottom: 1px solid #e2eee3;
             position: sticky; top: 0; z-index: 100; 
         }
         .nav-container { 
             max-width: 1200px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px 20px; flex-wrap: wrap; gap: 10px;
+            padding: 5px 20px; flex-wrap: wrap; gap: 10px;
         }
-        .logo-box span { font-weight: 700; font-size: 22px; color: var(--emerald-dark); }
+        .logo-box { display: flex; align-items: center; gap: 10px; }
+        .logo-box img { height: 60px; width: auto; object-fit: contain; }
+        .logo-box span { font-weight: 700; font-size: 20px; color: var(--emerald-dark); letter-spacing: 0.5px; }
 
         /* Khối Tầm Nhìn */
         .vision-container {
-            max-width: 1200px; margin: 20px auto 0; padding: 0 20px; box-sizing: border-box;
-            display: none; /* Mặc định ẩn, có data sẽ hiện */
+            max-width: 1200px; margin: 25px auto 0; padding: 0 20px; box-sizing: border-box;
+            display: none;
         }
         .vision-box {
             background: #ffffff; border-left: 4px solid var(--emerald-soft);
-            padding: 15px 20px; border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(22, 78, 67, 0.03);
-            font-style: italic; color: #555; font-size: 14px; line-height: 1.5;
+            padding: 15px 20px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(31, 78, 69, 0.04);
+            font-style: italic; color: #4a5568; font-size: 14px; line-height: 1.6;
+            text-align: center;
         }
 
-        /* Khối Banner Carousel */
+        /* Khối Carousel Banner Sửa Lỗi Hiển Thị */
         .hero-banner { 
-            max-width: 1200px; width: 100%; margin: 20px auto 0; padding: 0 20px; box-sizing: border-box;
+            max-width: 1200px; width: 100%; margin: 25px auto 0; padding: 0 20px; box-sizing: border-box;
             display: none;
         }
         .carousel-wrapper {
             position: relative; width: 100%; border-radius: 16px; overflow: hidden;
-            box-shadow: 0 8px 24px rgba(22, 78, 67, 0.08);
+            box-shadow: 0 10px 30px rgba(31, 78, 69, 0.06);
             border: 4px solid #ffffff; box-sizing: border-box;
-            background: #e5edea;
+            background: #ffffff;
         }
-        .carousel-slides { display: flex; width: 100%; transition: transform 0.5s ease-in-out; }
-        .slide { min-width: 100%; box-sizing: border-box; position: relative; cursor: default; }
-        .slide.has-link { cursor: pointer; }
-        .slide img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 450px; }
+        .carousel-slides { display: flex; width: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .slide { min-width: 100%; box-sizing: border-box; position: relative; }
+        .slide img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 485px; }
 
-        /* Vùng Thanh Điều Hướng & Bộ Lọc */
+        /* Thanh Điều Hướng & Bộ Lọc */
         .filter-section {
-            max-width: 1200px; margin: 30px auto 0; padding: 0 20px; box-sizing: border-box;
+            max-width: 1200px; margin: 35px auto 0; padding: 0 20px; box-sizing: border-box;
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
         }
         .menu-categories { display: flex; gap: 10px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
         .menu-item { 
             font-weight: 600; font-size: 13px; cursor: pointer; 
-            padding: 8px 16px; border-radius: 20px; background: #ffffff;
+            padding: 8px 18px; border-radius: 20px; background: #ffffff;
             border: 1px solid #dbebe8; transition: all 0.2s ease; color: var(--emerald-soft);
         }
         .menu-item.active, .menu-item:hover { 
             background: var(--emerald-dark); color: #ffffff; border-color: var(--emerald-dark);
         }
         .sort-box select {
-            padding: 8px 12px; border-radius: 20px; border: 1px solid #c2e2dd;
+            padding: 8px 16px; border-radius: 20px; border: 1px solid #c2e2dd;
             background: #ffffff; color: var(--emerald-dark); font-weight: 600; font-size: 13px; outline: none;
+            cursor: pointer;
         }
 
-        /* Lưới hiển thị Sản phẩm */
-        .main-content { max-width: 1200px; width: 100%; margin: 20px auto 40px; padding: 0 20px; box-sizing: border-box; flex: 1; }
+        /* Danh sách sản phẩm */
+        .main-content { max-width: 1200px; width: 100%; margin: 20px auto 50px; padding: 0 20px; box-sizing: border-box; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
         
         .product-card { 
-            background: #ffffff; border-radius: 16px; border: 1px solid #e3f0ee;
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); 
-            cursor: pointer; display: flex; flex-direction: column; position: relative;
-            overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            background: #ffffff; border-radius: 16px; border: 1px solid #e9f2f0;
+            transition: all 0.3s ease; display: flex; flex-direction: column; position: relative;
+            overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.01);
         }
         .product-card:hover { 
-            transform: translateY(-5px); box-shadow: 0 12px 24px rgba(22, 78, 67, 0.08); border-color: #c2e2dd;
+            transform: translateY(-4px); box-shadow: 0 12px 24px rgba(31, 78, 69, 0.06); border-color: #cde2de;
         }
-        .product-img-wrapper { width: 100%; height: 260px; background: var(--mint-light); overflow: hidden; }
+        .product-img-wrapper { width: 100%; height: 260px; background: #fdfefe; overflow: hidden; }
         .product-img { width: 100%; height: 100%; object-fit: cover; }
         .product-info { padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-title { font-size: 16px; margin: 0 0 6px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; }
-        .product-desc { font-size: 13px; color: #7f8c8d; margin: 0 0 12px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+        .product-title { font-size: 15px; margin: 0 0 6px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; }
+        .product-desc { font-size: 13px; color: #718096; margin: 0 0 12px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
         .product-price { font-size: 15px; font-weight: 700; color: var(--emerald-soft); }
 
         .badge-status { 
-            position: absolute; top: 12px; left: 12px; background: rgba(22, 78, 67, 0.9); color: #ffffff; 
-            padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 20px; z-index: 2; backdrop-filter: blur(5px);
+            position: absolute; top: 12px; left: 12px; background: rgba(31, 78, 69, 0.85); color: #ffffff; 
+            padding: 4px 12px; font-size: 11px; font-weight: 600; border-radius: 20px; z-index: 2; backdrop-filter: blur(5px);
         }
-        .status-preorder { background: rgba(118, 118, 119, 0.9); }
+        .status-preorder { background: rgba(113, 128, 150, 0.85); }
 
-        /* Chuẩn hóa Footer */
+        /* Footer */
         footer {
-            background: #ffffff; border-top: 1px solid #dbebe8; padding: 30px 20px;
+            background: #ffffff; border-top: 1px solid #e2eee3; padding: 35px 20px;
             text-align: center; margin-top: auto;
         }
         .footer-content { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .footer-links { display: flex; gap: 20px; }
         .footer-btn {
-            text-decoration: none; font-weight: 600; font-size: 13px; padding: 8px 18px; border-radius: 20px;
+            text-decoration: none; font-weight: 600; font-size: 13px; padding: 8px 20px; border-radius: 20px;
             transition: all 0.2s ease;
         }
-        .btn-fb { background: #e8f1f5; color: #1877f2; }
-        .btn-zl { background: #eaf3f5; color: #0068ff; }
-        .btn-sp { background: #fff1ed; color: var(--shopee-color); }
+        .btn-fb { background: #eaf2f9; color: #1877f2; }
+        .btn-zl { background: #edf5f7; color: #0068ff; }
+        .btn-sp { background: #fff2ee; color: var(--shopee-color); }
         .footer-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-        .footer-copy { font-size: 12px; color: #95a5a6; margin: 0; }
+        .footer-copy { font-size: 12px; color: #a0aec0; margin: 0; }
 
         @media (max-width: 768px) {
             .filter-section { flex-direction: column; align-items: flex-start; }
@@ -145,25 +147,23 @@
 
     <header>
         <div class="nav-container">
-            <div class="logo-box">
+            <div class="logo-box" id="shop-logo-container">
+                <!-- Chỗ này tự bốc ảnh logo màu nước của bạn lên nè -->
                 <span id="shop-name-txt">CỬA HÀNG VÔ TRI</span>
             </div>
         </div>
     </header>
 
-    <!-- Khối Tầm Nhìn đầu trang -->
     <div class="vision-container" id="vision-area">
         <div class="vision-box" id="vision-text-box"></div>
     </div>
 
-    <!-- Khối Carousel Banner -->
     <div class="hero-banner" id="carousel-area">
         <div class="carousel-wrapper">
             <div class="carousel-slides" id="carousel-slides-container"></div>
         </div>
     </div>
 
-    <!-- Thanh Menu danh mục và Bộ lọc sắp xếp -->
     <div class="filter-section">
         <nav>
             <ul class="menu-categories" id="menu-categories-list">
@@ -179,12 +179,10 @@
         </div>
     </div>
 
-    <!-- Lưới danh sách sản phẩm -->
     <div class="main-content">
         <div class="product-grid" id="product-list"></div>
     </div>
 
-    <!-- Footer mạng xã hội ở dưới cùng -->
     <footer>
         <div class="footer-content">
             <div class="footer-links" id="footer-social-links"></div>
@@ -199,13 +197,15 @@
         let carouselIndex = 0;
         let carouselInterval = null;
 
+        // BỘ GIẢI MÃ LINK DRIVE THẾ HỆ MỚI (ÉP GOOGLE NHẢ ẢNH GỐC KHÔNG QUA TRÌNH DUYỆT BẢO MẬT)
         function cleanDriveUrl(url) {
             if (!url) return '';
             const strUrl = String(url).trim();
             if (strUrl.includes('drive.google.com')) {
                 let match = strUrl.match(/\/d\/([^/]+)/) || strUrl.match(/id=([^&]+)/);
                 if (match && match[1]) {
-                    return `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=https://docs.google.com/uc?export=view%26id=${match[1]}`;
+                    // Dùng cổng phân phối file trực tiếp không chứa cookie
+                    return `https://docs.google.com/uc?export=view&id=${match[1]}`;
                 }
             }
             return strUrl;
@@ -221,7 +221,6 @@
         }
 
         async function initStore() {
-            // 1. Đồng bộ cấu hình Shop & hệ thống Banner từ tab Cau_Hinh_Shop
             const configRows = await fetchSheetData('Cau_Hinh_Shop');
             configRows.forEach(row => {
                 if(row && row.c && row.c[0] && row.c[1]) {
@@ -229,13 +228,23 @@
                 }
             });
 
-            // Xử lý Khối Tầm Nhìn
+            // Đồng bộ Logo
+            if(storeData.config['Logo_Shop']) {
+                document.getElementById('shop-logo-container').innerHTML = `
+                    <img src="${cleanDriveUrl(storeData.config['Logo_Shop'])}" alt="Logo" onerror="this.style.display='none'; document.getElementById('shop-name-txt').style.display='block';">
+                    <span id="shop-name-txt" style="display:none;">${storeData.config['Ten_Shop'] || 'CỬA HÀNG VÔ TRI'}</span>
+                `;
+            } else if(storeData.config['Ten_Shop']) {
+                document.getElementById('shop-name-txt').innerText = storeData.config['Ten_Shop'];
+            }
+
+            // Xử lý Tầm Nhìn
             if(storeData.config['Tam_Nhin'] && String(storeData.config['Tam_Nhin']).trim() !== "") {
                 document.getElementById('vision-text-box').innerText = storeData.config['Tam_Nhin'];
                 document.getElementById('vision-area').style.display = 'block';
             }
 
-            // Gộp dữ liệu 4 Banner động
+            // Gom dữ liệu 4 Banner
             for(let i=1; i<=4; i++) {
                 let imgKey = `Banner_${i}`;
                 let mapKey = `Mapping_Banner_${i}`;
@@ -250,16 +259,13 @@
                 renderCarousel();
             }
 
-            // Render Footer MXH
             renderFooterLinks();
 
-            // 2. Đồng bộ danh sách sản phẩm từ dòng 6 trở đi
+            // Đọc sản phẩm
             const prodRows = await fetchSheetData('Danh_Sach_SanPham');
-            const actualProds = prodRows.slice(5); // Dòng 6 Excel (index 5)
-            
+            const actualProds = prodRows.slice(5); 
             let categories = new Set();
 
-            // Đọc dữ liệu theo đúng cấu trúc thực tế của PO
             actualProds.forEach((row, idx) => {
                 if(row && row.c && row.c[1]) { 
                     const pCode = row.c[0] ? String(row.c[0].v).trim() : ''; 
@@ -280,10 +286,9 @@
                     const pVis = row.c[10] ? String(row.c[10].v).trim() : 'Hiện'; 
                     const pConfig = row.c[11] ? String(row.c[11].v).trim() : ''; 
 
-                    // ĐẶC TẢ LUỒNG BẢO MẬT: Bắt buộc ẩn sản phẩm nếu bị Admin chọn "Ẩn"
                     if(pName && pVis.toLowerCase() === 'hiện') {
                         storeData.products.push({
-                            indexOrder: idx, // Dùng để xác định thời gian tạo mặc định
+                            indexOrder: idx,
                             code: pCode, name: pName, category: pCat,
                             img: cleanDriveUrl(pImg), detailImgs: pDetailImg, desc: pDesc, 
                             material: pMaterial, basePrice: pPrice, shopee: pShopee, 
@@ -294,7 +299,6 @@
                 }
             });
 
-            // Tự động dựng các nút danh mục trên thanh điều hướng
             const menuContainer = document.getElementById('menu-categories-list');
             categories.forEach(cat => {
                 const li = document.createElement('li');
@@ -308,17 +312,16 @@
             applyFiltersAndSort();
         }
 
-        // Tạo giao diện vòng lặp Carousel 5s
         function renderCarousel() {
             const container = document.getElementById('carousel-slides-container');
             container.innerHTML = storeData.banners.map(b => `
-                <div class="slide ${b.mapping ? 'has-link' : ''}" onclick="handleBannerClick('${b.mapping}')">
-                    <img src="${b.img}" alt="Banner Image">
+                <div class="slide" onclick="handleBannerClick('${b.mapping}')" style="${b.mapping ? 'cursor:pointer;' : ''}">
+                    <img src="${b.img}" alt="Banner Image" onerror="this.src='https://via.placeholder.com/1200x450?text=Hình+ảnh+đang+đồng+bộ'">
                 </div>
             `).join('');
             document.getElementById('carousel-area').style.display = 'block';
             
-            // Khởi chạy bộ đếm thời gian tự động 5 giây
+            if(carouselInterval) clearInterval(carouselInterval);
             carouselInterval = setInterval(() => {
                 carouselIndex = (carouselIndex + 1) % storeData.banners.length;
                 container.style.transform = `translateX(-${carouselIndex * 100}%)`;
@@ -326,9 +329,8 @@
         }
 
         function handleBannerClick(categoryMapping) {
-            if(!categoryMapping) return;
+            if(!categoryMapping || categoryMapping === "") return;
             filterCategory(categoryMapping);
-            // Tự động cuộn trang mượt mà xuống vùng sản phẩm
             document.getElementById('menu-categories-list').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -353,23 +355,17 @@
             applyFiltersAndSort();
         }
 
-        // LÕI XỬ LÝ LỌC & SẮP XẾP SẢN PHẨM REAL-TIME
         function applyFiltersAndSort() {
             const container = document.getElementById('product-list');
             const sortType = document.getElementById('sort-selector').value;
 
-            // 1. Lọc theo danh mục trước
             let result = currentCategory === 'All' ? [...storeData.products] : storeData.products.filter(p => p.category === currentCategory);
 
-            // 2. Tiến hành sắp xếp dữ liệu
             if (sortType === 'default') {
-                // CHUẨN SRS: Mới nhất lên đầu (đảo ngược vị trí dòng của Excel, dòng dưới cùng xếp lên đầu tiên)
                 result.sort((a, b) => b.indexOrder - a.indexOrder);
             } else if (sortType === 'price-asc') {
-                // Giá từ thấp đến cao
                 result.sort((a, b) => a.basePrice - b.basePrice);
             } else if (sortType === 'price-desc') {
-                // Giá từ cao đến thấp
                 result.sort((a, b) => b.basePrice - a.basePrice);
             }
 
@@ -378,19 +374,18 @@
                 return;
             }
 
-            // 3. Đổ dữ liệu ra giao diện trang chủ công khai
             container.innerHTML = result.map(p => {
                 const isPre = p.stock.toLowerCase().includes('trước');
                 return `
                     <div class="product-card">
                         <span class="badge-status ${isPre ? 'status-preorder' : ''}">${p.stock}</span>
                         <div class="product-img-wrapper">
-                            <img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400?text=Hình+ảnh+lỗi'">
+                            <img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400?text=Đang+tải+ảnh...'">
                         </div>
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
                             <p class="product-desc">${p.desc || p.material || ''}</p>
-                            <div class="product-price">${p.configTable ? 'Giá tính theo cấu hình' : Number(p.basePrice).toLocaleString('vi-VN') + ' đ'}</div>
+                            <div class="product-price">${p.configTable ? 'Giá theo yêu cầu' : Number(p.basePrice).toLocaleString('vi-VN') + ' đ'}</div>
                         </div>
                     </div>
                 `;
