@@ -3,90 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuahangvotri - InDeStore</title>
+    <title>InDeStore // ADIDAS MASTERPIECE v5.0</title>
     <style>
         :root { 
-            --bg-url: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920'); 
-            --primary-color: #2c3e50;
-            --accent-color: #e74c3c;
-            --success-color: #2ecc71;
+            --black: #000000;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray-dark: #767677;
+            --shopee-color: #ea501f;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: var(--bg-url); background-size: cover; background-attachment: fixed; color: #333; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Header & Menu Danh mục */
-        header { background: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; padding: 10px 0; }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; flex-wrap: wrap; gap: 15px; }
-        .logo-box img { height: 45px; width: auto; max-width: 150px; object-fit: contain; }
-        .logo-box span { font-weight: bold; font-size: 22px; color: var(--primary-color); }
-        .menu-categories { display: flex; gap: 10px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
-        .menu-item { padding: 8px 16px; background: #f0f2f5; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s; }
-        .menu-item.active, .menu-item:hover { background: var(--primary-color); color: white; }
-        
-        /* Banner Trang Chủ */
-        .hero-banner { background: rgba(255, 255, 255, 0.85); text-align: center; padding: 40px 20px; margin: 20px auto 0; max-width: 1160px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); backdrop-filter: blur(5px); }
-        .hero-banner h1 { margin: 0 0 10px; color: var(--primary-color); font-size: 32px; }
-        .hero-banner p { margin: 0; color: #7f8c8d; font-size: 16px; }
+        body { 
+            font-family: 'AdihausDIN', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            margin: 0; padding: 0; 
+            background-color: var(--white); 
+            color: var(--black);
+            -webkit-font-smoothing: antialiased;
+        }
 
-        /* Vùng hiển thị sản phẩm */
-        .main-content { max-width: 1200px; width: 100%; margin: 30px auto; padding: 0 20px; box-sizing: border-box; flex: 1; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        .top-bar {
+            background: var(--black); color: var(--white);
+            text-align: center; font-size: 11px; letter-spacing: 2px;
+            padding: 8px 0; font-weight: bold; text-transform: uppercase;
+        }
         
-        /* Card Sản phẩm */
-        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s; cursor: pointer; display: flex; flex-direction: column; position: relative; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        .product-img-wrapper { position: relative; width: 100%; height: 240px; background: #f5f5f5; }
-        .product-img { width: 100%; height: 100%; object-fit: cover; }
-        .product-info { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-title { font-size: 16px; margin: 0 0 8px 0; color: var(--primary-color); font-weight: bold; line-height: 1.4; }
-        .product-desc { font-size: 13px; color: #7f8c8d; margin: 0 0 12px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .product-price { font-size: 15px; color: var(--accent-color); font-weight: bold; }
+        header { 
+            background: var(--white); border-bottom: 1px solid #e5e5e5;
+            position: sticky; top: 0; z-index: 100; 
+        }
+        .nav-container { 
+            max-width: 1300px; margin: 0 auto; 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px 20px; 
+        }
+        .logo-box span { 
+            font-weight: 900; font-size: 24px; 
+            letter-spacing: -1px; text-transform: uppercase; font-style: italic;
+        }
+
+        .menu-categories { display: flex; gap: 25px; list-style: none; margin: 0; padding: 0; }
+        .menu-item { 
+            font-weight: 700; font-size: 14px; text-transform: uppercase; 
+            letter-spacing: 1px; cursor: pointer; padding-bottom: 5px;
+            border-bottom: 2px solid transparent; transition: all 0.2s ease;
+        }
+        .menu-item.active, .menu-item:hover { border-bottom: 2px solid var(--black); }
         
-        /* Trạng thái Hàng sẵn/Hết hàng */
-        .badge-status { position: absolute; top: 10px; right: 10px; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; z-index: 2; }
-        .status-available { background: var(--success-color); }
-        .status-outofstock { background: #95a5a6; }
-        .card-outofstock { opacity: 0.75; }
-        .card-outofstock .product-img { filter: grayscale(40%); }
+        .hero-banner { 
+            background: var(--black); color: var(--white);
+            text-align: left; padding: 60px 10%;
+        }
+        .hero-banner h1 { 
+            margin: 0 0 10px; font-size: 40px; font-weight: 900; 
+            text-transform: uppercase; letter-spacing: -1px; font-style: italic;
+        }
+        .hero-banner p { margin: 0; color: var(--gray-dark); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Modal Popup */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: white; width: 100%; max-width: 750px; border-radius: 16px; display: flex; max-height: 85vh; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); animation: fadeIn 0.3s ease; }
-        .modal-left { width: 45%; background: #f8f9fa; padding: 20px; display: flex; flex-direction: column; gap: 12px; border-right: 1px solid #eee; overflow-y: auto; }
-        .modal-right { width: 55%; padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; position: relative; }
-        .close-btn { position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 24px; color: #bdc3c7; transition: color 0.3s; }
-        .close-btn:hover { color: #7f8c8d; }
-        .variant-group { display: flex; flex-direction: column; gap: 6px; }
-        label { font-weight: 600; font-size: 13px; color: #34495e; }
-        select, input, textarea { padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; width: 100%; box-sizing: border-box; }
-        select:focus, input:focus, textarea:focus { border-color: var(--primary-color); outline: none; }
-        .btn-order { background: var(--success-color); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: background 0.3s; width: 100%; margin-top: 5px; }
-        .btn-order:hover { background: #27ae60; }
-        .btn-disabled { background: #bdc3c7 !important; cursor: not-allowed; }
+        .main-content { max-width: 1300px; width: 100%; margin: 40px auto; padding: 0 20px; box-sizing: border-box; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        
+        .product-card { 
+            background: var(--white); border: 1px solid transparent;
+            transition: all 0.2s ease; cursor: pointer; display: flex; flex-direction: column; position: relative;
+        }
+        .product-card:hover { border: 1px solid var(--black); }
+        .product-card:hover .product-img { transform: scale(1.02); }
+        
+        .product-img-wrapper { width: 100%; height: 320px; background: var(--gray-light); overflow: hidden; position: relative; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        
+        .product-info { padding: 12px 5px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-title { font-size: 15px; margin: 0 0 5px 0; font-weight: 700; text-transform: uppercase; }
+        .product-desc { font-size: 13px; color: var(--gray-dark); margin: 0 0 10px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-price { font-size: 14px; font-weight: 700; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .badge-status { 
+            position: absolute; top: 10px; left: 10px; 
+            background: var(--black); color: var(--white); 
+            padding: 5px 12px; font-size: 10px; font-weight: 700; 
+            text-transform: uppercase; z-index: 2; letter-spacing: 1px;
+        }
+        .status-preorder { background: var(--gray-dark); }
+
+        /* Modal Popup Adidas */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--white); width: 100%; max-width: 850px; display: flex; max-height: 85vh; overflow: hidden; border: 2px solid var(--black); }
+        .modal-left { width: 50%; background: var(--gray-light); padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .modal-right { width: 50%; padding: 30px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; position: relative; }
+        
+        .close-btn { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 28px; font-weight: 300; z-index: 10; }
+        
+        .variant-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        select, input, textarea { padding: 10px; border: 1px solid var(--black); font-size: 14px; width: 100%; box-sizing: border-box; border-radius: 0; }
+        
+        .btn-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .btn-order { 
+            background: var(--black); color: var(--white); border: none; 
+            padding: 14px; font-weight: 700; cursor: pointer; font-size: 13px; 
+            text-transform: uppercase; letter-spacing: 1px; width: 100%; 
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn-order:hover { background: #333333; }
+        
+        .btn-shopee {
+            background: var(--white); color: var(--shopee-color); border: 1px solid var(--shopee-color);
+            padding: 12px; font-weight: 700; cursor: pointer; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 1px; text-align: center; text-decoration: none;
+        }
+        .btn-shopee:hover { background: #fff5f2; }
+
         @media (max-width: 768px) {
             .modal-content { flex-direction: column; max-height: 90vh; }
-            .modal-left, .modal-right { width: 100%; border: none; }
-            .modal-left { max-height: 40%; }
+            .modal-left, .modal-right { width: 100%; }
+            .modal-left { height: 220px; }
         }
     </style>
 </head>
 <body>
 
+    <div class="top-bar">IN ẤN & THIẾT KẾ THEO YÊU CẦU // CUSTOM STORE</div>
+
     <header>
         <div class="nav-container">
-            <div class="logo-box" id="shop-logo-container">
-                <span id="shop-name-txt">Cuahangvotri</span>
+            <div class="logo-box">
+                <span id="shop-name-txt">INDESTORE //</span>
             </div>
-            <ul class="menu-categories" id="menu-categories-list">
-                <li class="menu-item active" onclick="filterCategory('All')">Tất cả sản phẩm</li>
-            </ul>
+            <nav>
+                <ul class="menu-categories" id="menu-categories-list">
+                    <li class="menu-item active" onclick="filterCategory('All')">TẤT CẢ</li>
+                </ul>
+            </nav>
         </div>
     </header>
 
     <div class="hero-banner">
-        <h1 id="banner-title">Chào mừng đến với InDeStore</h1>
-        <p id="banner-subtitle">Hệ thống in ấn & thiết kế theo yêu cầu cá nhân hóa</p>
+        <h1 id="banner-title">INDE STORE</h1>
+        <p id="banner-subtitle">Hệ thống sản phẩm cá nhân hóa thương hiệu của bạn</p>
     </div>
 
     <div class="main-content">
@@ -97,30 +150,35 @@
     <div class="modal" id="order-modal">
         <div class="modal-content">
             <div class="modal-left">
-                <img id="modal-img" src="" style="width:100%; border-radius:8px; object-fit:cover; height:200px;">
-                <h3 id="modal-title" style="margin: 10px 0 5px 0; color: var(--primary-color);"></h3>
-                <p id="modal-desc" style="margin:0; font-size:13px; color:#7f8c8d; line-height:1.4;"></p>
-                <div style="font-size:20px; color:var(--accent-color); font-weight:bold; margin-top:10px; border-top: 1px dashed #ddd; padding-top:10px;" id="calculated-price">0 đ</div>
+                <img id="modal-img" src="" style="width:100%; object-fit:contain; max-height:300px;">
             </div>
             <div class="modal-right">
                 <span class="close-btn" onclick="closeModal()">&times;</span>
-                <h4 style="margin:0 0 10px 0; color:var(--primary-color); border-bottom:2px solid #eee; padding-bottom:5px;">Tùy chọn cấu hình đơn hàng</h4>
+                <h3 id="modal-title" style="margin: 0; font-size: 22px; font-weight:900; text-transform:uppercase;"></h3>
+                <p id="modal-desc" style="margin:0; font-size:13px; color:var(--gray-dark); line-height:1.4;"></p>
+                <div id="modal-material" style="font-size:12px; font-weight:bold; color:var(--black); margin-top:5px;"></div>
+                
+                <div style="font-size:22px; font-weight:900; margin: 5px 0 15px 0; border-top: 1px solid #eee; padding-top:10px;" id="calculated-price">0 đ</div>
                 
                 <div id="dynamic-variants" style="display:flex; flex-direction:column; gap:12px;"></div>
 
-                <div class="variant-group" style="margin-top:5px;">
-                    <label>Họ và tên người nhận</label>
-                    <input type="text" id="cus-name" placeholder="Nguyễn Văn A">
+                <div class="variant-group">
+                    <label>TÊN NGƯỜI NHẬN</label>
+                    <input type="text" id="cus-name" placeholder="NGUYỄN VĂN A">
                 </div>
                 <div class="variant-group">
-                    <label>Số điện thoại</label>
+                    <label>SỐ ĐIỆN THOẠI</label>
                     <input type="text" id="cus-phone" placeholder="0901234567">
                 </div>
                 <div class="variant-group">
-                    <label>Địa chỉ nhận hàng</label>
-                    <textarea id="cus-address" rows="2" placeholder="Số nhà, tên đường, khu vực..."></textarea>
+                    <label>ĐỊA CHỈ GIAO HÀNG</label>
+                    <textarea id="cus-address" rows="2" placeholder="SỐ NHÀ, TÊN ĐƯỜNG..."></textarea>
                 </div>
-                <button class="btn-order" id="btn-submit-action" onclick="submitOrder()">Gửi Đơn Hàng Qua Zalo</button>
+                
+                <div class="btn-actions">
+                    <button class="btn-order" id="btn-submit-action" onclick="submitOrder()">MUA QUA ZALO SHOP <span>→</span></button>
+                    <a href="#" id="btn-shopee-link" target="_blank" class="btn-shopee" style="display:none;">MUA TRÊN SHOPEE MALL</a>
+                </div>
             </div>
         </div>
     </div>
@@ -135,9 +193,9 @@
             if (!url) return '';
             const strUrl = String(url).trim();
             if (strUrl.includes('drive.google.com')) {
-                const match = strUrl.match(/\/d\/([^/]+)/);
+                let match = strUrl.match(/\/d\/([^/]+)/) || strUrl.match(/id=([^&]+)/);
                 if (match && match[1]) {
-                    return `https://docs.google.com/uc?export=view&id=${match[1]}`;
+                    return `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=https://docs.google.com/uc?export=view%26id=${match[1]}`;
                 }
             }
             return strUrl;
@@ -149,11 +207,10 @@
                 const text = await response.text();
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 return json.table.rows;
-            } catch (e) { console.error("Lỗi đọc sheet: " + sheetName, e); return []; }
+            } catch (e) { console.error(e); return []; }
         }
 
         async function initStore() {
-            // 1. Đọc Cấu hình Shop
             const configRows = await fetchSheetData('Cau_Hinh_Shop');
             configRows.forEach(row => {
                 if(row && row.c && row.c[0] && row.c[1]) {
@@ -161,60 +218,53 @@
                 }
             });
 
-            if(storeData.config['Logo_Shop']) {
-                document.getElementById('shop-logo-container').innerHTML = `<img src="${cleanDriveUrl(storeData.config['Logo_Shop'])}" alt="Logo">`;
-            } else if(storeData.config['Ten_Shop']) {
-                document.getElementById('shop-name-txt').innerText = storeData.config['Ten_Shop'];
-                document.getElementById('banner-title').innerText = storeData.config['Ten_Shop'];
-            }
-            if(storeData.config['Background_Shop']) {
-                document.documentElement.style.setProperty('--bg-url', `url('${cleanDriveUrl(storeData.config['Background_Shop'])}')`);
+            if(storeData.config['Ten_Shop']) {
+                document.getElementById('shop-name-txt').innerText = storeData.config['Ten_Shop'].toUpperCase() + ' //';
+                document.getElementById('banner-title').innerText = storeData.config['Ten_Shop'].toUpperCase();
             }
 
-            // 2. Đọc Danh sách Sản phẩm
             const prodRows = await fetchSheetData('Danh_Sach_SanPham');
-            const actualProds = prodRows.slice(4); 
-            
+            const actualProds = prodRows.slice(5); 
             let categories = new Set();
 
             actualProds.forEach((row, idx) => {
-                if(row && row.c && row.c[0]) {
-                    // Xử lý thông minh phòng trường hợp ô trống/Null dữ liệu
-                    const pName = row.c[0] ? String(row.c[0].v) : '';
-                    const pDesc = row.c[1] ? String(row.c[1].v) : '';
+                if(row && row.c && row.c[1]) { 
+                    const pCode = row.c[0] ? String(row.c[0].v).trim() : ''; 
+                    const pName = row.c[1] ? String(row.c[1].v).trim() : ''; 
+                    const pCat = row.c[2] ? String(row.c[2].v).trim() : 'KHÁC'; 
+                    const pImg = row.c[3] ? String(row.c[3].v).trim() : ''; 
+                    const pDetailImg = row.c[4] ? String(row.c[4].v).trim() : ''; 
+                    const pDesc = row.c[5] ? String(row.c[5].v).trim() : ''; 
+                    const pMaterial = row.c[6] ? String(row.c[6].v).trim() : ''; 
                     
-                    // Xử lý giá tiền thuần tuý, loại bỏ chữ ký tự lạ
                     let pPrice = 0;
-                    if(row.c[2] && row.c[2].v) {
-                        pPrice = parseFloat(String(row.c[2].v).replace(/[^0-9.-]+/g, "")) || 0;
+                    if(row.c[7] && row.c[7].v) {
+                        pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
                     }
-
-                    const pImg = row.c[3] ? String(row.c[3].v) : '';
-                    const pConfig = row.c[4] ? String(row.c[4].v).trim() : '';
                     
-                    // Cột Phân Loại Danh Mục (Cột F - Index 5)
-                    const pCat = (row.c[5] && row.c[5].v) ? String(row.c[5].v).trim() : 'Khác';
-                    
-                    // Cột Trạng thái hàng sẵn (Cột G - Index 6)
-                    const pStatus = (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : 'Sẵn hàng';
+                    const pShopee = row.c[8] ? String(row.c[8].v).trim() : ''; 
+                    const pStock = row.c[9] ? String(row.c[9].v).trim() : 'Có sẵn'; 
+                    const pVis = row.c[10] ? String(row.c[10].v).trim() : 'Hiện'; 
+                    const pConfig = row.c[11] ? String(row.c[11].v).trim() : ''; 
 
-                    if(pName) {
+                    if(pName && pVis.toLowerCase() === 'hiện') {
                         storeData.products.push({
-                            id: idx, name: pName, desc: pDesc, basePrice: pPrice,
-                            img: cleanDriveUrl(pImg), configTable: pConfig, category: pCat, status: pStatus
+                            id: idx, code: pCode, name: pName, category: pCat,
+                            img: cleanDriveUrl(pImg), detailImgs: pDetailImg, desc: pDesc, 
+                            material: pMaterial, basePrice: pPrice, shopee: pShopee, 
+                            stock: pStock, configTable: pConfig
                         });
                         categories.add(pCat);
                     }
                 }
             });
 
-            // Sinh động Menu Danh Mục dựa trên Cột Phân Loại của PO
             const menuContainer = document.getElementById('menu-categories-list');
             categories.forEach(cat => {
                 const li = document.createElement('li');
                 li.className = 'menu-item';
                 li.setAttribute('data-cat', cat);
-                li.innerText = cat;
+                li.innerText = cat.toUpperCase();
                 li.onclick = () => filterCategory(cat);
                 menuContainer.appendChild(li);
             });
@@ -228,6 +278,7 @@
                 if(item.getAttribute('data-cat') === cat || (cat === 'All' && !item.getAttribute('data-cat'))) {
                     item.classList.add('active');
                 } else {
+                    item.classList.remove('remove');
                     item.classList.remove('active');
                 }
             });
@@ -239,22 +290,22 @@
             const filtered = currentCategory === 'All' ? storeData.products : storeData.products.filter(p => p.category === currentCategory);
             
             if(filtered.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: #7f8c8d; font-weight: bold;">Chưa có sản phẩm nào trong mục này.</div>`;
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 60px 0; font-weight: bold; letter-spacing:1px;">KHÔNG CÓ SẢN PHẨM NÀO KHỚP.</div>`;
                 return;
             }
 
             container.innerHTML = filtered.map(p => {
-                const isOut = p.status.toLowerCase().includes('hết') || p.status.toLowerCase().includes('out');
+                const isPre = p.stock.toLowerCase().includes('trước');
                 return `
-                    <div class="product-card ${isOut ? 'card-outofstock' : ''}" onclick="openModal(${p.id})">
-                        <span class="badge-status ${isOut ? 'status-outofstock' : 'status-available'}">${p.status}</span>
+                    <div class="product-card" onclick="openModal(${p.id})">
+                        <span class="badge-status ${isPre ? 'status-preorder' : ''}">${p.stock.toUpperCase()}</span>
                         <div class="product-img-wrapper">
-                            <img class="product-img" src="${p.img || 'https://via.placeholder.com/300'}" alt="${p.name}">
+                            <img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400?text=Image+In+Queue'">
                         </div>
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
-                            <p class="product-desc">${p.desc}</p>
-                            <div class="product-price">${p.configTable ? 'Giá tính theo cấu hình' : Number(p.basePrice).toLocaleString('vi-VN') + ' đ'}</div>
+                            <p class="product-desc">${p.desc || p.material || ''}</p>
+                            <div class="product-price">${p.configTable ? 'GIÁ THEO YÊU CẦU' : Number(p.basePrice).toLocaleString('vi-VN') + ' đ'}</div>
                         </div>
                     </div>
                 `;
@@ -265,22 +316,25 @@
             currentProduct = storeData.products.find(p => p.id === id);
             document.getElementById('modal-img').src = currentProduct.img;
             document.getElementById('modal-title').innerText = currentProduct.name;
-            document.getElementById('modal-desc').innerText = currentProduct.desc;
+            document.getElementById('modal-desc').innerText = currentProduct.desc || '';
+            document.getElementById('modal-material').innerText = currentProduct.material ? `CHẤT LIỆU: ${currentProduct.material.toUpperCase()}` : '';
             
+            const orderBtn = document.getElementById('btn-submit-action');
+            orderBtn.innerText = currentProduct.stock.toLowerCase().includes('trước') ? "ĐẶT TRƯỚC HÀNG (ZALO)" : "MUA QUA ZALO SHOP <span>→</span>";
+
+            const shopeeBtn = document.getElementById('btn-shopee-link');
+            if(currentProduct.shopee && currentProduct.shopee.startsWith('http')) {
+                shopeeBtn.href = currentProduct.shopee;
+                shopeeBtn.style.display = 'block';
+            } else {
+                shopeeBtn.style.display = 'none';
+            }
+
             const variantContainer = document.getElementById('dynamic-variants');
             variantContainer.innerHTML = '';
 
-            const orderBtn = document.getElementById('btn-submit-action');
-            const isOut = currentProduct.status.toLowerCase().includes('hết') || currentProduct.status.toLowerCase().includes('out');
-            
-            if(isOut) {
-                orderBtn.innerText = "Tạm Hết Hàng - Nhận Đặt Trước";
-            } else {
-                orderBtn.innerText = "Gửi Đơn Hàng Qua Zalo";
-            }
-
             if(currentProduct.configTable) {
-                document.getElementById('calculated-price').innerText = "Đang lấy bảng giá từ Sheets...";
+                document.getElementById('calculated-price').innerText = "ĐANG ĐỒNG BỘ BẢNG GIÁ...";
                 if(!storeData.matrices[currentProduct.configTable]) {
                     const matrixRows = await fetchSheetData(currentProduct.configTable);
                     if(matrixRows && matrixRows.length > 5) {
@@ -298,86 +352,194 @@
 
         function setupDynamicDropdowns(matrix) {
             const container = document.getElementById('dynamic-variants');
-            if(!matrix || !matrix.data) {
-                container.innerHTML = `<p style="color:red; font-size:12px;">Cấu hình bảng giá ${currentProduct.configTable} trống hoặc sai cấu trúc.</p>`;
-                document.getElementById('calculated-price').innerText = "0 đ";
+            if(!matrix || !matrix.data || matrix.data.length === 0) {
+                container.innerHTML = `<p style="color:var(--gray-dark); font-size:12px;">Sản phẩm áp dụng biểu giá mặc định.</p>`;
+                document.getElementById('calculated-price').innerText = Number(currentProduct.basePrice).toLocaleString('vi-VN') + ' đ';
                 return;
             }
 
-            if(currentProduct.configTable === 'GIA_CARD' || currentProduct.configTable === 'GIA_THIEP') {
-                const sizes = [...new Set(matrix.data.map(r => r[0]).filter(Boolean))];
-                let html = `
+            let html = '';
+
+            // KIỂM TRA PHÂN LOẠI TAB THEO TIÊU ĐỀ CỘT THỰC TẾ
+            const isThiepTable = matrix.headers[0] && matrix.headers[0].toLowerCase().includes('kieu');
+
+            if (isThiepTable) {
+                // XỬ LÝ RIÊNG BIỆT CHO BẢNG GIA_THIEP (Cấu trúc: Kieu_In, Kich_Thuoc, Giay_Ford_...)
+                const kieuIns = [...new Set(matrix.data.map(r => r[0]).filter(Boolean))];
+                const kichThuocs = [...new Set(matrix.data.map(r => r[1]).filter(Boolean))];
+                
+                // Lấy danh sách các cột giấy (bắt đầu từ cột index 2 trở đi)
+                const giayCols = matrix.headers.slice(2).filter(Boolean);
+
+                html = `
                     <div class="variant-group">
-                        <label>Chọn Kích Thước (cm)</label>
+                        <label>KIỂU IN THIỆP</label>
+                        <select id="sel-kieuin" onchange="calculateMatrixPrice()">
+                            ${kieuIns.map(k => `<option value="${k}">${k}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="variant-group">
+                        <label>KÍCH THƯỚC BAO THƯ / THIỆP</label>
                         <select id="sel-size" onchange="calculateMatrixPrice()">
-                            ${sizes.map(s => `<option value="${s}">${s}</option>`).join('')}
+                            ${kichThuocs.map(s => `<option value="${s}">${s}</option>`).join('')}
                         </select>
                     </div>
                     <div class="variant-group">
-                        <label>Số Mặt In</label>
-                        <select id="sel-face" onchange="calculateMatrixPrice()">
-                            <option value="1">In 1 mặt</option>
-                            <option value="2">In 2 mặt</option>
+                        <label>CHẤT LIỆU GIẤY IN</label>
+                        <select id="sel-giay" onchange="calculateMatrixPrice()">
+                            ${giayCols.map(g => `<option value="${g}">${g.replace(/_/g, ' ')}</option>`).join('')}
                         </select>
                     </div>
                     <div class="variant-group">
-                        <label>Quy Cách Cán Màng</label>
-                        <select id="sel-film" onchange="calculateMatrixPrice()">
-                            <option value="Khong">Không cán màng</option>
-                            <option value="Co">Có cán màng</option>
-                        </select>
+                        <label>SỐ LƯỢNG ĐẶT IN (BỘ)</label>
+                        <input type="number" id="inp-sheet-qty" value="1" min="1" oninput="calculateMatrixPrice()">
                     </div>
                 `;
-                container.innerHTML = html;
-                calculateMatrixPrice();
             } else {
-                // Hỗ trợ dự phòng cho các bảng giá thông thường khác
-                container.innerHTML = `<p style="color:#7f8c8d; font-size:13px;">Sản phẩm áp dụng bảng giá liên hệ cấu hình riêng.</p>`;
-                document.getElementById('calculated-price').innerText = Number(currentProduct.basePrice).toLocaleString('vi-VN') + ' đ';
+                // XỬ LÝ CHO CÁC BẢNG CARD HOẶC STICKER THÔNG THƯỜNG
+                const sizes = [...new Set(matrix.data.map(r => r[0]).filter(Boolean))];
+                const hasFaceColumn = matrix.headers.some(h => h && h.toLowerCase().includes('mat'));
+
+                if (hasFaceColumn) {
+                    html = `
+                        <div class="variant-group">
+                            <label>KÍCH THƯỚC</label>
+                            <select id="sel-size" onchange="calculateMatrixPrice()">
+                                ${sizes.map(s => `<option value="${s}">${s}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="variant-group">
+                            <label>SỐ MẶT IN</label>
+                            <select id="sel-face" onchange="calculateMatrixPrice()">
+                                <option value="1">IN 1 MẶT</option>
+                                <option value="2">IN 2 MẶT</option>
+                            </select>
+                        </div>
+                        <div class="variant-group">
+                            <label>QUY CÁCH CÁN MÀNG</label>
+                            <select id="sel-film" onchange="calculateMatrixPrice()">
+                                <option value="Khong">KHÔNG CÁN MÀNG</option>
+                                <option value="Co">CÓ CÁN MÀNG</option>
+                            </select>
+                        </div>
+                        <div class="variant-group">
+                            <label>SỐ LƯỢNG ĐẶT IN (TỜ A3)</label>
+                            <input type="number" id="inp-sheet-qty" value="1" min="1" oninput="calculateMatrixPrice()">
+                        </div>
+                    `;
+                } else {
+                    html = `
+                        <div class="variant-group">
+                            <label>KÍCH THƯỚC</label>
+                            <select id="sel-size" onchange="calculateMatrixPrice()">
+                                ${sizes.map(s => `<option value="${s}">${s}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="variant-group">
+                            <label>QUY CÁCH CÁN MÀNG</label>
+                            <select id="sel-film" onchange="calculateMatrixPrice()">
+                                <option value="Khong_Man">KHÔNG CÁN MÀNG</option>
+                                <option value="Co_Man">CÓ CÁN MÀNG</option>
+                            </select>
+                        </div>
+                        <div class="variant-group">
+                            <label>SỐ LƯỢNG ĐẶT IN (TỜ A3)</label>
+                            <input type="number" id="inp-sheet-qty" value="1" min="1" oninput="calculateMatrixPrice()">
+                        </div>
+                    `;
+                }
             }
+
+            container.innerHTML = html;
+            calculateMatrixPrice();
         }
 
         function calculateMatrixPrice() {
             if(!currentProduct.configTable || !storeData.matrices[currentProduct.configTable]) return;
             const matrix = storeData.matrices[currentProduct.configTable];
+            const sheetQty = parseInt(document.getElementById('inp-sheet-qty').value) || 1;
             
-            const sizeVal = document.getElementById('sel-size').value;
-            const faceVal = document.getElementById('sel-face').value;
-            const filmVal = document.getElementById('sel-film').value;
+            let unitPrice = currentProduct.basePrice;
+            const isThiepTable = matrix.headers[0] && matrix.headers[0].toLowerCase().includes('kieu');
 
-            // Xây dựng Header chuẩn khớp 100% với tên cột của PO: In_1_Mat_Khong_Man
-            let targetHeader = `In_${faceVal}_Mat_${filmVal}_Man`;
-            let colIndex = matrix.headers.findIndex(h => h && h.toLowerCase() === targetHeader.toLowerCase());
-            
-            if(colIndex === -1) colIndex = 2; // Cột mặc định phòng hờ ký tự
+            if (isThiepTable) {
+                // TÍNH GIÁ MA TRẬN CHO THIỆP
+                const kieuInVal = document.getElementById('sel-kieuin').value;
+                const sizeVal = document.getElementById('sel-size').value;
+                const giayHeader = document.getElementById('sel-giay').value;
 
-            const rowData = matrix.data.find(r => r[0] && r[0].toString().trim() === sizeVal.toString().trim());
-            let finalPrice = 0;
-            if(rowData && rowData[colIndex]) {
-                finalPrice = parseFloat(String(rowData[colIndex]).replace(/[^0-9.-]+/g, "")) || 0;
+                let colIndex = matrix.headers.findIndex(h => h && h.toLowerCase() === giayHeader.toLowerCase());
+                if(colIndex === -1) colIndex = 2;
+
+                // Tìm dòng khớp cả 2 tiêu chí: Kiểu in (cột A) VÀ Kích thước (cột B)
+                const rowData = matrix.data.find(r => 
+                    r[0] && r[0].toString().trim() === kieuInVal.toString().trim() &&
+                    r[1] && r[1].toString().trim() === sizeVal.toString().trim()
+                );
+
+                if(rowData && rowData[colIndex] !== null) {
+                    unitPrice = parseFloat(String(rowData[colIndex]).replace(/[^0-9.-]+/g, "")) || 0;
+                }
+            } else {
+                // TÍNH GIÁ MA TRẬN CHO CARD/STICKER
+                const sizeVal = document.getElementById('sel-size').value;
+                const faceEl = document.getElementById('sel-face');
+                const filmEl = document.getElementById('sel-film');
+                
+                let targetHeader = '';
+                if (faceEl) {
+                    targetHeader = `In_${faceEl.value}_Mat_${filmEl.value}_Man`;
+                } else {
+                    targetHeader = filmEl.value;
+                }
+
+                let colIndex = matrix.headers.findIndex(h => h && h.toLowerCase().replace(/_/g, '') === targetHeader.toLowerCase().replace(/_/g, ''));
+                if(colIndex === -1) colIndex = 2;
+
+                const rowData = matrix.data.find(r => r[0] && r[0].toString().trim() === sizeVal.toString().trim());
+                if(rowData && rowData[colIndex] !== null) {
+                    unitPrice = parseFloat(String(rowData[colIndex]).replace(/[^0-9.-]+/g, "")) || 0;
+                }
             }
+            
+            let finalPrice = unitPrice * sheetQty;
             document.getElementById('calculated-price').innerText = Number(finalPrice).toLocaleString('vi-VN') + ' đ';
         }
 
         function closeModal() { document.getElementById('order-modal').style.display = 'none'; }
 
         function submitOrder() {
-            const name = document.getElementById('cus-name').value.trim();
+            const name = document.getElementById('cus-name').value.trim().toUpperCase();
             const phone = document.getElementById('cus-phone').value.trim();
-            const addr = document.getElementById('cus-address').value.trim();
-            if(!name || !phone || !addr) { alert('Vui lòng điền đầy đủ thông tin giao hàng nhé!'); return; }
+            const addr = document.getElementById('cus-address').value.trim().toUpperCase();
+            if(!name || !phone || !addr) { alert('VUI LÒNG ĐIỀN ĐẦY ĐỦ THÔNG TIN ĐẶT HÀNG!'); return; }
 
             let detailSpec = '';
-            if(currentProduct.configTable && document.getElementById('sel-size')) {
-                const s = document.getElementById('sel-size').value;
-                const f = document.getElementById('sel-face').value === '1' ? 'In 1 mặt' : 'In 2 mặt';
-                const m = document.getElementById('sel-film').value === 'Co' ? 'Có cán màng' : 'Không cán màng';
-                detailSpec = `\n- Cấu hình: ${s}cm, ${f}, ${m}`;
+            if(currentProduct.configTable) {
+                const kieuInEl = document.getElementById('sel-kieuin');
+                const sizeVal = document.getElementById('sel-size').value;
+                const q = document.getElementById('inp-sheet-qty').value;
+
+                if (kieuInEl) {
+                    const g = document.getElementById('sel-giay').value.replace(/_/g, ' ');
+                    detailSpec = `\n- CẤU HÌNH: ${kieuInEl.value}\n- KÍCH THƯỚC: ${sizeVal}\n- CHẤT LIỆU: ${g}\n- SỐ LƯỢNG: ${q} Bộ`;
+                } else {
+                    const faceEl = document.getElementById('sel-face');
+                    const m = document.getElementById('sel-film').value.toLowerCase().includes('co') ? 'CÓ CÁN MÀNG' : 'KHÔNG CÁN MÀNG';
+                    let faceTxt = faceEl ? `, ${faceEl.value === '1' ? 'IN 1 MẶT' : 'IN 2 MẶT'}` : '';
+                    detailSpec = `\n- CẤU HÌNH: Kích thước ${sizeVal}${faceTxt}, Quy cách ${m}\n- SỐ LƯỢNG IN: ${q} tờ A3`;
+                }
             }
 
             const price = document.getElementById('calculated-price').innerText;
-            const shopPhone = storeData.config['SDT_Shop'] || '0900000000';
-            const textMsg = `KHÁCH ĐẶT HÀNG TỪ WEBSITE:\n====================\n🛍️ Sản phẩm: ${currentProduct.name}${detailSpec}\n💰 Tổng giá: ${price}\nTRẠNG THÁI: ${currentProduct.status}\n\n👤 Người nhận: ${name}\n📞 Điện thoại: ${phone}\n📍 Địa chỉ: ${addr}`;
+            
+            let shopPhone = '84879058797';
+            if(storeData.config['Link_Zalo']) {
+                const matchPhone = storeData.config['Link_Zalo'].match(/zalo\.me\/([0-9]+)/);
+                if(matchPhone && matchPhone[1]) shopPhone = matchPhone[1];
+            }
+
+            const textMsg = `ĐƠN ĐẶT HÀNG MỚI [MASTERPIECE v5.0]:\n====================\n🛍️ SẢN PHẨM: ${currentProduct.name.toUpperCase()}\n🆔 MÃ SP: ${currentProduct.code}${detailSpec}\n💰 TỔNG GIÁ ĐƠN: ${price}\n🚚 LOẠI ĐƠN: ${currentProduct.stock.toUpperCase()}\n\n👤 NGƯỜI NHẬN: ${name}\n📞 SĐT KHÁCH: ${phone}\n📍 ĐỊA CHỈ: ${addr}`;
             window.open(`https://zalo.me/${shopPhone}?text=${encodeURIComponent(textMsg)}`, '_blank');
         }
         window.onload = initStore;
