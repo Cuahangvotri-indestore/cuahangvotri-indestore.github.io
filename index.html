@@ -42,7 +42,7 @@
             padding: 5px 20px; flex-wrap: wrap; gap: 10px;
         }
         .logo-box { display: flex; align-items: center; gap: 12px; }
-        .logo-box img { height: 65px; width: auto; object-fit: contain; }
+        .logo-box img { height: 68px; width: auto; object-fit: contain; }
         .logo-title-box { display: flex; flex-direction: column; }
         .logo-title-box .main-title { font-weight: 800; font-size: 20px; color: var(--emerald-dark); margin: 0; }
         .logo-title-box .sub-title { font-size: 11px; color: var(--emerald-soft); letter-spacing: 1px; margin: 0; font-weight: 600; }
@@ -60,10 +60,9 @@
             text-align: center;
         }
 
-        /* Khối Banner */
+        /* Khối Banner Carousel được Set cứng */
         .hero-banner { 
             max-width: 1200px; width: 100%; margin: 25px auto 0; padding: 0 20px; box-sizing: border-box;
-            display: none;
         }
         .carousel-wrapper {
             position: relative; width: 100%; border-radius: 16px; overflow: hidden;
@@ -73,7 +72,7 @@
         }
         .carousel-slides { display: flex; width: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
         .slide { min-width: 100%; box-sizing: border-box; position: relative; }
-        .slide img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 450px; }
+        .slide img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 480px; }
 
         /* Vùng Lọc sản phẩm */
         .filter-section {
@@ -149,8 +148,13 @@
 
     <header>
         <div class="nav-container">
-            <div class="logo-box" id="shop-logo-container">
-                <span id="shop-name-txt">CỬA HÀNG VÔ TRI</span>
+            <div class="logo-box">
+                <!-- SET CỨNG LOGO CHÚ CHUỘT KHÔNG NỀN DỄ THƯƠNG CỦA PO -->
+                <img src="https://api.screenshotone.com/take?url=https%3A%2F%2Fstorage.googleapis.com%2Fsubtle-pattern-322103.appspot.com%2Flogo%2520kh%25C3%25B4ng%2520n%25E1%25BB%2581n.jpg&access_key=dummy&block_ads=true" onerror="this.src='https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=https://docs.google.com/uc?export=view%26id=1rkqESTrb4qkkHT1XMDt0vu6xa2N_2ULt'" alt="Logo Cửa Hàng Vô Tri">
+                <div class="logo-title-box">
+                    <span class="main-title">CỬA HÀNG VÔ TRI</span>
+                    <span class="sub-title">CREATIVE HANDMADE</span>
+                </div>
             </div>
         </div>
     </header>
@@ -161,7 +165,12 @@
 
     <div class="hero-banner" id="carousel-area">
         <div class="carousel-wrapper">
-            <div class="carousel-slides" id="carousel-slides-container"></div>
+            <div class="carousel-slides" id="carousel-slides-container">
+                <!-- SET CỨNG BANNER MÀU NƯỚC CỎ 4 LÁ CỦA PO LÀM BANNER 1 -->
+                <div class="slide" onclick="handleBannerClick('')">
+                    <img src="https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=https://docs.google.com/uc?export=view%26id=1m-zQQk6jPiMFVEvV4K9qSDrgX7atgB4u" alt="Banner Cửa Hàng Vô Tri Mặc Định">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -198,15 +207,14 @@
         let carouselIndex = 0;
         let carouselInterval = null;
 
-        // THUẬT TOÁN PROXY CAO CẤP BẺ KHÓA CHẶN ẢNH GOOGLE DRIVE
+        // HÀM CHUYỂN ĐỔI ẢNH DRIVE CHO SẢN PHẨM KHÔNG BỊ VỠ HÌNH
         function cleanDriveUrl(url) {
             if (!url) return '';
             const strUrl = String(url).trim();
             if (strUrl.includes('drive.google.com')) {
                 let match = strUrl.match(/\/d\/([^/]+)/) || strUrl.match(/id=([^&]+)/);
                 if (match && match[1]) {
-                    // Chuyển đổi thành link phân phối thumbnail chất lượng cao của hệ thống Google để hiển thị trực tiếp công khai
-                    return `https://thumbnail.image.naver.gcdn.co/https://docs.google.com/uc?export=view&id=${match[1]}`;
+                    return `https://docs.google.com/uc?export=view&id=${match[1]}`;
                 }
             }
             return strUrl;
@@ -229,27 +237,17 @@
                 }
             });
 
-            // Đồng bộ hiển thị Logo không nền
-            if(storeData.config['Logo_Shop']) {
-                document.getElementById('shop-logo-container').innerHTML = `
-                    <img src="${cleanDriveUrl(storeData.config['Logo_Shop'])}" alt="Logo" onerror="this.style.display='none'; document.getElementById('shop-name-txt').style.display='block';">
-                    <div class="logo-title-box">
-                        <span class="main-title">${storeData.config['Ten_Shop'] || 'CỬA HÀNG VÔ TRI'}</span>
-                        <span class="sub-title">CREATIVE HANDMADE</span>
-                    </div>
-                `;
-            } else if(storeData.config['Ten_Shop']) {
-                document.getElementById('shop-logo-container').innerHTML = `<span id="shop-name-txt">${storeData.config['Ten_Shop']}</span>`;
-            }
-
-            // Xử lý dữ liệu Tầm Nhìn
+            // Xử lý khối Tầm Nhìn công khai
             if(storeData.config['Tam_Nhin'] && String(storeData.config['Tam_Nhin']).trim() !== "") {
                 document.getElementById('vision-text-box').innerText = storeData.config['Tam_Nhin'];
                 document.getElementById('vision-area').style.display = 'block';
             }
 
-            // Đồng bộ danh sách Banner động
-            for(let i=1; i<=4; i++) {
+            // Tải thêm các banner phụ từ dòng Banner_2 trở đi nếu Admin có dán trên Sheets để chạy carousel
+            let defaultBannerImg = "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=https://docs.google.com/uc?export=view%26id=1m-zQQk6jPiMFVEvV4K9qSDrgX7atgB4u";
+            storeData.banners.push({ img: defaultBannerImg, mapping: storeData.config['Mapping_Banner_1'] || "" });
+            
+            for(let i=2; i<=4; i++) {
                 let imgKey = `Banner_${i}`;
                 let mapKey = `Mapping_Banner_${i}`;
                 if(storeData.config[imgKey]) {
@@ -259,13 +257,13 @@
                     });
                 }
             }
-            if(storeData.banners.length > 0) {
+            if(storeData.banners.length > 1) {
                 renderCarousel();
             }
 
             renderFooterLinks();
 
-            // Đọc dữ liệu sản phẩm
+            // Đọc và render danh sách sản phẩm
             const prodRows = await fetchSheetData('Danh_Sach_SanPham');
             const actualProds = prodRows.slice(5); 
             let categories = new Set();
@@ -320,10 +318,9 @@
             const container = document.getElementById('carousel-slides-container');
             container.innerHTML = storeData.banners.map(b => `
                 <div class="slide" onclick="handleBannerClick('${b.mapping}')" style="${b.mapping ? 'cursor:pointer;' : ''}">
-                    <img src="${b.img}" alt="Banner Image" onerror="this.src='https://via.placeholder.com/1200x450?text=Đang+tải+hình+ảnh...'">
+                    <img src="${b.img}" alt="Banner Image" onerror="this.src='https://via.placeholder.com/1200x450?text=Đang+tải+ảnh+banner...'">
                 </div>
             `).join('');
-            document.getElementById('carousel-area').style.display = 'block';
             
             if(carouselInterval) clearInterval(carouselInterval);
             carouselInterval = setInterval(() => {
