@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
+    <title>Cửa Hàng Vô Tri - Creative Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -226,6 +226,12 @@
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
+        /* ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Vô hiệu hóa tính tương tác của tất cả phần tử con bên trong card trang chủ */
+        /* Giúp loại bỏ hiện tượng các khối đồ họa và chữ in chìm trong ảnh chặn mất cú click */
+        .product-grid .product-card * {
+            pointer-events: none !important;
+        }
+
         /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES ==================== */
         .popup-overlay {
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15);
@@ -316,7 +322,11 @@
         }
         .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
 
-        /* ==================== KHÔI PHỤC HOÀN TOÀN STYLE FOOTER MỊN MÀNG BAN ĐẦU CỦA PO ==================== */
+        /* Đảm bảo bên trong khối Popup các nút chọn vẫn click bình thường, không dính pointer-events-none */
+        .popup-container * {
+            pointer-events: auto !important;
+        }
+
         footer {
             background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
             text-align: center; margin-top: auto; backdrop-filter: blur(var(--blur-value)); box-shadow: 0 -10px 30px rgba(31, 78, 69, 0.03);
@@ -400,7 +410,6 @@
             
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
-            <!-- Vùng hiển thị bên trái (Ảnh + Mô tả nếu là sản phẩm Đặt Trước) -->
             <div class="popup-left-side">
                 <div class="popup-image-container-wrapper">
                     <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
@@ -409,19 +418,16 @@
                 
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
                 
-                <!-- Vị trí Mô tả mới dành riêng cho hàng Đặt trước -->
                 <div id="popupLeftDescWrapper" style="display: none; margin-top: 15px;">
                     <span class="popup-section-title">Mô tả sản phẩm</span>
                     <div class="popup-desc-box" id="popupProductLeftDesc"></div>
                 </div>
             </div>
             
-            <!-- Vùng hiển thị bên phải (Thông tin giá + Phân loại chọn) -->
             <div class="popup-right-side">
                 <div class="popup-scroll-box">
                     <h2 class="popup-title-text" id="popupProductTitle">Tên sản phẩm</h2>
                     
-                    <!-- Vị trí Mô tả cũ dành riêng cho hàng Có sẵn -->
                     <div id="popupRightDescWrapper">
                         <span class="popup-section-title">Mô tả sản phẩm</span>
                         <div class="popup-desc-box" id="popupProductDesc">Nội dung mô tả sản phẩm...</div>
@@ -666,7 +672,6 @@
             track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
         }
 
-        // ĐÃ KHẮC PHỤC: Trả tên nút "Zalo Shop" về chữ "Zalo" nguyên bản của PO
         function renderFooterSocials() {
             const container = document.getElementById('footer-social-links');
             let htmlLinks = '';
@@ -676,7 +681,6 @@
             container.innerHTML = htmlLinks;
         }
 
-        // ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Gán trực tiếp onclick lên thẻ cha ngoài cùng của Card. Click bất kỳ đâu cũng ăn 100% mượt mà!
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
