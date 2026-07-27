@@ -59,27 +59,27 @@
             box-shadow: var(--liquid-shadow);
         }
         
-        /* Thu gọn padding top/bottom của header */
+        /* Layout Header: Căn giữa theo chiều dọc, gọn gàng vừa vặn */
         .nav-container { 
             max-width: 1300px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px 24px 24px 24px; 
+            padding: 10px 24px 22px 24px; 
             box-sizing: border-box;
             position: relative;
         }
         
-        .logo-box { flex-shrink: 0; display: flex; align-items: center; }
+        .logo-box { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         
-        /* Giảm kích thước logo nhẹ để header gọn gàng vừa vặn */
+        /* Phóng to Logo lên 135px và căn giữa tuyệt đối theo chiều dọc */
         .logo-circle { 
-            width: 110px; height: 110px; 
+            width: 135px; height: 135px; 
             border-radius: 50%; 
             background: rgba(255, 255, 255, 0.25);
             display: flex; align-items: center; justify-content: center;
             overflow: hidden;
             backdrop-filter: blur(10px);
             border: 2px solid var(--liquid-border);
-            box-shadow: 0 8px 25px rgba(31, 78, 69, 0.1), inset 0 6px 15px rgba(255, 255, 255, 0.7);
+            box-shadow: 0 10px 30px rgba(31, 78, 69, 0.1), inset 0 8px 18px rgba(255, 255, 255, 0.7);
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .logo-circle:hover { transform: scale(1.05) rotate(2deg); }
@@ -94,7 +94,7 @@
 
         nav { width: 100%; }
         
-        /* Căn sát lề phải cho dàn menu */
+        /* Căn sát lề phải hoàn toàn cho dàn menu danh mục */
         .menu-categories { 
             display: flex; 
             justify-content: flex-end; 
@@ -104,7 +104,7 @@
         
         .menu-item { 
             font-weight: 700; font-size: 14px; cursor: pointer; 
-            padding: 9px 22px; border-radius: 40px; 
+            padding: 10px 24px; border-radius: 40px; 
             background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%);
             border: 1px solid var(--liquid-border); 
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
@@ -148,7 +148,6 @@
             opacity: 0.85;
         }
 
-        /* Banner Carousel */
         .hero-banner { 
             max-width: 1300px; width: 100%; margin: 20px auto 0; padding: 0 24px; box-sizing: border-box;
         }
@@ -163,7 +162,6 @@
         .banner-slide.active { opacity: 1; }
         .banner-slide img { width: 100%; height: 100%; object-fit: cover; object-position: center center; display: block; }
 
-        /* Bộ lọc Custom Filter */
         .filter-section {
             max-width: 1300px; margin: 25px auto 0; padding: 0 24px; box-sizing: border-box;
             display: flex; justify-content: flex-end; width: 100%;
@@ -205,7 +203,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Lưới sản phẩm */
         .main-content { max-width: 1300px; width: 100%; margin: 20px auto 60px; padding: 0 24px; box-sizing: border-box; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 30px; } 
         
@@ -431,105 +428,4 @@
 
                     if(pName && pVis.toLowerCase() === 'hiện') {
                         globalStoreData.products.push({
-                            sheetIndex: idx, 
-                            code: pCode, 
-                            name: pName, 
-                            category: pCat,
-                            img: parseDirectImageUrl(pImg),
-                            basePrice: pPrice,
-                            stock: pStock
-                        });
-                    }
-                }
-            });
-
-            renderProductsGrid();
-        }
-
-        function setupBannerCarousel() {
-            const track = document.getElementById('carousel-slider-track');
-            let bannerUrls = [];
-            
-            if(globalStoreData.config['Banner_1']) bannerUrls.push(parseDirectImageUrl(globalStoreData.config['Banner_1']));
-            if(globalStoreData.config['Banner_2']) bannerUrls.push(parseDirectImageUrl(globalStoreData.config['Banner_2']));
-            if(globalStoreData.config['Banner_3']) bannerUrls.push(parseDirectImageUrl(globalStoreData.config['Banner_3']));
-
-            totalSlidesCount = bannerUrls.length;
-
-            if(totalSlidesCount > 0) {
-                let htmlSlides = bannerUrls.map((url, index) => {
-                    return `<div class="banner-slide ${index === 0 ? 'active' : ''}"><img src="${url}" alt="Banner ${index + 1}"></div>`;
-                }).join('');
-                
-                track.innerHTML = htmlSlides;
-                document.getElementById('banner-root-area').style.display = 'block';
-                
-                if(totalSlidesCount > 1) {
-                    clearInterval(slideInterval);
-                    slideInterval = setInterval(moveToNextSlide, 8000);
-                }
-            }
-        }
-
-        function moveToNextSlide() {
-            const track = document.getElementById('carousel-slider-track');
-            const slides = document.querySelectorAll('.banner-slide');
-            if(slides.length === 0) return;
-            
-            slides[currentSlideIndex].classList.remove('active');
-            currentSlideIndex = (currentSlideIndex + 1) % totalSlidesCount;
-            slides[currentSlideIndex].classList.add('active');
-            
-            track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
-        }
-
-        function renderFooterSocials() {
-            const container = document.getElementById('footer-social-links');
-            let htmlLinks = '';
-            if(globalStoreData.config['Link_FB']) htmlLinks += `<a href="${globalStoreData.config['Link_FB']}" target="_blank" class="footer-btn btn-fb">Facebook</a>`;
-            if(globalStoreData.config['Link_Zalo']) htmlLinks += `<a href="${globalStoreData.config['Link_Zalo']}" target="_blank" class="footer-btn btn-zl">Zalo Shop</a>`;
-            if(globalStoreData.config['Link_Shopee_Chung']) htmlLinks += `<a href="${globalStoreData.config['Link_Shopee_Chung']}" target="_blank" class="footer-btn btn-sp">Shopee</a>`;
-            container.innerHTML = htmlLinks;
-        }
-
-        function renderProductsGrid() {
-            const container = document.getElementById('product-list-view');
-            const sortVal = currentSortValue;
-
-            let displayList = [...globalStoreData.products];
-
-            if (sortVal === 'default') {
-                displayList.sort((a, b) => b.sheetIndex - a.sheetIndex);
-            } else if (sortVal === 'price-asc') {
-                displayList.sort((a, b) => a.basePrice - b.basePrice);
-            } else if (sortVal === 'price-desc') {
-                displayList.sort((a, b) => b.basePrice - a.basePrice);
-            }
-
-            if(displayList.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 50px 0; font-weight: bold; color: var(--emerald-soft);">Không tìm thấy sản phẩm nào để hiển thị.</div>`;
-                return;
-            }
-
-            container.innerHTML = displayList.map(p => {
-                return `
-                    <div class="product-card">
-                        <span class="badge-status">${p.stock}</span>
-                        <div class="product-img-wrapper">
-                            <img class="product-img" src="${p.img || 'https://via.placeholder.com/400?text=No+Image'}" alt="${p.name}">
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">${p.name}</h3>
-                            <div class="product-price">
-                                ${Number(p.basePrice).toLocaleString('vi-VN') + ' đ'}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.onload = initSprint1HomePage;
-    </script>
-</body>
-</html>
+                            sheetIndex:
