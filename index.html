@@ -254,16 +254,19 @@
 
         .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; overflow-y: auto; }
         
-        /* Đã nâng cấp: Sử dụng Layout chặn vị trí tuyệt đối (Absolute Track) để tạo hiệu ứng Opacity lướt hòa quyện như banner trang chủ */
+        /* ĐÃ KHẮC PHỤC: Thêm position: relative bọc khung viewport để neo giữ nút Next quay về đúng vị trí bên cạnh ảnh */
+        .popup-image-container-wrapper { position: relative; width: 100%; }
         .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 420px; width: 100%; overflow: hidden; }
+        
         .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
         .popup-slide-item.active { opacity: 1; pointer-events: auto; }
         .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
         
+        /* Đập z-index cao lên để luôn nổi bật bên trên các slide ảnh đè tuyệt đối */
         .popup-nav-btn {
-            position: absolute; right: 10px; width: 40px; height: 40px; border-radius: 50%;
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%;
             background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
-            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; z-index: 5;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; z-index: 20;
         }
         .popup-nav-btn:hover { background: var(--emerald-soft); color: #fff; }
         .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 15px; }
@@ -307,7 +310,6 @@
         .btn-action-main:hover { background: var(--emerald-soft); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(31, 78, 69, 0.25); }
         .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
-        /* Khôi phục và chuẩn hóa text in hoa Uppercase cho 2 nút phụ như PO yêu cầu */
         .btn-action-sub {
             text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px;
             border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border);
@@ -408,12 +410,14 @@
             
             <!-- Vùng hiển thị bên trái (Ảnh + Mô tả nếu là sản phẩm Đặt Trước) -->
             <div class="popup-left-side">
-                <!-- Đã cập nhật: Khung viewport chứa các slide ảnh xếp đè lên nhau để lướt opacity mượt mà -->
-                <div class="popup-image-viewport" id="popupImageViewportTrack">
-                    <!-- Các thẻ img slide sẽ được tạo động bằng Javascript tại đây -->
+                <!-- ĐÃ KHẮC PHỤC: Khung cha bọc tương đối ôm khít cả ảnh lẫn nút chuyển slide -->
+                <div class="popup-image-container-wrapper">
+                    <div class="popup-image-viewport" id="popupImageViewportTrack">
+                        <!-- Các thẻ img slide tạo động bằng JS đổ vào đây -->
+                    </div>
+                    <!-- Nút bấm chuyển ảnh thủ công neo chặt đúng vị trí bên phải ảnh -->
+                    <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
-                <!-- Nút bấm chuyển ảnh thủ công đặt nổi lên trên -->
-                <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                 
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
                 
@@ -779,7 +783,6 @@
                 subButtonsGroup.style.display = 'none';
             }
 
-            // Đã cập nhật: Khởi tạo DOM các slide ảnh đè tuyệt đối trước khi chạy hiệu ứng lướt Opacity
             buildPopupSliderDOM();
             renderPopupSliderEffects();
             startPopupAutoplay();
@@ -889,7 +892,7 @@
                 const singleOptVal = document.querySelector(`input[name="Single_Option"]:checked`)?.value;
 
                 if(cardMatVal && cardManVal) {
-                    const combinedKey = `${cardMatVal}_var(--liquid-border)cardManVal}`;
+                    const combinedKey = `${cardMatVal}_${cardManVal}`;
                     if(dataRow[combinedKey] !== undefined) {
                         computedPrice = dataRow[combinedKey];
                     }
@@ -906,7 +909,6 @@
             }
         }
 
-        // ĐÃ THÊM: Tạo sẵn cây cấu trúc DOM cho toàn bộ ảnh chi tiết nằm đè lên nhau
         function buildPopupSliderDOM() {
             const viewPort = document.getElementById('popupImageViewportTrack');
             viewPort.innerHTML = '';
@@ -923,14 +925,12 @@
             });
         }
 
-        // ĐÃ THÊM: Thực thi điều khiển Opacity lướt hòa quyện mượt mà (y hệt như banner trang chủ)
         function renderPopupSliderEffects() {
             if(popupImagesArray.length === 0) return;
 
             const slides = document.querySelectorAll('.popup-slide-item');
             if(slides.length === 0) return;
 
-            // Tắt active của toàn bộ ảnh, chỉ bật active cho ảnh hiện tại để kích hoạt transition mờ dần
             slides.forEach((slide, idx) => {
                 if (idx === popupActiveImgIndex) {
                     slide.classList.add('active');
@@ -964,7 +964,7 @@
         function nextPopupImage() {
             if(popupImagesArray.length <= 1) return;
             popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length;
-            renderPopupSliderEffects(); // Gọi hàm cập nhật hiệu ứng hòa trộn Opacity mới
+            renderPopupSliderEffects();
         }
 
         function startPopupAutoplay() {
