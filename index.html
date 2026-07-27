@@ -124,7 +124,6 @@
             transform: translateY(-3px) scale(1.02);
         }
 
-        /* KHU VỰC CÂU TẦM NHÌN TRÊN BANNER KHÔNG KHUNG */
         .vision-container {
             max-width: 1300px; width: 100%; margin: 25px auto 0; padding: 0 24px; box-sizing: border-box;
             display: none; text-align: center;
@@ -139,7 +138,6 @@
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
 
-        /* Banner lỏng */
         .hero-banner { 
             max-width: 1300px; width: 100%; margin: 15px auto 0; padding: 0 24px; box-sizing: border-box;
         }
@@ -154,7 +152,6 @@
         .banner-slide.active { opacity: 1; }
         .banner-slide img { width: 100%; height: 100%; object-fit: cover; object-position: center center; display: block; }
 
-        /* Bộ lọc Custom */
         .filter-section {
             max-width: 1300px; margin: 35px auto 0; padding: 0 24px; box-sizing: border-box;
             display: flex; justify-content: flex-end; width: 100%;
@@ -196,7 +193,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Lưới Card */
         .main-content { max-width: 1300px; width: 100%; margin: 25px auto 70px; padding: 0 24px; box-sizing: border-box; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
@@ -230,11 +226,11 @@
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* ==================== STYLE CHO SPRINT 2: POPUP KÍNH MỜ LIQUID GLASS ==================== */
+        /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES ==================== */
         .popup-overlay {
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            display: flex; items-center: center; justify-content: center; padding: 20px;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
             opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
         .popup-overlay.open { opacity: 1; pointer-events: auto; }
@@ -261,11 +257,11 @@
         .popup-main-image { max-width: 100%; max-height: 320px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
         
         .popup-nav-btn {
-            position: absolute; right: 10px; width: 36px; height: 36px; rounded: 50%; border-radius: 50%;
+            position: absolute; right: 10px; width: 36px; height: 36px; border-radius: 50%;
             background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
             display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;
         }
-        .popup-nav-btn:hover { background: var(--emerald-soft); color: #white; color: #fff; }
+        .popup-nav-btn:hover { background: var(--emerald-soft); color: #fff; }
         .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; }
         .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); transition: all 0.3s; }
         .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
@@ -299,7 +295,7 @@
         .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
         .btn-action-main {
             text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 14px;
-            border-radius: 18px; color: #white; background: var(--emerald-dark); color: #fff;
+            border-radius: 18px; background: var(--emerald-dark); color: #fff;
             letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer;
             box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); transition: all 0.3s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -318,30 +314,6 @@
             .popup-left-side, .popup-right-side { width: 100%; padding: 20px; }
             .popup-left-side { border-right: none; border-bottom: 1px solid var(--liquid-border); }
             .popup-image-viewport { min-height: 240px; }
-        }
-
-        footer {
-            background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
-            text-align: center; margin-top: auto; backdrop-filter: blur(var(--blur-value)); box-shadow: 0 -10px 30px rgba(31, 78, 69, 0.03);
-        }
-        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .footer-links { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
-        .footer-btn {
-            text-decoration: none; font-weight: 700; font-size: 14px; padding: 11px 28px; border-radius: 40px;
-            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--liquid-border); backdrop-filter: blur(5px);
-        }
-        .btn-fb { background: rgba(234, 242, 249, 0.5); color: #1877f2; }
-        .btn-zl { background: rgba(237, 245, 247, 0.5); color: #0068ff; }
-        .btn-sp { background: rgba(255, 242, 238, 0.5); color: var(--shopee-color); }
-        .footer-btn:hover { transform: translateY(-2px); opacity: 0.9; box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
-        .footer-copy { font-size: 13px; color: #8e9cae; margin: 0; font-weight: 500; }
-
-        @media (max-width: 1024px) {
-            .nav-container { flex-direction: column; gap: 15px; justify-content: center; }
-            .right-nav-box { align-items: center; }
-            .menu-categories { justify-content: center; gap: 8px; }
-            .filter-section { justify-content: center; }
-            .banner-wrapper { aspect-ratio: auto; height: 160px; }
         }
     </style>
 </head>
@@ -394,17 +366,15 @@
     </div>
 
     <div class="main-content">
-        <!-- Khi click vào các card trong lưới này sẽ mở popup xem chi tiết -->
         <div class="product-grid" id="product-list-view"></div>
     </div>
 
-    <!-- ==================== CỬA SỔ POPUP XEM CHI TIẾT SẢN PHẨM & TÍNH GIÁ MA TRẬN ==================== -->
+    <!-- CỬA SỔ POPUP CHI TIẾT SẢN PHẨM & MAPPING GIÁ -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
-            <!-- Vùng hiển thị Slider ảnh bên trái -->
             <div class="popup-left-side">
                 <div class="popup-image-viewport">
                     <img class="popup-main-image" id="popupMainImg" src="" alt="Ảnh sản phẩm">
@@ -413,7 +383,6 @@
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
             </div>
             
-            <!-- Vùng hiển thị Thông tin & Khung Check giá bên phải -->
             <div class="popup-right-side">
                 <div class="popup-scroll-box">
                     <h2 class="popup-title-text" id="popupProductTitle">Tên sản phẩm</h2>
@@ -426,14 +395,12 @@
                         <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
                     </div>
                     
-                    <!-- Khung tính giá phân loại tự sinh từ Tab phụ -->
                     <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
                         <span class="popup-section-title" style="margin-bottom:12px; display:block;"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
                         <div id="popupDynamicRadioSpace"></div>
                     </div>
                 </div>
                 
-                <!-- Khung bộ ba hành động nặng đô ở cuối -->
                 <div class="popup-actions-wrapper">
                     <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank">
                         <i class="fa-solid fa-bag-shopping"></i> Mua ngay nhé
@@ -467,12 +434,11 @@
         let totalSlidesCount = 0;
         let currentSortValue = 'default';
 
-        // Quản lý biến cục bộ cho Popup Slider
         let popupActiveProduct = null;
         let popupActiveImgIndex = 0;
         let popupImagesArray = [];
 
-        // Giả lập ma trận dữ liệu đọc ngầm từ các Tab bảng giá phụ Google Sheets của PO
+        // Hệ thống dữ liệu ma trận giá phụ tích hợp logic hiển thị text "Chưa có" mới từ PO
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": {
                 headers: ["Mac_Dinh", "Khong_Man", "Co_Man"],
@@ -491,7 +457,10 @@
                     { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 3 mặt 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3900, Giay_Ford_210gsm: 4000 },
                     { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 3 mặt 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 4200, Giay_Ford_210gsm: 4400 },
                     { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "Giay_Ford_180gsm | Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: 3600, Giay_Ford_210gsm: 4000 },
-                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: 3800, Giay_Ford_210gsm: 4200 }
+                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: 3800, Giay_Ford_210gsm: 4200 },
+                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 2 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: "Chưa có", Giay_Ford_210gsm: "Chưa có" },
+                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 3 mặt 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: "Chưa có", Giay_Ford_210gsm: "Chưa có" },
+                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 3 mặt 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: "Chưa có", Giay_Ford_210gsm: "Chưa có" }
                 ]
             }
         };
@@ -590,7 +559,6 @@
                     const pCat  = row.c[2] ? String(row.c[2].v).trim() : 'KHÁC'; 
                     const pImg  = row.c[3] ? String(row.c[3].v).trim() : ''; 
                     
-                    // Lấy thêm các cột mới phục vụ Popup Sprint 2 theo sơ đồ thực tế của PO
                     const pDetailImgs = row.c[4] ? String(row.c[4].v).trim() : '';
                     const pDesc = row.c[5] ? String(row.c[5].v).trim() : '';
                     const pShopeeLink = row.c[8] ? String(row.c[8].v).trim() : '';
@@ -670,7 +638,6 @@
             container.innerHTML = htmlLinks;
         }
 
-        // GIỮ NGUYÊN 100% GIAO DIỆN HÀM RENDER TRANG CHỦ CỦA SPRINT 1
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
@@ -694,7 +661,6 @@
                 const isPreorder = p.stock.toLowerCase().includes('đặt trước');
                 const badgeClass = isPreorder ? 'status-preorder' : 'status-available';
 
-                // Chỉ chèn thêm thuộc tính onclick ngầm để kích hoạt Popup chi tiết khi bấm vào sản phẩm
                 return `
                     <div class="product-card" onclick="openProductDetailPopup('${p.code}')">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
@@ -712,9 +678,6 @@
             }).join('');
         }
 
-        // ==================== LOGIC PHÁT TRIỂN RIÊNG CHO SPRINT 2: SIÊU POPUP CHI TIẾT SẢN PHẨM ====================
-        
-        // Hàm tiện ích chuẩn hóa text hệ thống sang Tiếng Việt có dấu trực quan
         function formatOptionToVietnamese(text) {
             return text.replace(/_/g, ' ')
                        .replace(/Khong Man/g, 'Không màng')
@@ -731,18 +694,15 @@
             popupActiveProduct = prod;
             popupActiveImgIndex = 0;
             
-            // Xử lý chuỗi danh sách ảnh chi tiết (Cột E) cách nhau bằng dấu phẩy
             if(prod.detailImgs && prod.detailImgs.trim() !== "") {
                 popupImagesArray = prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim()));
             } else {
-                popupImagesArray = [prod.img]; // Nếu cột E trống, tự động bốc ảnh đại diện làm slide đơn
+                popupImagesArray = [prod.img];
             }
 
-            // Đổ nội dung text cơ bản lên Popup
             document.getElementById('popupProductTitle').innerText = prod.name;
             document.getElementById('popupProductDesc').innerText = prod.desc || "Sản phẩm handmade chất lượng cao, thiết kế độc quyền tỉ mỉ.";
             
-            // Liên kết động bộ ba nút hành động hạng nặng theo thiết kế Zalo QR chính thức của PO
             const mainBuyBtn = document.getElementById('btnPopupMainBuy');
             const shopZaloLink = globalStoreData.config['Link_Zalo'] || "http://zaloapp.com/qr/p/14jxxuqxy1zbj";
             document.getElementById('btnPopupZaloConsult').href = shopZaloLink;
@@ -755,7 +715,6 @@
                 mainBuyBtn.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> Mua qua Zalo Shop`;
             }
 
-            // Ẩn hiện cụm nút phụ thiết kế dựa trên tình trạng hàng có sẵn
             const subButtonsGroup = document.getElementById('popupSubButtonsGroup');
             if(prod.stock.toLowerCase().includes('đặt trước')) {
                 subButtonsGroup.style.display = 'grid';
@@ -763,30 +722,24 @@
                 subButtonsGroup.style.display = 'none';
             }
 
-            // Khởi chạy slider ảnh
             renderPopupSlider();
 
-            // BIẾN HÌNH KHUNG CHECK GIÁ ĐỘNG TỪ THEO KIỂU BẢNG PHỤ CỦA PO
             const checkGiaBlock = document.getElementById('popupCheckGiaBlock');
             const radioSpace = document.getElementById('popupDynamicRadioSpace');
             radioSpace.innerHTML = '';
 
             if(!prod.boCauHinh || !sheetsPhuDataMatrix[prod.boCauHinh]) {
-                // Kịch bản sản phẩm thường: Ẩn khung check giá, hiện giá mặc định từ sheet sản phẩm
                 checkGiaBlock.style.display = 'none';
                 document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
             } else {
-                // Kịch bản sản phẩm cấu hình ma trận phức tạp (Card, Sticker, Thiệp)
                 checkGiaBlock.style.display = 'block';
                 const matrixConfig = sheetsPhuDataMatrix[prod.boCauHinh];
 
                 if(prod.boCauHinh === 'GIA_THIEP') {
-                    // Dữ liệu dạng Thiệp cưới: Dò dòng dọc phối cột ngang đan chéo
                     let listLoaiThiep = [...new Set(matrixConfig.data.map(d => d.Loai_Thiep))];
                     let listKieuIn = [...new Set(matrixConfig.data.map(d => d.Kieu_In))];
                     let listGiayCols = matrixConfig.headers.filter(h => h.startsWith('Giay_'));
 
-                    // Giải mã cấu trúc ô Mặc định tại dòng đầu tiên của tab Thiệp
                     const defaultRowInfo = matrixConfig.data.find(d => d.Mac_Dinh && d.Mac_Dinh.trim() !== "");
                     let defaultGiayStr = "", defaultKieuInStr = "";
                     if(defaultRowInfo) {
@@ -799,7 +752,6 @@
                     buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in màu:", listKieuIn, defaultKieuInStr || listKieuIn[0]);
                     buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", listGiayCols, defaultGiayStr || listGiayCols[0]);
                 } else {
-                    // Dữ liệu dạng Card hoặc Sticker: Phân loại theo tiêu đề hàng ngang
                     const dataRow = matrixConfig.data[0];
                     const activeDefaultOption = dataRow.Mac_Dinh;
                     const cleanHeaders = matrixConfig.headers.filter(h => h !== 'Mac_Dinh');
@@ -807,7 +759,6 @@
                     const isCardLayout = cleanHeaders.some(h => h.includes('_Mat_'));
 
                     if(isCardLayout) {
-                        // Tự động phân tách chuỗi hàng ngang thành 2 cụm độc lập (Mặt in & Cán màng) theo yêu cầu PO
                         let uniqueMats = ["In_1_Mat", "In_2_Mat"];
                         let uniqueMans = ["Khong_Man", "Co_Man"];
 
@@ -817,20 +768,16 @@
                         buildPopupRadioRow(radioSpace, "Card_Mat", "Số mặt in ấn:", uniqueMats, selMat);
                         buildPopupRadioRow(radioSpace, "Card_Man", "Gia công màng bảo vệ:", uniqueMans, selMan);
                     } else {
-                        // Sticker đơn nhóm phân loại màng thông thường
                         buildPopupRadioRow(radioSpace, "Single_Option", "Lựa chọn phân loại cán màng:", cleanHeaders, activeDefaultOption);
                     }
                 }
 
-                // Thực thi quét ma trận giá lần đầu tiên ngay khi mở popup
                 calculatePopupDynamicPrice();
             }
 
-            // Kích hoạt hiệu ứng mở popup
             document.getElementById('liquidProductPopup').classList.add('open');
         }
 
-        // Hàm dựng giao diện nút Radio bọc khung chuẩn UX
         function buildPopupRadioRow(container, groupName, groupTitle, elementsList, activeValue) {
             const wrapper = document.createElement('div');
             wrapper.className = "radio-group-wrapper";
@@ -858,7 +805,7 @@
             container.appendChild(wrapper);
         }
 
-        // Hàm chạy ngầm tính toán ma trận giá cố định (Fixed Price Matrix) theo thời gian thực
+        // HÀM TÍNH TOÁN GIÁ CÓ TÍCH HỢP TÍNH NĂNG NHẬN DIỆN TEXT "Chưa có" CỦA PO
         function calculatePopupDynamicPrice() {
             if(!popupActiveProduct || !popupActiveProduct.boCauHinh) return;
 
@@ -867,17 +814,16 @@
             let computedPrice = popupActiveProduct.basePrice;
 
             if(configCode === 'GIA_THIEP') {
-                // Thuật toán gióng chéo Ma trận Thiệp cưới (Dò dòng dọc -> bốc ô cột ngang)
                 const pickedLoaiThiep = document.querySelector(`input[name="Loai_Thiep"]:checked`)?.value;
                 const pickedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 const pickedGiayCol = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
 
                 const matchedDataRow = matrixConfig.data.find(d => d.Loai_Thiep === pickedLoaiThiep && d.Kieu_In === pickedKieuIn);
+                
                 if(matchedDataRow && matchedDataRow[pickedGiayCol] !== undefined) {
                     computedPrice = matchedDataRow[pickedGiayCol];
                 }
             } else {
-                // Thuật toán dò tìm cột nằm ngang dành cho Card và Sticker
                 const dataRow = matrixConfig.data[0];
                 const cardMatVal = document.querySelector(`input[name="Card_Mat"]:checked`)?.value;
                 const cardManVal = document.querySelector(`input[name="Card_Man"]:checked`)?.value;
@@ -893,10 +839,15 @@
                 }
             }
 
-            document.getElementById('popupDynamicPrice').innerText = Number(computedPrice).toLocaleString('vi-VN') + " đ";
+            // Thuật toán kiểm tra nếu giá trị trả về là chuỗi chữ "Chưa có" thì hiện text, ngược lại format tiền tệ đ
+            const priceDisplayEl = document.getElementById('popupDynamicPrice');
+            if (String(computedPrice).trim() === "Chưa có") {
+                priceDisplayEl.innerText = "Chưa có";
+            } else {
+                priceDisplayEl.innerText = Number(computedPrice).toLocaleString('vi-VN') + " đ";
+            }
         }
 
-        // Vận hành cập nhật Slider ảnh chi tiết trong Popup
         function renderPopupSlider() {
             if(popupImagesArray.length === 0) return;
 
@@ -915,7 +866,6 @@
                 };
             }
 
-            // Vẽ cụm chấm đếm vị trí ảnh
             const dotsSpace = document.getElementById('popupImgDotsSpace');
             dotsSpace.innerHTML = '';
             if(popupImagesArray.length > 1) {
