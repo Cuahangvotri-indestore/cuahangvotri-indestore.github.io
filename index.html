@@ -4,47 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cửa Hàng Vô Tri // Creative Handmade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
     <style>
         :root { 
-            --mint-light: #f2faf7;
-            --mint-bg: #e6f6f3; 
             --emerald-dark: #1f4e45; 
             --emerald-soft: #387a6f;
-            --emerald-glass: rgba(56, 122, 111, 0.12);
+            --emerald-glass: rgba(56, 122, 111, 0.15);
             --text-color: #2c3e50;
             --shopee-color: #ea501f;
-            /* Liquid Glass Styles */
-            --glass-bg: rgba(255, 255, 255, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.6);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 78, 69, 0.08);
+            
+            /* Bộ lọc Liquid Glass thượng hạng - Giả lập chất liệu thủy tinh lỏng */
+            --liquid-glass-bg: rgba(255, 255, 255, 0.5);
+            --liquid-glass-border: rgba(255, 255, 255, 0.65);
+            --liquid-shadow: 0 15px 35px rgba(31, 78, 69, 0.08), inset 0 4px 12px rgba(255, 255, 255, 0.4);
         }
         
         body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            font-family: 'Quicksand', 'Comfortaa', sans-serif; 
             margin: 0; padding: 0; 
-            background: linear-gradient(135deg, #f7fcfb 0%, var(--mint-bg) 50%, #dbf2ee 100%);
-            background-attachment: fixed;
             color: var(--text-color);
             -webkit-font-smoothing: antialiased;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            font-size: 17px; /* Phóng to cỡ chữ cơ bản */
+            font-size: 17px; 
+            font-weight: 500;
+            
+            /* Nền mặc định dự phòng nếu chưa load xong ảnh từ Sheets */
+            background: linear-gradient(135deg, #f7fcfb 0%, #e6f6f3 50%, #dbf2ee 100%);
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Lớp phủ mờ giúp ảnh nền tiệp vào giao diện, tăng độ tương phản cho chữ */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(230, 246, 243, 0.35);
+            backdrop-filter: blur(8px); /* Làm mờ nhẹ ảnh nền phía sau tạo chiều sâu */
+            -webkit-backdrop-filter: blur(8px);
+            z-index: -1;
         }
 
         .top-bar {
             background: var(--emerald-dark); color: #ffffff;
-            text-align: center; font-size: 14px; letter-spacing: 1px;
-            padding: 12px 0; font-weight: 600;
+            text-align: center; font-size: 14px; letter-spacing: 0.5px;
+            padding: 12px 0; font-weight: 700;
+            font-family: 'Comfortaa', sans-serif;
+            box-shadow: 0 4px 15px rgba(31, 78, 69, 0.1);
         }
         
+        /* HEADER THỦY TINH LỎNG */
         header { 
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
+            background: var(--liquid-glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--liquid-glass-border);
             position: sticky; top: 0; z-index: 100;
-            box-shadow: 0 4px 30px rgba(31, 78, 69, 0.03);
+            box-shadow: var(--liquid-shadow);
         }
         
         .nav-container { 
@@ -55,17 +77,17 @@
         
         .logo-box { display: flex; align-items: center; }
         .logo-circle { 
-            width: 130px; height: 130px; /* Tăng kích thước logo lớn rõ ràng ở zoom 100% */
+            width: 130px; height: 130px; 
             border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.4);
             display: flex; align-items: center; justify-content: center;
             overflow: hidden;
-            backdrop-filter: blur(5px);
-            border: 2px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(31, 78, 69, 0.06), inset 0 4px 10px rgba(255, 255, 255, 0.5);
-            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--liquid-glass-border);
+            box-shadow: 0 10px 30px rgba(31, 78, 69, 0.08), inset 0 8px 16px rgba(255, 255, 255, 0.6);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .logo-circle:hover { transform: scale(1.03); }
+        .logo-circle:hover { transform: scale(1.05) rotate(3deg); }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
         .menu-categories { 
@@ -73,18 +95,19 @@
             gap: 18px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; 
         }
         .menu-item { 
-            font-weight: 700; font-size: 15px; cursor: pointer; /* Tăng kích thước chữ menu */
-            padding: 12px 28px; border-radius: 40px; /* Bo tròn kiểu giọt nước */
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid var(--glass-border); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            color: var(--emerald-dark); text-transform: uppercase; letter-spacing: 0.5px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 15px rgba(31, 78, 69, 0.03);
+            font-weight: 700; font-size: 15px; cursor: pointer; 
+            padding: 12px 28px; border-radius: 40px; 
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--liquid-glass-border); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            color: var(--emerald-dark); letter-spacing: 0.3px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(31, 78, 69, 0.03), inset 0 2px 6px rgba(255, 255, 255, 0.4);
         }
         .menu-item.active, .menu-item:hover { 
             background: var(--emerald-soft); color: #ffffff; border-color: var(--emerald-soft);
-            box-shadow: 0 8px 20px rgba(56, 122, 111, 0.25);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 122, 111, 0.3);
+            transform: translateY(-3px);
         }
 
         .vision-container {
@@ -92,28 +115,29 @@
             display: none; text-align: center;
         }
         .vision-box {
-            background: rgba(255, 255, 255, 0.4); 
-            backdrop-filter: blur(10px);
-            padding: 18px 30px; border-radius: 24px;
-            color: #34495e; font-size: 16.5px; font-style: italic;
+            background: rgba(255, 255, 255, 0.5); 
+            backdrop-filter: blur(15px);
+            padding: 20px 35px; border-radius: 28px;
+            color: #34495e; font-size: 17px; font-style: italic;
             max-width: 900px; margin: 0 auto;
-            border: 1px dashed rgba(56, 122, 111, 0.3);
+            border: 1.5px solid var(--liquid-glass-border);
+            box-shadow: var(--liquid-shadow);
         }
 
-        /* BANNER LIQUID GLASS */
+        /* BANNER LIQUID GLASS GIỌT NƯỚC */
         .hero-banner { 
             max-width: 1300px; width: 100%; margin: 30px auto 0; padding: 0 24px; box-sizing: border-box;
         }
         .banner-wrapper {
             position: relative; width: 100%; 
-            border-radius: 40px; /* Tăng bo góc hiệu ứng lỏng mượt mà */
+            border-radius: 40px; 
             overflow: hidden;
-            border: 6px solid var(--glass-border); 
+            border: 6px solid var(--liquid-glass-border); 
             box-sizing: border-box;
-            box-shadow: 0 20px 50px rgba(31, 78, 69, 0.09), inset 0 10px 20px rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 55px rgba(31, 78, 69, 0.12), inset 0 10px 25px rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.3);
             aspect-ratio: 1024 / 285; 
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
         }
         
         .banner-slider-track {
@@ -130,84 +154,126 @@
             object-fit: cover; object-position: center center; display: block; 
         }
 
-        /* BỘ LỌC CĂN PHẢI TUYỆT ĐỐI */
+        /* FILTER LIQUID GLASS DẠT PHẢI TUYỆT ĐỐI */
         .filter-section {
             max-width: 1300px; margin: 35px auto 0; padding: 0 24px; box-sizing: border-box;
             display: flex;
-            justify-content: flex-end; /* Căn lề phải chuẩn xác */
+            justify-content: flex-end; 
             width: 100%;
         }
-        .sort-box select {
-            padding: 13px 28px; border-radius: 40px; 
-            border: 1px solid var(--glass-border);
-            background: rgba(255, 255, 255, 0.6); 
-            color: var(--emerald-dark); 
-            font-weight: 700; font-size: 14px; outline: none;
-            cursor: pointer; 
-            backdrop-filter: blur(10px);
-            box-shadow: 0 6px 20px rgba(31, 78, 69, 0.05);
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
+        
+        .sort-box {
+            position: relative;
+            display: inline-block;
         }
+
+        .sort-box select {
+            padding: 12px 42px 12px 24px; 
+            border-radius: 40px; 
+            border: 1.5px solid var(--liquid-glass-border);
+            background: rgba(255, 255, 255, 0.65); 
+            color: var(--emerald-dark); 
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700; 
+            font-size: 15px; 
+            outline: none;
+            cursor: pointer; 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: var(--liquid-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+        }
+
+        .sort-box::after {
+            content: "";
+            position: absolute; right: 22px; top: 50%;
+            transform: translateY(-30%);
+            width: 0; height: 0;
+            border-left: 5px solid transparent; border-right: 5px solid transparent;
+            border-top: 6px solid var(--emerald-dark);
+            pointer-events: none;
+            transition: border-top-color 0.3s ease;
+        }
+
         .sort-box select:hover {
             background: var(--emerald-soft);
             color: #ffffff;
             border-color: var(--emerald-soft);
+            box-shadow: 0 10px 25px rgba(56, 122, 111, 0.25);
         }
 
-        /* CONTENT & CARD PHÓNG TO */
+        .sort-box select:hover + ::after,
+        .sort-box:hover::after {
+            border-top-color: #ffffff;
+        }
+
+        /* CARDS LIQUID GLASS */
         .main-content { max-width: 1300px; width: 100%; margin: 25px auto 70px; padding: 0 24px; box-sizing: border-box; flex: 1; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } /* Phóng to card */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
-        /* Card dạng Liquid Glass */
         .product-card { 
-            background: rgba(255, 255, 255, 0.45); 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 32px; 
-            border: 1px solid var(--glass-border);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease; 
+            background: rgba(255, 255, 255, 0.5); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 35px; /* Góc bo lỏng mềm mại */
+            border: 1.5px solid var(--liquid-glass-border);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease, border-color 0.4s ease; 
             display: flex; flex-direction: column; position: relative;
             overflow: hidden; 
-            box-shadow: 0 8px 32px 0 rgba(31, 78, 69, 0.04);
-            min-height: 440px; /* Tăng chiều cao tổng thể */
+            box-shadow: var(--liquid-shadow);
+            min-height: 450px; 
         }
         .product-card:hover { 
-            transform: translateY(-8px); 
-            box-shadow: 0 20px 40px rgba(31, 78, 69, 0.09); 
-            border-color: rgba(56, 122, 111, 0.4);
+            transform: translateY(-10px); 
+            box-shadow: 0 25px 45px rgba(31, 78, 69, 0.12), inset 0 4px 15px rgba(255, 255, 255, 0.6); 
+            border-color: rgba(56, 122, 111, 0.5);
         }
-        .product-img-wrapper { width: 100%; height: 285px; background: rgba(255, 255, 255, 0.2); overflow: hidden; position: relative; }
-        .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .product-img-wrapper { width: 100%; height: 285px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+        .product-card:hover .product-img { transform: scale(1.04); }
         
         .product-info { padding: 22px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
         .product-title { font-size: 17px; margin: 0 0 12px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.5; min-height: 50px; display: flex; align-items: center; justify-content: center; }
-        .product-price { font-size: 16px; font-weight: 700; color: var(--emerald-soft); background: var(--emerald-glass); padding: 8px 20px; border-radius: 25px; display: inline-block; margin-top: auto; border: 1px solid rgba(56, 122, 111, 0.15); }
+        
+        /* Button giá giọt nước bóng loáng */
+        .product-price { 
+            font-size: 16px; font-weight: 700; color: var(--emerald-soft); 
+            background: rgba(255, 255, 255, 0.6); 
+            padding: 8px 22px; border-radius: 25px; display: inline-block; margin-top: auto; 
+            border: 1px solid var(--liquid-glass-border); font-family: 'Comfortaa', sans-serif;
+            box-shadow: 0 4px 12px rgba(31, 78, 69, 0.03), inset 0 2px 5px rgba(255, 255, 255, 0.5);
+        }
 
         .badge-status { 
             position: absolute; top: 15px; left: 15px; color: var(--emerald-dark); 
-            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(8px);
             padding: 5px 15px; font-size: 12px; font-weight: 700; border-radius: 35px; z-index: 2; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--liquid-glass-border);
         }
 
+        /* FOOTER LIQUID GLASS */
         footer {
-            background: rgba(255, 255, 255, 0.4); border-top: 1px solid var(--glass-border); padding: 40px 24px;
-            text-align: center; margin-top: auto; backdrop-filter: blur(15px);
+            background: var(--liquid-glass-bg); 
+            border-top: 1px solid var(--liquid-glass-border); padding: 40px 24px;
+            text-align: center; margin-top: auto; 
+            backdrop-filter: blur(20px);
+            box-shadow: var(--liquid-shadow);
         }
         .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .footer-links { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
         .footer-btn {
             text-decoration: none; font-weight: 700; font-size: 14px; padding: 11px 28px; border-radius: 40px;
             transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--liquid-glass-border);
             backdrop-filter: blur(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02), inset 0 2px 4px rgba(255, 255, 255, 0.4);
         }
         .btn-fb { background: rgba(234, 242, 249, 0.6); color: #1877f2; }
         .btn-zl { background: rgba(237, 245, 247, 0.6); color: #0068ff; }
         .btn-sp { background: rgba(255, 242, 238, 0.6); color: var(--shopee-color); }
-        .footer-btn:hover { transform: translateY(-2px); opacity: 0.9; box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
-        .footer-copy { font-size: 13px; color: #8e9cae; margin: 0; font-weight: 500; }
+        .footer-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .footer-copy { font-size: 13px; color: #7f8e9f; margin: 0; font-weight: 500; }
 
         @media (max-width: 768px) {
             .nav-container { flex-direction: column; gap: 15px; justify-content: center; }
@@ -248,13 +314,12 @@
         </div>
     </div>
 
-    <!-- Cấu trúc filter được làm sạch hoàn toàn để ép sang phải -->
     <div class="filter-section">
         <div class="sort-box">
             <select id="sort-selector" onchange="renderProductsGrid()">
-                <option value="default">SẮP XẾP: MỚI NHẤT</option>
-                <option value="price-asc">GIÁ: THẤP ĐẾN CAO</option>
-                <option value="price-desc">GIÁ: CAO ĐẾN THẤP</option>
+                <option value="default">Sắp xếp: Mới nhất</option>
+                <option value="price-asc">Giá: Thấp đến Cao</option>
+                <option value="price-desc">Giá: Cao đến Thấp</option>
             </select>
         </div>
     </div>
@@ -320,6 +385,12 @@
                 }
             });
 
+            // Tự động bốc và kích hoạt ảnh nền động cho toàn bộ trang web
+            if(globalStoreData.config['Background_Shop']) {
+                const bgUrl = parseDirectImageUrl(globalStoreData.config['Background_Shop']);
+                document.body.style.backgroundImage = `url('${bgUrl}')`;
+            }
+
             if(globalStoreData.config['Logo_Shop']) {
                 const logoUrl = parseDirectImageUrl(globalStoreData.config['Logo_Shop']);
                 document.getElementById('shop-logo-box').innerHTML = `<img src="${logoUrl}" alt="Logo Shop">`;
@@ -331,7 +402,6 @@
             }
 
             setupBannerCarousel();
-
             renderFooterSocials();
 
             const productRows = await fetchSheetRows('Danh_Sach_SanPham');
