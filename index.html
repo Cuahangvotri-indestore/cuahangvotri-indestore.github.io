@@ -40,26 +40,25 @@
             position: sticky; top: 0; z-index: 100; 
         }
         
-        /* Layout Header: Căn giữa theo trục dọc, Logo bên trái - Menu bên phải rộng rãi */
         .nav-container { 
             max-width: 1200px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 12px 20px; box-sizing: border-box;
+            padding: 10px 20px; box-sizing: border-box;
         }
         
         .logo-box { display: flex; align-items: center; }
         .logo-circle { 
-            width: 95px; height: 95px; /* Tăng kích thước logo to đẹp hơn */
+            width: 115px; height: 115px; /* Phóng to logo lên 115px cực rõ nét */
             border-radius: 50%; 
-            background: #ffffff;
+            background: transparent; /* Loại bỏ nền trắng đục */
             display: flex; align-items: center; justify-content: center;
             overflow: hidden;
-            box-shadow: 0 4px 14px rgba(31, 78, 69, 0.15);
-            border: 2px solid #ffffff;
+            /* Làm mờ và làm dịu đường viền bao quanh logo */
+            box-shadow: 0 4px 20px rgba(31, 78, 69, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* Menu căn hẳn sang bên phải */
         .menu-categories { 
             display: flex; justify-content: flex-end; align-items: center;
             gap: 15px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; 
@@ -88,32 +87,51 @@
             border: 1px dashed rgba(56, 122, 111, 0.25);
         }
 
-        /* Khối Banner Carousel mượt mà */
+        /* Khối Banner trượt vuốt trái CSS mượt mà */
         .hero-banner { 
             max-width: 1200px; width: 100%; margin: 25px auto 0; padding: 0 20px; box-sizing: border-box;
         }
         .banner-wrapper {
-            position: relative; width: 100%; border-radius: 24px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(31, 78, 69, 0.06);
+            position: relative; width: 100%; 
+            border-radius: 32px; /* Tăng bo góc sâu nghệ thuật hơn */
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(31, 78, 69, 0.08);
             border: 5px solid #ffffff; box-sizing: border-box;
-            background: #ffffff; height: 450px;
+            background: #ffffff;
+            aspect-ratio: 1024 / 571; /* Khóa cứng khung khớp chuẩn tỷ lệ ảnh 1024x571 của PO */
+        }
+        
+        /* Cấu trúc thanh trượt dịch chuyển tịnh tiến theo trục X */
+        .banner-slider-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); /* Vuốt trái chậm rãi mượt mà */
         }
         .banner-slide {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0; transition: opacity 0.8s ease-in-out; display: none;
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            transition: opacity 1.2s ease;
         }
         .banner-slide.active {
-            opacity: 1; display: block;
+            opacity: 1; /* Hiện dần tự nhiên khi vào khung hình */
         }
         .banner-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        /* Khối lọc căn lề phải tuyệt đối */
+        /* Cưỡng bức Khối lọc dạt lề phải tuyệt đối 100% */
         .filter-section {
-            max-width: 1200px; margin: 30px auto 0; padding: 0 20px; box-sizing: border-box;
-            display: flex; justify-content: flex-end; 
+            max-width: 1200px; margin: 35px auto 0; padding: 0 20px; box-sizing: border-box;
+            display: flex !important; 
+            justify-content: flex-end !important; /* Đẩy sang phải */
+        }
+        .sort-box {
+            display: block;
+            margin-left: auto; /* Bổ trợ đẩy lề phải tối đa */
         }
         .sort-box select {
-            padding: 10px 24px; border-radius: 30px; border: 1px solid rgba(56, 122, 111, 0.25);
+            padding: 11px 26px; border-radius: 30px; border: 1px solid rgba(56, 122, 111, 0.25);
             background: var(--emerald-soft); color: #ffffff; font-weight: 700; font-size: 13px; outline: none;
             cursor: pointer; box-shadow: 0 4px 12px rgba(31, 78, 69, 0.08);
             letter-spacing: 0.5px;
@@ -164,8 +182,8 @@
         @media (max-width: 768px) {
             .nav-container { flex-direction: column; gap: 15px; justify-content: center; }
             .menu-categories { justify-content: center; gap: 8px; }
-            .filter-section { justify-content: center; }
-            .banner-wrapper { height: 250px; }
+            .filter-section { justify-content: center !important; }
+            .banner-wrapper { aspect-ratio: auto; height: 220px; }
         }
     </style>
 </head>
@@ -194,9 +212,11 @@
         <div class="vision-box" id="vision-text-box"></div>
     </div>
 
-    <!-- Khung chứa Carousel động -->
+    <!-- Khối Banner dạng trượt Slider Track -->
     <div class="hero-banner" id="banner-root-area" style="display: none;">
-        <div class="banner-wrapper" id="carousel-inner-container"></div>
+        <div class="banner-wrapper">
+            <div class="banner-slider-track" id="carousel-slider-track"></div>
+        </div>
     </div>
 
     <div class="filter-section">
@@ -225,6 +245,7 @@
         let globalStoreData = { products: [], config: {} };
         let currentSlideIndex = 0;
         let slideInterval;
+        let totalSlidesCount = 0;
 
         function parseDirectImageUrl(rawUrl) {
             if (!rawUrl) return '';
@@ -279,7 +300,6 @@
                 document.getElementById('vision-area').style.display = 'block';
             }
 
-            // Thiết lập hệ thống Carousel tự động quét Banner_1, Banner_2, Banner_3
             setupBannerCarousel();
 
             renderFooterSocials();
@@ -317,37 +337,42 @@
         }
 
         function setupBannerCarousel() {
-            const carouselContainer = document.getElementById('carousel-inner-container');
+            const track = document.getElementById('carousel-slider-track');
             let bannerUrls = [];
             
-            // Tìm và bốc tất cả banner có khai báo trong Sheets
             if(globalStoreData.config['Banner_1']) bannerUrls.push(parseDirectImageUrl(globalStoreData.config['Banner_1']));
             if(globalStoreData.config['Banner_2']) bannerUrls.push(parseDirectImageUrl(globalStoreData.config['Banner_2']));
             if(globalStoreData.config['Banner_3']) bannerUrls.push(parseDirectImageUrl(globalStoreData.config['Banner_3']));
 
-            if(bannerUrls.length > 0) {
+            totalSlidesCount = bannerUrls.length;
+
+            if(totalSlidesCount > 0) {
                 let htmlSlides = bannerUrls.map((url, index) => {
                     return `<div class="banner-slide ${index === 0 ? 'active' : ''}"><img src="${url}" alt="Banner ${index + 1}"></div>`;
                 }).join('');
                 
-                carouselContainer.innerHTML = htmlSlides;
+                track.innerHTML = htmlSlides;
                 document.getElementById('banner-root-area').style.display = 'block';
                 
-                // Nếu có nhiều hơn 1 banner thì kích hoạt chạy tự động sau 5 giây
-                if(bannerUrls.length > 1) {
+                // Cài đặt thời gian đổi ảnh lên 8000ms (8 giây) theo mong muốn của PO
+                if(totalSlidesCount > 1) {
                     clearInterval(slideInterval);
-                    slideInterval = setInterval(nextBannerSlide, 5000);
+                    slideInterval = setInterval(moveToNextSlide, 8000);
                 }
             }
         }
 
-        function nextBannerSlide() {
+        function moveToNextSlide() {
+            const track = document.getElementById('carousel-slider-track');
             const slides = document.querySelectorAll('.banner-slide');
             if(slides.length === 0) return;
             
             slides[currentSlideIndex].classList.remove('active');
-            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            currentSlideIndex = (currentSlideIndex + 1) % totalSlidesCount;
             slides[currentSlideIndex].classList.add('active');
+            
+            // Dịch chuyển track sang trái tính theo phần trăm vị trí slide
+            track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
         }
 
         function renderFooterSocials() {
