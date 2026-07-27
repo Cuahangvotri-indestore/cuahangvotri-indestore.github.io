@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Vô Tri - Creative Handmade</title>
+    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -253,13 +253,17 @@
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
 
         .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; overflow-y: auto; }
-        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 420px; }
+        
+        /* Đã nâng cấp: Sử dụng Layout chặn vị trí tuyệt đối (Absolute Track) để tạo hiệu ứng Opacity lướt hòa quyện như banner trang chủ */
+        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 420px; width: 100%; overflow: hidden; }
+        .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
+        .popup-slide-item.active { opacity: 1; pointer-events: auto; }
         .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
         
         .popup-nav-btn {
             position: absolute; right: 10px; width: 40px; height: 40px; border-radius: 50%;
             background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
-            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; z-index: 5;
         }
         .popup-nav-btn:hover { background: var(--emerald-soft); color: #fff; }
         .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 15px; }
@@ -303,7 +307,7 @@
         .btn-action-main:hover { background: var(--emerald-soft); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(31, 78, 69, 0.25); }
         .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
-        /* Đã nâng nhãn text in hoa Uppercase cho 2 nút phụ */
+        /* Khôi phục và chuẩn hóa text in hoa Uppercase cho 2 nút phụ như PO yêu cầu */
         .btn-action-sub {
             text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px;
             border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border);
@@ -404,10 +408,13 @@
             
             <!-- Vùng hiển thị bên trái (Ảnh + Mô tả nếu là sản phẩm Đặt Trước) -->
             <div class="popup-left-side">
-                <div class="popup-image-viewport">
-                    <img class="popup-main-image" id="popupMainImg" src="" alt="Ảnh sản phẩm">
-                    <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                <!-- Đã cập nhật: Khung viewport chứa các slide ảnh xếp đè lên nhau để lướt opacity mượt mà -->
+                <div class="popup-image-viewport" id="popupImageViewportTrack">
+                    <!-- Các thẻ img slide sẽ được tạo động bằng Javascript tại đây -->
                 </div>
+                <!-- Nút bấm chuyển ảnh thủ công đặt nổi lên trên -->
+                <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
                 
                 <!-- Vị trí Mô tả mới dành riêng cho hàng Đặt trước -->
@@ -475,7 +482,7 @@
         let popupActiveProduct = null;
         let popupActiveImgIndex = 0;
         let popupImagesArray = [];
-        let popupAutoplayInterval = null; // Quản lý bộ đếm tự chuyển ảnh 5s
+        let popupAutoplayInterval = null; 
 
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": {
@@ -716,7 +723,6 @@
             }).join('');
         }
 
-        // ĐÃ KHẮC PHỤC: Chuyển chữ "giấy" thành "Giấy" viết hoa chữ cái đầu tiên chuẩn chỉnh
         function formatOptionToVietnamese(text) {
             return text.replace(/_/g, ' ')
                        .replace(/Khong Man/g, 'Không màng')
@@ -773,9 +779,9 @@
                 subButtonsGroup.style.display = 'none';
             }
 
-            renderPopupSlider();
-            
-            // ĐÃ THÊM: Kích hoạt Carousel tự động nhảy ảnh chi tiết mỗi 5s
+            // Đã cập nhật: Khởi tạo DOM các slide ảnh đè tuyệt đối trước khi chạy hiệu ứng lướt Opacity
+            buildPopupSliderDOM();
+            renderPopupSliderEffects();
             startPopupAutoplay();
 
             const checkGiaBlock = document.getElementById('popupCheckGiaBlock');
@@ -883,7 +889,7 @@
                 const singleOptVal = document.querySelector(`input[name="Single_Option"]:checked`)?.value;
 
                 if(cardMatVal && cardManVal) {
-                    const combinedKey = `${cardMatVal}_${cardManVal}`;
+                    const combinedKey = `${cardMatVal}_var(--liquid-border)cardManVal}`;
                     if(dataRow[combinedKey] !== undefined) {
                         computedPrice = dataRow[combinedKey];
                     }
@@ -900,11 +906,38 @@
             }
         }
 
-        function renderPopupSlider() {
+        // ĐÃ THÊM: Tạo sẵn cây cấu trúc DOM cho toàn bộ ảnh chi tiết nằm đè lên nhau
+        function buildPopupSliderDOM() {
+            const viewPort = document.getElementById('popupImageViewportTrack');
+            viewPort.innerHTML = '';
+            
+            if (popupImagesArray.length === 0) return;
+            
+            popupImagesArray.forEach((url, index) => {
+                const slideItem = document.createElement('div');
+                slideItem.className = `popup-slide-item ${index === 0 ? 'active' : ''}`;
+                slideItem.innerHTML = `
+                    <img class="popup-main-image" src="${url}" alt="Ảnh chi tiết ${index + 1}" onerror="this.src='https://via.placeholder.com/400?text=No+Image'">
+                `;
+                viewPort.appendChild(slideItem);
+            });
+        }
+
+        // ĐÃ THÊM: Thực thi điều khiển Opacity lướt hòa quyện mượt mà (y hệt như banner trang chủ)
+        function renderPopupSliderEffects() {
             if(popupImagesArray.length === 0) return;
 
-            const mainImgEl = document.getElementById('popupMainImg');
-            mainImgEl.src = popupImagesArray[popupActiveImgIndex];
+            const slides = document.querySelectorAll('.popup-slide-item');
+            if(slides.length === 0) return;
+
+            // Tắt active của toàn bộ ảnh, chỉ bật active cho ảnh hiện tại để kích hoạt transition mờ dần
+            slides.forEach((slide, idx) => {
+                if (idx === popupActiveImgIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
             
             const nextBtn = document.getElementById('btnNextPopupImg');
             if(popupImagesArray.length <= 1) {
@@ -928,22 +961,19 @@
             }
         }
 
-        // Hàm hỗ trợ dịch chuyển sang hình ảnh tiếp theo
         function nextPopupImage() {
             if(popupImagesArray.length <= 1) return;
             popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length;
-            renderPopupSlider();
+            renderPopupSliderEffects(); // Gọi hàm cập nhật hiệu ứng hòa trộn Opacity mới
         }
 
-        // ĐÃ THÊM: Khởi động vòng lặp tự động chuyển slide ảnh mỗi 5000ms (5 giây)
         function startPopupAutoplay() {
-            stopPopupAutoplay(); // Xóa vòng lặp cũ trước tránh trùng lặp bộ đếm
+            stopPopupAutoplay(); 
             if(popupImagesArray.length > 1) {
                 popupAutoplayInterval = setInterval(nextPopupImage, 5000);
             }
         }
 
-        // Dừng đếm thời gian chuyển ảnh khi đóng popup
         function stopPopupAutoplay() {
             if(popupAutoplayInterval) {
                 clearInterval(popupAutoplayInterval);
@@ -952,7 +982,7 @@
         }
 
         function closeProductPopup() {
-            stopPopupAutoplay(); // Hủy bỏ hoàn toàn bộ đếm thời gian 5s
+            stopPopupAutoplay(); 
             document.getElementById('liquidProductPopup').classList.remove('open');
             popupActiveProduct = null;
         }
