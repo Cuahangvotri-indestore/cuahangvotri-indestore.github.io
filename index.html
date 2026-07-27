@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
+    <title>Cửa Hàng Vô Tri - Creative Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -226,6 +226,11 @@
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
+        /* ĐÃ THÊM: Triệt tiêu sự kiện click trên toàn bộ thẻ con để bảo vệ sự kiện click trọn vẹn của Thẻ cha (.product-card) */
+        .product-card > * {
+            pointer-events: none;
+        }
+
         /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES ==================== */
         .popup-overlay {
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15);
@@ -254,7 +259,6 @@
 
         .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; overflow-y: auto; }
         
-        /* ĐÃ KHẮC PHỤC: Thêm position: relative bọc khung viewport để neo giữ nút Next quay về đúng vị trí bên cạnh ảnh */
         .popup-image-container-wrapper { position: relative; width: 100%; }
         .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 420px; width: 100%; overflow: hidden; }
         
@@ -262,7 +266,6 @@
         .popup-slide-item.active { opacity: 1; pointer-events: auto; }
         .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
         
-        /* Đập z-index cao lên để luôn nổi bật bên trên các slide ảnh đè tuyệt đối */
         .popup-nav-btn {
             position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%;
             background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
@@ -317,6 +320,11 @@
             text-transform: uppercase; letter-spacing: 0.5px;
         }
         .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
+
+        /* Bảo vệ riêng các thẻ con bên trong Popup không bị dính pointer-events-none của trang chủ */
+        .popup-container * {
+            pointer-events: auto;
+        }
 
         @media (max-width: 768px) {
             .popup-container { flex-direction: column; max-height: 90vh; overflow-y: auto; }
@@ -410,12 +418,10 @@
             
             <!-- Vùng hiển thị bên trái (Ảnh + Mô tả nếu là sản phẩm Đặt Trước) -->
             <div class="popup-left-side">
-                <!-- ĐÃ KHẮC PHỤC: Khung cha bọc tương đối ôm khít cả ảnh lẫn nút chuyển slide -->
                 <div class="popup-image-container-wrapper">
                     <div class="popup-image-viewport" id="popupImageViewportTrack">
                         <!-- Các thẻ img slide tạo động bằng JS đổ vào đây -->
                     </div>
-                    <!-- Nút bấm chuyển ảnh thủ công neo chặt đúng vị trí bên phải ảnh -->
                     <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
                 
@@ -488,6 +494,7 @@
         let popupImagesArray = [];
         let popupAutoplayInterval = null; 
 
+        // Hệ thống dữ liệu ma trận giá phụ tích hợp logic hiển thị text "Chưa có" mới từ PO
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": {
                 headers: ["Mac_Dinh", "Khong_Man", "Co_Man"],
@@ -621,6 +628,7 @@
                     }
 
                     if(pName && pVis.toLowerCase() === 'hiện') {
+                        // ĐỒNG BỘ HOÀN TOÀN: Đảm bảo toàn bộ sản phẩm thực tế từ Sheets đều được đẩy vào mảng quản lý
                         globalStoreData.products.push({
                             sheetIndex: idx, 
                             code: pCode, 
@@ -706,6 +714,7 @@
                 return;
             }
 
+            // Đã fix lỗi click: Truyền p.code linh hoạt thay vì ép cứng chỉ số index của mảng demo cũ
             container.innerHTML = displayList.map(p => {
                 const isPreorder = p.stock.toLowerCase().includes('đặt trước');
                 const badgeClass = isPreorder ? 'status-preorder' : 'status-available';
@@ -737,6 +746,7 @@
         }
 
         function openProductDetailPopup(productCode) {
+            // Đã sửa lỗi: Dò tìm sản phẩm chính xác theo mã p.code lấy trực tiếp từ dữ liệu thật
             const prod = globalStoreData.products.find(p => p.code === productCode);
             if(!prod) return;
 
