@@ -226,7 +226,7 @@
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES (ĐÃ TĂNG SIZE ẢNH VÀ TEXT) ==================== */
+        /* ==================== POPUP LIQUID GLASS STYLES ==================== */
         .popup-overlay {
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -237,7 +237,7 @@
         
         .popup-container {
             background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
-            border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; /* Tăng max-width toàn khung */
+            border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%;
             box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18), inset 0 4px 20px rgba(255, 255, 255, 0.5);
             display: flex; max-height: 85vh; overflow: hidden; position: relative;
             transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
@@ -252,9 +252,9 @@
         }
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
 
-        .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-        .popup-image-viewport { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 420px; } /* Đẩy min-height rộng ra */
-        .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); } /* Cho ảnh to lên */
+        .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; overflow-y: auto; }
+        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 420px; }
+        .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
         
         .popup-nav-btn {
             position: absolute; right: 10px; width: 40px; height: 40px; border-radius: 50%;
@@ -262,31 +262,31 @@
             display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;
         }
         .popup-nav-btn:hover { background: var(--emerald-soft); color: #fff; }
-        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; }
+        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 15px; }
         .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); transition: all 0.3s; }
         .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
 
         .popup-right-side { width: 50%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
         .popup-scroll-box { flex: 1; margin-bottom: 20px; padding-right: 5px; }
-        .popup-scroll-box::-webkit-scrollbar { width: 4px; }
-        .popup-scroll-box::-webkit-scrollbar-thumb { background: rgba(31, 78, 69, 0.15); border-radius: 10px; }
+        .popup-left-side::-webkit-scrollbar, .popup-scroll-box::-webkit-scrollbar { width: 4px; }
+        .popup-left-side::-webkit-scrollbar-thumb, .popup-scroll-box::-webkit-scrollbar-thumb { background: rgba(31, 78, 69, 0.15); border-radius: 10px; }
         
-        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 24px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 14px 0; padding-right: 25px; line-height: 1.4; } /* Tăng size tên SP */
-        .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; } /* Tăng size tiêu đề mục */
-        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 14px 18px; font-size: 15px; color: #4f6a65; line-height: 1.6; margin-bottom: 18px; } /* Tăng size mô tả */
+        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 24px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 14px 0; padding-right: 25px; line-height: 1.4; }
+        .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 14px 18px; font-size: 15px; color: #4f6a65; line-height: 1.6; margin-bottom: 18px; }
         .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 14px 20px; border-radius: 18px; margin-bottom: 20px; }
-        .popup-price-label { font-size: 13px; font-weight: 700; color: var(--emerald-dark); }
-        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); } /* Tăng size hiển thị giá tiền */
+        .popup-price-label { font-size: 12px; font-weight: 700; color: var(--emerald-dark); }
+        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); }
 
         .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 18px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.01); }
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-group-wrapper:last-child { margin-bottom: 0; }
-        .radio-title-label { font-size: 14px; font-weight: 700; color: var(--emerald-dark); } /* Tăng size nhãn chọn */
+        .radio-title-label { font-size: 14px; font-weight: 700; color: var(--emerald-dark); }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
         .custom-radio-btn {
             display: flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255,255,255,0.7);
-            border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; /* Tăng size text nút chọn */
+            border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700;
             color: var(--emerald-dark); cursor: pointer; transition: all 0.2s ease;
         }
         .custom-radio-btn input { accent-color: var(--emerald-dark); margin: 0; transform: scale(1.05); }
@@ -316,7 +316,6 @@
             .popup-image-viewport { min-height: 280px; }
         }
 
-        /* ==================== KHÔI PHỤC HOÀN TOÀN STYLE FOOTER BAN ĐẦU CỦA PO ==================== */
         footer {
             background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
             text-align: center; margin-top: auto; backdrop-filter: blur(var(--blur-value)); box-shadow: 0 -10px 30px rgba(31, 78, 69, 0.03);
@@ -400,20 +399,31 @@
             
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
+            <!-- Vùng hiển thị bên trái (Ảnh + Mô tả nếu là sản phẩm Đặt Trước) -->
             <div class="popup-left-side">
                 <div class="popup-image-viewport">
                     <img class="popup-main-image" id="popupMainImg" src="" alt="Ảnh sản phẩm">
                     <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+                
+                <!-- Vị trí Mô tả mới dành riêng cho hàng Đặt trước -->
+                <div id="popupLeftDescWrapper" style="display: none; mt-4">
+                    <span class="popup-section-title">Mô tả sản phẩm</span>
+                    <div class="popup-desc-box" id="popupProductLeftDesc"></div>
+                </div>
             </div>
             
+            <!-- Vùng hiển thị bên phải (Thông tin giá + Phân loại chọn) -->
             <div class="popup-right-side">
                 <div class="popup-scroll-box">
                     <h2 class="popup-title-text" id="popupProductTitle">Tên sản phẩm</h2>
                     
-                    <span class="popup-section-title">Mô tả sản phẩm</span>
-                    <div class="popup-desc-box" id="popupProductDesc">Nội dung mô tả sản phẩm...</div>
+                    <!-- Vị trí Mô tả cũ dành riêng cho hàng Có sẵn -->
+                    <div id="popupRightDescWrapper">
+                        <span class="popup-section-title">Mô tả sản phẩm</span>
+                        <div class="popup-desc-box" id="popupProductDesc">Nội dung mô tả sản phẩm...</div>
+                    </div>
                     
                     <div class="popup-price-tag-row">
                         <span class="popup-price-label">GIÁ HIỂN THỊ:</span>
@@ -463,7 +473,6 @@
         let popupActiveImgIndex = 0;
         let popupImagesArray = [];
 
-        // Hệ thống dữ liệu ma trận giá phụ tích hợp logic hiển thị text "Chưa có" mới từ PO
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": {
                 headers: ["Mac_Dinh", "Khong_Man", "Co_Man"],
@@ -726,7 +735,22 @@
             }
 
             document.getElementById('popupProductTitle').innerText = prod.name;
-            document.getElementById('popupProductDesc').innerText = prod.desc || "Sản phẩm handmade chất lượng cao, thiết kế độc quyền tỉ mỉ.";
+            
+            // LOGIC DỜI BỐ CỤC MÔ TẢ ĐỘNG THEO YÊU CẦU CỦA PO
+            const isPreorderProduct = prod.stock.toLowerCase().includes('đặt trước');
+            const descContent = prod.desc || "Sản phẩm handmade chất lượng cao, thiết kế độc quyền tỉ mỉ.";
+
+            if (isPreorderProduct) {
+                // Hàng đặt trước -> Chuyển mô tả sang bên trái, ẩn mô tả bên phải
+                document.getElementById('popupLeftDescWrapper').style.display = 'block';
+                document.getElementById('popupRightDescWrapper').style.display = 'none';
+                document.getElementById('popupProductLeftDesc').innerText = descContent;
+            } else {
+                // Hàng có sẵn -> Giữ mô tả ở bên phải, ẩn mô tả bên trái
+                document.getElementById('popupLeftDescWrapper').style.display = 'none';
+                document.getElementById('popupRightDescWrapper').style.display = 'block';
+                document.getElementById('popupProductDesc').innerText = descContent;
+            }
             
             const mainBuyBtn = document.getElementById('btnPopupMainBuy');
             const shopZaloLink = globalStoreData.config['Link_Zalo'] || "http://zaloapp.com/qr/p/14jxxuqxy1zbj";
@@ -741,7 +765,7 @@
             }
 
             const subButtonsGroup = document.getElementById('popupSubButtonsGroup');
-            if(prod.stock.toLowerCase().includes('đặt trước')) {
+            if(isPreorderProduct) {
                 subButtonsGroup.style.display = 'grid';
             } else {
                 subButtonsGroup.style.display = 'none';
