@@ -46,7 +46,6 @@
             padding: 15px 20px; gap: 15px;
         }
         
-        /* Cố định khung Logo tròn */
         .logo-box { display: flex; justify-content: center; width: 100%; }
         .logo-circle { 
             width: 80px; height: 80px; 
@@ -59,7 +58,6 @@
         }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* Feedback Bug 2: Đưa Menu ra giữa màn hình, tăng khoảng cách rộng rãi hơn */
         .menu-categories { 
             display: flex; justify-content: center; align-items: center;
             gap: 20px; list-style: none; margin: 5px 0 0 0; padding: 0; flex-wrap: wrap; 
@@ -88,7 +86,6 @@
             border: 1px dashed rgba(56, 122, 111, 0.25);
         }
 
-        /* Bug 3: Khối Banner sạch sẽ, loại bỏ hoàn toàn dấu mũi tên dư thừa */
         .hero-banner { 
             max-width: 1200px; width: 100%; margin: 25px auto 0; padding: 0 20px; box-sizing: border-box;
         }
@@ -100,7 +97,6 @@
         }
         .banner-wrapper img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 450px; }
 
-        /* Bug 4: Đẩy cục filter sang phải, dùng select mặc định sạch chữ V */
         .filter-section {
             max-width: 1200px; margin: 30px auto 0; padding: 0 20px; box-sizing: border-box;
             display: flex; justify-content: flex-end; 
@@ -115,7 +111,6 @@
         .main-content { max-width: 1200px; width: 100%; margin: 20px auto 60px; padding: 0 20px; box-sizing: border-box; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
         
-        /* Bug 7: Cố định kết cấu card để triệt tiêu hiện tượng giật nháy màn hình */
         .product-card { 
             background: #ffffff; border-radius: 24px; border: 1px solid rgba(205, 226, 222, 0.4);
             transition: transform 0.25s ease, box-shadow 0.25s ease; 
@@ -217,7 +212,6 @@
         const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0'; 
         let globalStoreData = { products: [], config: {} };
 
-        // Hàm v6.8 giải mã link Google Drive sang link hình ảnh trực tiếp hiển thị được trên Web
         function parseDirectImageUrl(rawUrl) {
             if (!rawUrl) return '';
             const linkStr = String(rawUrl).trim();
@@ -248,7 +242,6 @@
         }
 
         async function initSprint1HomePage() {
-            // Đọc cấu hình shop từ dòng 6 trở đi
             const configRows = await fetchSheetRows('Cau_Hinh_Shop');
             configRows.forEach(row => {
                 if(row && row.c && row.c[0] && row.c[1]) {
@@ -256,7 +249,6 @@
                 }
             });
 
-            // Bug 1: Xử lý hiển thị logo
             if(globalStoreData.config['Logo_Shop']) {
                 const logoUrl = parseDirectImageUrl(globalStoreData.config['Logo_Shop']);
                 document.getElementById('shop-logo-box').innerHTML = `<img src="${logoUrl}" alt="Logo Shop">`;
@@ -267,7 +259,6 @@
                 document.getElementById('vision-area').style.display = 'block';
             }
 
-            // Bug 3: Xử lý hiển thị banner
             if(globalStoreData.config['Banner_1']) {
                 document.getElementById('static-banner-img').src = parseDirectImageUrl(globalStoreData.config['Banner_1']);
                 document.getElementById('banner-root-area').style.display = 'block';
@@ -275,7 +266,6 @@
 
             renderFooterSocials();
 
-            // Đọc sản phẩm từ dòng 6 trở đi
             const productRows = await fetchSheetRows('Danh_Sach_SanPham');
             productRows.forEach((row, idx) => {
                 if(row && row.c && row.c[1]) {
@@ -297,8 +287,8 @@
                             code: pCode, 
                             name: pName, 
                             category: pCat,
-                            img: parseDirectImageUrl(pImg), // Bug 5: Giải mã link ảnh sản phẩm
-                            basePrice: pPrice
+                            img: parseDirectImageUrl(pImg),
+                            basePrice: pPrice,
                             stock: pStock
                         });
                     }
@@ -336,7 +326,6 @@
                 return;
             }
 
-            // Bug 6: Ép hiển thị giá mặc định của sản phẩm từ Sheets ra ngoài màn hình chính
             container.innerHTML = displayList.map(p => {
                 return `
                     <div class="product-card">
