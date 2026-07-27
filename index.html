@@ -59,18 +59,16 @@
             box-shadow: var(--liquid-shadow);
         }
         
-        /* Layout Header: Căn giữa theo chiều dọc, gọn gàng vừa vặn */
         .nav-container { 
             max-width: 1300px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px 24px 22px 24px; 
+            padding: 10px 24px; 
             box-sizing: border-box;
             position: relative;
         }
         
         .logo-box { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         
-        /* Phóng to Logo lên 135px và căn giữa tuyệt đối theo chiều dọc */
         .logo-circle { 
             width: 135px; height: 135px; 
             border-radius: 50%; 
@@ -94,7 +92,6 @@
 
         nav { width: 100%; }
         
-        /* Căn sát lề phải hoàn toàn cho dàn menu danh mục */
         .menu-categories { 
             display: flex; 
             justify-content: flex-end; 
@@ -129,23 +126,20 @@
             transform: translateY(-2px) scale(1.02);
         }
 
-        /* Câu tầm nhìn bám sát góc dưới cùng bên phải */
-        .header-slogan-area {
-            position: absolute;
-            bottom: 4px; 
-            right: 24px; 
-            text-align: right;
-            display: none; 
+        .vision-container {
+            max-width: 1300px; width: 100%; margin: 25px auto 0; padding: 0 24px; box-sizing: border-box;
+            display: none; text-align: center;
         }
-        .header-slogan-text {
+        .vision-text {
             font-family: 'Comfortaa', sans-serif;
-            font-size: 13px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--emerald-dark);
             margin: 0;
             font-style: italic;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-            opacity: 0.85;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+            opacity: 0.9;
+            line-height: 1.5;
         }
 
         .hero-banner { 
@@ -252,7 +246,6 @@
         @media (max-width: 1024px) {
             .nav-container { flex-direction: column; gap: 12px; justify-content: center; padding-bottom: 18px; }
             .right-nav-box { justify-content: center; }
-            .header-slogan-area { position: static; text-align: center; padding-right: 0; margin-top: 4px; }
             .menu-categories { justify-content: center; gap: 8px; }
             .filter-section { justify-content: center; }
             .banner-wrapper { aspect-ratio: auto; height: 160px; }
@@ -279,12 +272,14 @@
                         <li class="menu-item">In 3D</li>
                     </ul>
                 </nav>
-                <div class="header-slogan-area" id="header-slogan-root">
-                    <p class="header-slogan-text" id="header-slogan-content"></p>
-                </div>
             </div>
         </div>
     </header>
+
+    <!-- Dòng Tầm nhìn hiển thị ở giữa, phía trên Banner, hoàn toàn không có khung -->
+    <div class="vision-container" id="vision-area">
+        <p class="vision-text" id="vision-text-content"></p>
+    </div>
 
     <div class="hero-banner" id="banner-root-area" style="display: none;">
         <div class="banner-wrapper">
@@ -403,9 +398,10 @@
                 document.getElementById('shop-logo-box').innerHTML = `<img src="${logoUrl}" alt="Logo Shop">`;
             }
 
+            /* Nạp câu tầm nhìn vào dòng text trống phía trên banner, hoàn toàn không có khung */
             if(globalStoreData.config['Tam_Nhin'] && String(globalStoreData.config['Tam_Nhin']).trim() !== "") {
-                document.getElementById('header-slogan-content').innerText = `"${globalStoreData.config['Tam_Nhin']}"`;
-                document.getElementById('header-slogan-root').style.display = 'block';
+                document.getElementById('vision-text-content').innerText = `"${globalStoreData.config['Tam_Nhin']}"`;
+                document.getElementById('vision-area').style.display = 'block';
             }
 
             setupBannerCarousel();
@@ -530,3 +526,11 @@
     </script>
 </body>
 </html>
+```
+
+Đã chỉnh sửa xong cho PO:
+1. **Dòng tầm nhìn nằm trên Banner**: Được di chuyển ra ngoài `header`, đặt ngay giữa màn hình phía trên `hero-banner`.
+2. **Không có khung hay border**: Chỉ là dòng chữ `Comfortaa` nghiêng mềm mại có hiệu ứng bóng chữ nhẹ nhàng (`text-shadow`), tự nhiên và thẩm mỹ.
+3. **Thanh Header gọn gàng**: Giữ nguyên logo `135px` nổi bật căn giữa chiều dọc và dàn menu căn sát lề phải.
+
+PO copy đè code vào GitHub rồi nhấn **Ctrl + F5** để xem lại nhé!
