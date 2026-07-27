@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Vô Tri - Creative Handmade</title>
+    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Bổ sung Font Awesome dùng cho các icon trong Popup -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root { 
@@ -137,14 +139,13 @@
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
 
-        /* Banner lỏng - Bỏ đường viền border thô cứng */
+        /* Banner lỏng */
         .hero-banner { 
             max-width: 1300px; width: 100%; margin: 15px auto 0; padding: 0 24px; box-sizing: border-box;
         }
         .banner-wrapper {
             position: relative; width: 100%; border-radius: 40px; overflow: hidden;
             box-sizing: border-box;
-            /* Thay viền đặc bằng đổ bóng mềm mịn tỏa ra xung quanh tạo cảm giác lỏng hơn */
             box-shadow: 0 20px 50px rgba(31, 78, 69, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.4);
             background: rgba(255, 255, 255, 0.15); aspect-ratio: 1024 / 285; backdrop-filter: blur(10px);
         }
@@ -204,7 +205,7 @@
             border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
             display: flex; flex-direction: column; position: relative; overflow: hidden; 
-            box-shadow: var(--liquid-shadow); min-height: 440px; 
+            box-shadow: var(--liquid-shadow); min-height: 440px; cursor: pointer;
         }
         .product-card:hover { 
             transform: translateY(-8px); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4); border-color: rgba(56, 122, 111, 0.45);
@@ -221,7 +222,6 @@
             border: 1px solid var(--liquid-border); font-family: 'Comfortaa', sans-serif; box-shadow: 0 4px 12px rgba(31, 78, 69, 0.03);
         }
 
-        /* Phân biệt màu sắc các tag trạng thái */
         .badge-status { 
             position: absolute; top: 15px; left: 15px; 
             padding: 6px 16px; font-size: 12px; font-weight: 700; border-radius: 35px; z-index: 2; 
@@ -229,6 +229,96 @@
         }
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
+
+        /* ==================== STYLE CHO SPRINT 2: POPUP KÍNH MỜ LIQUID GLASS ==================== */
+        .popup-overlay {
+            position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            display: flex; items-center: center; justify-content: center; padding: 20px;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .popup-overlay.open { opacity: 1; pointer-events: auto; }
+        
+        .popup-container {
+            background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+            border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 960px; width: 100%;
+            box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18), inset 0 4px 20px rgba(255, 255, 255, 0.5);
+            display: flex; max-height: 85vh; overflow: hidden; position: relative;
+            transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+        }
+        .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
+        
+        .popup-close-btn {
+            position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px;
+            background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;
+            transition: all 0.3s ease; z-index: 10;
+        }
+        .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
+
+        .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .popup-image-viewport { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 320px; }
+        .popup-main-image { max-width: 100%; max-height: 320px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        
+        .popup-nav-btn {
+            position: absolute; right: 10px; width: 36px; height: 36px; rounded: 50%; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;
+        }
+        .popup-nav-btn:hover { background: var(--emerald-soft); color: #white; color: #fff; }
+        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; }
+        .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); transition: all 0.3s; }
+        .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
+
+        .popup-right-side { width: 50%; padding: 30px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
+        .popup-scroll-box { flex: 1; margin-bottom: 20px; padding-right: 5px; }
+        .popup-scroll-box::-webkit-scrollbar { width: 4px; }
+        .popup-scroll-box::-webkit-scrollbar-thumb { background: rgba(31, 78, 69, 0.15); border-radius: 10px; }
+        
+        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 20px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 12px 0; padding-right: 25px; line-height: 1.4; }
+        .popup-section-title { font-size: 11px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 12px 16px; font-size: 14px; color: #4f6a65; line-height: 1.6; margin-bottom: 16px; }
+        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 12px 18px; border-radius: 18px; margin-bottom: 18px; }
+        .popup-price-label { font-size: 12px; font-weight: 700; color: var(--emerald-dark); }
+        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 22px; font-weight: 700; color: var(--emerald-dark); }
+
+        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 16px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.01); }
+        .radio-group-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .radio-group-wrapper:last-child { margin-bottom: 0; }
+        .radio-title-label { font-size: 12px; font-weight: 700; color: var(--emerald-dark); }
+        .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
+        
+        .custom-radio-btn {
+            display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255,255,255,0.7);
+            border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 13px; font-weight: 700;
+            color: var(--emerald-dark); cursor: pointer; transition: all 0.2s ease;
+        }
+        .custom-radio-btn input { accent-color: var(--emerald-dark); margin: 0; transform: scale(0.95); }
+        .custom-radio-btn:hover { background: #ffffff; }
+
+        .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .btn-action-main {
+            text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 14px;
+            border-radius: 18px; color: #white; background: var(--emerald-dark); color: #fff;
+            letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer;
+            box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-action-main:hover { background: var(--emerald-soft); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(31, 78, 69, 0.25); }
+        .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-action-sub {
+            text-decoration: none; text-align: center; font-weight: 700; font-size: 13px; padding: 11px;
+            border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border);
+            cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
+
+        @media (max-width: 768px) {
+            .popup-container { flex-direction: column; max-height: 90vh; overflow-y: auto; }
+            .popup-left-side, .popup-right-side { width: 100%; padding: 20px; }
+            .popup-left-side { border-right: none; border-bottom: 1px solid var(--liquid-border); }
+            .popup-image-viewport { min-height: 240px; }
+        }
 
         footer {
             background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
@@ -304,7 +394,62 @@
     </div>
 
     <div class="main-content">
+        <!-- Khi click vào các card trong lưới này sẽ mở popup xem chi tiết -->
         <div class="product-grid" id="product-list-view"></div>
+    </div>
+
+    <!-- ==================== CỬA SỔ POPUP XEM CHI TIẾT SẢN PHẨM & TÍNH GIÁ MA TRẬN ==================== -->
+    <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
+        <div class="popup-container">
+            
+            <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <!-- Vùng hiển thị Slider ảnh bên trái -->
+            <div class="popup-left-side">
+                <div class="popup-image-viewport">
+                    <img class="popup-main-image" id="popupMainImg" src="" alt="Ảnh sản phẩm">
+                    <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+            </div>
+            
+            <!-- Vùng hiển thị Thông tin & Khung Check giá bên phải -->
+            <div class="popup-right-side">
+                <div class="popup-scroll-box">
+                    <h2 class="popup-title-text" id="popupProductTitle">Tên sản phẩm</h2>
+                    
+                    <span class="popup-section-title">Mô tả sản phẩm</span>
+                    <div class="popup-desc-box" id="popupProductDesc">Nội dung mô tả sản phẩm...</div>
+                    
+                    <div class="popup-price-tag-row">
+                        <span class="popup-price-label">GIÁ HIỂN THỊ:</span>
+                        <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
+                    </div>
+                    
+                    <!-- Khung tính giá phân loại tự sinh từ Tab phụ -->
+                    <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
+                        <span class="popup-section-title" style="margin-bottom:12px; display:block;"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
+                        <div id="popupDynamicRadioSpace"></div>
+                    </div>
+                </div>
+                
+                <!-- Khung bộ ba hành động nặng đô ở cuối -->
+                <div class="popup-actions-wrapper">
+                    <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank">
+                        <i class="fa-solid fa-bag-shopping"></i> Mua ngay nhé
+                    </a>
+                    <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
+                        <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')">
+                            <i class="fa-solid fa-file-pen"></i> Xin tí info
+                        </button>
+                        <a class="btn-action-sub" id="btnPopupZaloConsult" href="#" target="_blank">
+                            <i class="fa-brands fa-square-zalo" style="color:#0068ff; font-size:16px;"></i> Tư vấn Zalo
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <footer>
@@ -321,6 +466,35 @@
         let slideInterval;
         let totalSlidesCount = 0;
         let currentSortValue = 'default';
+
+        // Quản lý biến cục bộ cho Popup Slider
+        let popupActiveProduct = null;
+        let popupActiveImgIndex = 0;
+        let popupImagesArray = [];
+
+        // Giả lập ma trận dữ liệu đọc ngầm từ các Tab bảng giá phụ Google Sheets của PO
+        const sheetsPhuDataMatrix = {
+            "GIA_TEM_STICKER": {
+                headers: ["Mac_Dinh", "Khong_Man", "Co_Man"],
+                data: [{ Mac_Dinh: "Khong_Man", Khong_Man: 26250, Co_Man: 31500 }]
+            },
+            "GIA_CARD": {
+                headers: ["Mac_Dinh", "In_1_Mat_Khong_Man", "In_2_Mat_Khong_Man", "In_1_Mat_Co_Man", "In_2_Mat_Co_Man"],
+                data: [{ Mac_Dinh: "In_1_Mat_Khong_Man", In_1_Mat_Khong_Man: 6800, In_2_Mat_Khong_Man: 9500, In_1_Mat_Co_Man: 12200, In_2_Mat_Co_Man: 20300 }]
+            },
+            "GIA_THIEP": {
+                headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Kich_Thuoc", "Giay_Ford_180gsm", "Giay_Ford_210gsm"],
+                data: [
+                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "Giay_Ford_180gsm | Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3200, Giay_Ford_210gsm: 3300 },
+                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3500, Giay_Ford_210gsm: 3700 },
+                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 2 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3700, Giay_Ford_210gsm: 3900 },
+                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 3 mặt 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3900, Giay_Ford_210gsm: 4000 },
+                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 3 mặt 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 4200, Giay_Ford_210gsm: 4400 },
+                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "Giay_Ford_180gsm | Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: 3600, Giay_Ford_210gsm: 4000 },
+                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: 3800, Giay_Ford_210gsm: 4200 }
+                ]
+            }
+        };
 
         function toggleDropdown() {
             document.getElementById('customSortDropdown').classList.toggle('open');
@@ -415,8 +589,14 @@
                     const pName = row.c[1] ? String(row.c[1].v).trim() : ''; 
                     const pCat  = row.c[2] ? String(row.c[2].v).trim() : 'KHÁC'; 
                     const pImg  = row.c[3] ? String(row.c[3].v).trim() : ''; 
+                    
+                    // Lấy thêm các cột mới phục vụ Popup Sprint 2 theo sơ đồ thực tế của PO
+                    const pDetailImgs = row.c[4] ? String(row.c[4].v).trim() : '';
+                    const pDesc = row.c[5] ? String(row.c[5].v).trim() : '';
+                    const pShopeeLink = row.c[8] ? String(row.c[8].v).trim() : '';
                     const pStock = row.c[9] ? String(row.c[9].v).trim() : 'Có sẵn'; 
                     const pVis  = row.c[10] ? String(row.c[10].v).trim() : 'Hiện'; 
+                    const pConfigName = row.c[11] ? String(row.c[11].v).trim() : '';
                     
                     let pPrice = 0;
                     if(row.c[7] && row.c[7].v) {
@@ -430,8 +610,12 @@
                             name: pName, 
                             category: pCat,
                             img: parseDirectImageUrl(pImg),
+                            detailImgs: pDetailImgs,
+                            desc: pDesc,
+                            shopeeLink: pShopeeLink,
                             basePrice: pPrice,
-                            stock: pStock
+                            stock: pStock,
+                            boCauHinh: pConfigName
                         });
                     }
                 }
@@ -486,6 +670,7 @@
             container.innerHTML = htmlLinks;
         }
 
+        // GIỮ NGUYÊN 100% GIAO DIỆN HÀM RENDER TRANG CHỦ CỦA SPRINT 1
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
@@ -509,8 +694,9 @@
                 const isPreorder = p.stock.toLowerCase().includes('đặt trước');
                 const badgeClass = isPreorder ? 'status-preorder' : 'status-available';
 
+                // Chỉ chèn thêm thuộc tính onclick ngầm để kích hoạt Popup chi tiết khi bấm vào sản phẩm
                 return `
-                    <div class="product-card">
+                    <div class="product-card" onclick="openProductDetailPopup('${p.code}')">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper">
                             <img class="product-img" src="${p.img || 'https://via.placeholder.com/400?text=No+Image'}" alt="${p.name}">
@@ -524,6 +710,232 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // ==================== LOGIC PHÁT TRIỂN RIÊNG CHO SPRINT 2: SIÊU POPUP CHI TIẾT SẢN PHẨM ====================
+        
+        // Hàm tiện ích chuẩn hóa text hệ thống sang Tiếng Việt có dấu trực quan
+        function formatOptionToVietnamese(text) {
+            return text.replace(/_/g, ' ')
+                       .replace(/Khong Man/g, 'Không màng')
+                       .replace(/Co Man/g, 'Có màng')
+                       .replace(/In 1 Mat/g, 'In 1 mặt')
+                       .replace(/In 2 Mat/g, 'In 2 mặt')
+                       .replace(/Giay_Ford_/g, 'Giấy Ford ');
+        }
+
+        function openProductDetailPopup(productCode) {
+            const prod = globalStoreData.products.find(p => p.code === productCode);
+            if(!prod) return;
+
+            popupActiveProduct = prod;
+            popupActiveImgIndex = 0;
+            
+            // Xử lý chuỗi danh sách ảnh chi tiết (Cột E) cách nhau bằng dấu phẩy
+            if(prod.detailImgs && prod.detailImgs.trim() !== "") {
+                popupImagesArray = prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim()));
+            } else {
+                popupImagesArray = [prod.img]; // Nếu cột E trống, tự động bốc ảnh đại diện làm slide đơn
+            }
+
+            // Đổ nội dung text cơ bản lên Popup
+            document.getElementById('popupProductTitle').innerText = prod.name;
+            document.getElementById('popupProductDesc').innerText = prod.desc || "Sản phẩm handmade chất lượng cao, thiết kế độc quyền tỉ mỉ.";
+            
+            // Liên kết động bộ ba nút hành động hạng nặng theo thiết kế Zalo QR chính thức của PO
+            const mainBuyBtn = document.getElementById('btnPopupMainBuy');
+            const shopZaloLink = globalStoreData.config['Link_Zalo'] || "http://zaloapp.com/qr/p/14jxxuqxy1zbj";
+            document.getElementById('btnPopupZaloConsult').href = shopZaloLink;
+
+            if(prod.shopeeLink && prod.shopeeLink.trim() !== "") {
+                mainBuyBtn.href = prod.shopeeLink;
+                mainBuyBtn.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> Mua ngay trên Shopee`;
+            } else {
+                mainBuyBtn.href = shopZaloLink;
+                mainBuyBtn.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> Mua qua Zalo Shop`;
+            }
+
+            // Ẩn hiện cụm nút phụ thiết kế dựa trên tình trạng hàng có sẵn
+            const subButtonsGroup = document.getElementById('popupSubButtonsGroup');
+            if(prod.stock.toLowerCase().includes('đặt trước')) {
+                subButtonsGroup.style.display = 'grid';
+            } else {
+                subButtonsGroup.style.display = 'none';
+            }
+
+            // Khởi chạy slider ảnh
+            renderPopupSlider();
+
+            // BIẾN HÌNH KHUNG CHECK GIÁ ĐỘNG TỪ THEO KIỂU BẢNG PHỤ CỦA PO
+            const checkGiaBlock = document.getElementById('popupCheckGiaBlock');
+            const radioSpace = document.getElementById('popupDynamicRadioSpace');
+            radioSpace.innerHTML = '';
+
+            if(!prod.boCauHinh || !sheetsPhuDataMatrix[prod.boCauHinh]) {
+                // Kịch bản sản phẩm thường: Ẩn khung check giá, hiện giá mặc định từ sheet sản phẩm
+                checkGiaBlock.style.display = 'none';
+                document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
+            } else {
+                // Kịch bản sản phẩm cấu hình ma trận phức tạp (Card, Sticker, Thiệp)
+                checkGiaBlock.style.display = 'block';
+                const matrixConfig = sheetsPhuDataMatrix[prod.boCauHinh];
+
+                if(prod.boCauHinh === 'GIA_THIEP') {
+                    // Dữ liệu dạng Thiệp cưới: Dò dòng dọc phối cột ngang đan chéo
+                    let listLoaiThiep = [...new Set(matrixConfig.data.map(d => d.Loai_Thiep))];
+                    let listKieuIn = [...new Set(matrixConfig.data.map(d => d.Kieu_In))];
+                    let listGiayCols = matrixConfig.headers.filter(h => h.startsWith('Giay_'));
+
+                    // Giải mã cấu trúc ô Mặc định tại dòng đầu tiên của tab Thiệp
+                    const defaultRowInfo = matrixConfig.data.find(d => d.Mac_Dinh && d.Mac_Dinh.trim() !== "");
+                    let defaultGiayStr = "", defaultKieuInStr = "";
+                    if(defaultRowInfo) {
+                        let segments = defaultRowInfo.Mac_Dinh.split('|').map(s => s.trim());
+                        defaultGiayStr = segments[0];
+                        defaultKieuInStr = segments[1];
+                    }
+
+                    buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", listLoaiThiep, listLoaiThiep[0]);
+                    buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in màu:", listKieuIn, defaultKieuInStr || listKieuIn[0]);
+                    buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", listGiayCols, defaultGiayStr || listGiayCols[0]);
+                } else {
+                    // Dữ liệu dạng Card hoặc Sticker: Phân loại theo tiêu đề hàng ngang
+                    const dataRow = matrixConfig.data[0];
+                    const activeDefaultOption = dataRow.Mac_Dinh;
+                    const cleanHeaders = matrixConfig.headers.filter(h => h !== 'Mac_Dinh');
+
+                    const isCardLayout = cleanHeaders.some(h => h.includes('_Mat_'));
+
+                    if(isCardLayout) {
+                        // Tự động phân tách chuỗi hàng ngang thành 2 cụm độc lập (Mặt in & Cán màng) theo yêu cầu PO
+                        let uniqueMats = ["In_1_Mat", "In_2_Mat"];
+                        let uniqueMans = ["Khong_Man", "Co_Man"];
+
+                        let selMat = activeDefaultOption.includes("In_2_Mat") ? "In_2_Mat" : "In_1_Mat";
+                        let selMan = activeDefaultOption.includes("Co_Man") ? "Co_Man" : "Khong_Man";
+
+                        buildPopupRadioRow(radioSpace, "Card_Mat", "Số mặt in ấn:", uniqueMats, selMat);
+                        buildPopupRadioRow(radioSpace, "Card_Man", "Gia công màng bảo vệ:", uniqueMans, selMan);
+                    } else {
+                        // Sticker đơn nhóm phân loại màng thông thường
+                        buildPopupRadioRow(radioSpace, "Single_Option", "Lựa chọn phân loại cán màng:", cleanHeaders, activeDefaultOption);
+                    }
+                }
+
+                // Thực thi quét ma trận giá lần đầu tiên ngay khi mở popup
+                calculatePopupDynamicPrice();
+            }
+
+            // Kích hoạt hiệu ứng mở popup
+            document.getElementById('liquidProductPopup').classList.add('open');
+        }
+
+        // Hàm dựng giao diện nút Radio bọc khung chuẩn UX
+        function buildPopupRadioRow(container, groupName, groupTitle, elementsList, activeValue) {
+            const wrapper = document.createElement('div');
+            wrapper.className = "radio-group-wrapper";
+
+            const titleSpan = document.createElement('span');
+            titleSpan.className = "radio-title-label";
+            titleSpan.innerText = groupTitle;
+            wrapper.appendChild(titleSpan);
+
+            const optionsFlex = document.createElement('div');
+            optionsFlex.className = "radio-options-flex";
+
+            elementsList.forEach(item => {
+                const isSelected = item === activeValue;
+                const label = document.createElement('label');
+                label.className = "custom-radio-btn";
+                label.innerHTML = `
+                    <input type="radio" name="${groupName}" value="${item}" ${isSelected ? 'checked' : ''} onchange="calculatePopupDynamicPrice()">
+                    ${formatOptionToVietnamese(item)}
+                `;
+                optionsFlex.appendChild(label);
+            });
+
+            wrapper.appendChild(optionsFlex);
+            container.appendChild(wrapper);
+        }
+
+        // Hàm chạy ngầm tính toán ma trận giá cố định (Fixed Price Matrix) theo thời gian thực
+        function calculatePopupDynamicPrice() {
+            if(!popupActiveProduct || !popupActiveProduct.boCauHinh) return;
+
+            const configCode = popupActiveProduct.boCauHinh;
+            const matrixConfig = sheetsPhuDataMatrix[configCode];
+            let computedPrice = popupActiveProduct.basePrice;
+
+            if(configCode === 'GIA_THIEP') {
+                // Thuật toán gióng chéo Ma trận Thiệp cưới (Dò dòng dọc -> bốc ô cột ngang)
+                const pickedLoaiThiep = document.querySelector(`input[name="Loai_Thiep"]:checked`)?.value;
+                const pickedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
+                const pickedGiayCol = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
+
+                const matchedDataRow = matrixConfig.data.find(d => d.Loai_Thiep === pickedLoaiThiep && d.Kieu_In === pickedKieuIn);
+                if(matchedDataRow && matchedDataRow[pickedGiayCol] !== undefined) {
+                    computedPrice = matchedDataRow[pickedGiayCol];
+                }
+            } else {
+                // Thuật toán dò tìm cột nằm ngang dành cho Card và Sticker
+                const dataRow = matrixConfig.data[0];
+                const cardMatVal = document.querySelector(`input[name="Card_Mat"]:checked`)?.value;
+                const cardManVal = document.querySelector(`input[name="Card_Man"]:checked`)?.value;
+                const singleOptVal = document.querySelector(`input[name="Single_Option"]:checked`)?.value;
+
+                if(cardMatVal && cardManVal) {
+                    const combinedKey = `${cardMatVal}_${cardManVal}`;
+                    if(dataRow[combinedKey] !== undefined) {
+                        computedPrice = dataRow[combinedKey];
+                    }
+                } else if(singleOptVal && dataRow[singleOptVal] !== undefined) {
+                    computedPrice = dataRow[singleOptVal];
+                }
+            }
+
+            document.getElementById('popupDynamicPrice').innerText = Number(computedPrice).toLocaleString('vi-VN') + " đ";
+        }
+
+        // Vận hành cập nhật Slider ảnh chi tiết trong Popup
+        function renderPopupSlider() {
+            if(popupImagesArray.length === 0) return;
+
+            const mainImgEl = document.getElementById('popupMainImg');
+            mainImgEl.src = popupImagesArray[popupActiveImgIndex];
+            
+            const nextBtn = document.getElementById('btnNextPopupImg');
+            if(popupImagesArray.length <= 1) {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'flex';
+                nextBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length;
+                    renderPopupSlider();
+                };
+            }
+
+            // Vẽ cụm chấm đếm vị trí ảnh
+            const dotsSpace = document.getElementById('popupImgDotsSpace');
+            dotsSpace.innerHTML = '';
+            if(popupImagesArray.length > 1) {
+                popupImagesArray.forEach((_, idx) => {
+                    const dot = document.createElement('span');
+                    dot.className = `popup-dot ${idx === popupActiveImgIndex ? 'active' : ''}`;
+                    dotsSpace.appendChild(dot);
+                });
+            }
+        }
+
+        function closeProductPopup() {
+            document.getElementById('liquidProductPopup').classList.remove('open');
+            popupActiveProduct = null;
+        }
+
+        function closeProductPopupOutside(e) {
+            if(e.target.classList.contains('popup-overlay')) {
+                closeProductPopup();
+            }
         }
 
         window.onload = initSprint1HomePage;
