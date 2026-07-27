@@ -201,16 +201,28 @@
             border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
             display: flex; flex-direction: column; position: relative; overflow: hidden; 
-            box-shadow: var(--liquid-shadow); min-height: 440px; cursor: pointer;
+            box-shadow: var(--liquid-shadow); min-height: 440px;
         }
         .product-card:hover { 
             transform: translateY(-8px); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4); border-color: rgba(56, 122, 111, 0.45);
         }
         
-        /* GIẢI PHÁP TỐI ƯU TUYỆT ĐỐI BẢN v27: Dùng lớp giả :before để phủ màn kính trong suốt lên bề mặt Card */
-        /* Không sinh thêm thẻ con, chặn đứng hoàn toàn việc ăn lẹm giá tiền và nhạy bén 100% khi click */
-        .product-card::before {
-            content: ""; position: absolute; inset: 0; z-index: 50; background: transparent;
+        /* BẬT Ý TƯỞNG CỦA PO: Thiết kế lớp kính lỏng bọc phủ đè trên cùng của card sản phẩm */
+        .product-liquid-glass-layer {
+            position: absolute; inset: 0; z-index: 40; cursor: pointer; background: transparent;
+            transition: all 0.4s ease; overflow: hidden; border-radius: 32px;
+        }
+        /* Hiệu ứng loáng bóng phát sáng cực đẹp khi rà chuột vào y hệt các nút menu phía trên */
+        .product-liquid-glass-layer::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+            transform: skewX(-25deg); transition: 0.75s;
+        }
+        .product-card:hover .product-liquid-glass-layer::before {
+            left: 200%;
+        }
+        .product-card:hover .product-liquid-glass-layer {
+            background: rgba(31, 78, 69, 0.02); /* Loáng nhẹ màu ngọc lục bảo khi hover */
         }
 
         .product-img-wrapper { width: 100%; height: 285px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
@@ -323,12 +335,6 @@
         }
         .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
 
-        /* Bảo vệ các phần tử chọn trong popup không bị dính click-through */
-        .popup-container * {
-            pointer-events: auto !important;
-        }
-
-        /* ==================== STYLE FOOTER MỊN MÀNG CHUẨN GỐC CỦA PO ==================== */
         footer {
             background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
             text-align: center; margin-top: auto; backdrop-filter: blur(var(--blur-value)); box-shadow: 0 -10px 30px rgba(31, 78, 69, 0.03);
@@ -687,6 +693,7 @@
             container.innerHTML = htmlLinks;
         }
 
+        // ĐÃ SỬA THEO Ý PO: Tấm kính Kính lỏng (Liquid Glass Mask) bọc kín bề mặt, hover loáng bóng, click ăn 100%!
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
@@ -711,7 +718,10 @@
                 const badgeClass = isPreorder ? 'status-preorder' : 'status-available';
 
                 return `
-                    <div class="product-card" onclick="openProductDetailPopup('${p.code}')">
+                    <div class="product-card">
+                        <!-- Tấm khiên Kính lỏng bảo vệ, hover lướt bóng sáng và bắt trọn vẹn click mở popup -->
+                        <div class="product-liquid-glass-layer" onclick="openProductDetailPopup('${p.code}')"></div>
+                        
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper">
                             <img class="product-img" src="${p.img || 'https://via.placeholder.com/400?text=No+Image'}" alt="${p.name}">
