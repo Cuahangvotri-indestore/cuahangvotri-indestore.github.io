@@ -201,7 +201,7 @@
             border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
             display: flex; flex-direction: column; position: relative; overflow: hidden; 
-            box-shadow: var(--liquid-shadow); min-height: 440px;
+            box-shadow: var(--liquid-shadow); min-height: 440px; cursor: pointer;
         }
         .product-card:hover { 
             transform: translateY(-8px); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4); border-color: rgba(56, 122, 111, 0.45);
@@ -225,11 +225,6 @@
         }
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
-
-        /* GIẢI PHÁP MỚI: Thẻ kính trong suốt bao phủ tuyệt đối toàn bộ card sản phẩm giúp bắt click nhạy 100% */
-        .product-click-glass {
-            position: absolute; inset: 0; z-index: 30; cursor: pointer; background: transparent;
-        }
 
         /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES ==================== */
         .popup-overlay {
@@ -321,18 +316,29 @@
         }
         .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
 
+        /* ==================== KHÔI PHỤC HOÀN TOÀN STYLE FOOTER MỊN MÀNG BAN ĐẦU CỦA PO ==================== */
+        footer {
+            background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
+            text-align: center; margin-top: auto; backdrop-filter: blur(var(--blur-value)); box-shadow: 0 -10px 30px rgba(31, 78, 69, 0.03);
+        }
+        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .footer-links { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+        .footer-btn {
+            text-decoration: none; font-weight: 700; font-size: 14px; padding: 11px 28px; border-radius: 40px;
+            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--liquid-border); backdrop-filter: blur(5px);
+        }
+        .btn-fb { background: rgba(234, 242, 249, 0.5); color: #1877f2; }
+        .btn-zl { background: rgba(237, 245, 247, 0.5); color: #0068ff; }
+        .btn-sp { background: rgba(255, 242, 238, 0.5); color: var(--shopee-color); }
+        .footer-btn:hover { transform: translateY(-2px); opacity: 0.9; box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
+        .footer-copy { font-size: 13px; color: #8e9cae; margin: 0; font-weight: 500; }
+
         @media (max-width: 1024px) {
             .nav-container { flex-direction: column; gap: 15px; justify-content: center; }
             .right-nav-box { align-items: center; }
             .menu-categories { justify-content: center; gap: 8px; }
             .filter-section { justify-content: center; }
             .banner-wrapper { aspect-ratio: auto; height: 160px; }
-        }
-        @media (max-width: 768px) {
-            .popup-container { flex-direction: column; max-height: 90vh; overflow-y: auto; }
-            .popup-left-side, .popup-right-side { width: 100%; padding: 20px; }
-            .popup-left-side { border-right: none; border-bottom: 1px solid var(--liquid-border); }
-            .popup-image-viewport { min-height: 280px; }
         }
     </style>
 </head>
@@ -394,6 +400,7 @@
             
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
+            <!-- Vùng hiển thị bên trái (Ảnh + Mô tả nếu là sản phẩm Đặt Trước) -->
             <div class="popup-left-side">
                 <div class="popup-image-container-wrapper">
                     <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
@@ -402,16 +409,19 @@
                 
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
                 
+                <!-- Vị trí Mô tả mới dành riêng cho hàng Đặt trước -->
                 <div id="popupLeftDescWrapper" style="display: none; margin-top: 15px;">
                     <span class="popup-section-title">Mô tả sản phẩm</span>
                     <div class="popup-desc-box" id="popupProductLeftDesc"></div>
                 </div>
             </div>
             
+            <!-- Vùng hiển thị bên phải (Thông tin giá + Phân loại chọn) -->
             <div class="popup-right-side">
                 <div class="popup-scroll-box">
                     <h2 class="popup-title-text" id="popupProductTitle">Tên sản phẩm</h2>
                     
+                    <!-- Vị trí Mô tả cũ dành riêng cho hàng Có sẵn -->
                     <div id="popupRightDescWrapper">
                         <span class="popup-section-title">Mô tả sản phẩm</span>
                         <div class="popup-desc-box" id="popupProductDesc">Nội dung mô tả sản phẩm...</div>
@@ -656,16 +666,17 @@
             track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
         }
 
+        // ĐÃ KHẮC PHỤC: Trả tên nút "Zalo Shop" về chữ "Zalo" nguyên bản của PO
         function renderFooterSocials() {
             const container = document.getElementById('footer-social-links');
             let htmlLinks = '';
             if(globalStoreData.config['Link_FB']) htmlLinks += `<a href="${globalStoreData.config['Link_FB']}" target="_blank" class="footer-btn btn-fb">Facebook</a>`;
-            if(globalStoreData.config['Link_Zalo']) htmlLinks += `<a href="${globalStoreData.config['Link_Zalo']}" target="_blank" class="footer-btn btn-zl">Zalo Shop</a>`;
+            if(globalStoreData.config['Link_Zalo']) htmlLinks += `<a href="${globalStoreData.config['Link_Zalo']}" target="_blank" class="footer-btn btn-zl">Zalo</a>`;
             if(globalStoreData.config['Link_Shopee_Chung']) htmlLinks += `<a href="${globalStoreData.config['Link_Shopee_Chung']}" target="_blank" class="footer-btn btn-sp">Shopee</a>`;
             container.innerHTML = htmlLinks;
         }
 
-        // GIẢI PHÁP TRIỆT ĐỂ: Tạo một lớp kính div trong suốt phủ đè lên trên cùng của Card sản phẩm để bắt click nhạy 100%
+        // ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Gán trực tiếp onclick lên thẻ cha ngoài cùng của Card. Click bất kỳ đâu cũng ăn 100% mượt mà!
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
@@ -690,10 +701,7 @@
                 const badgeClass = isPreorder ? 'status-preorder' : 'status-available';
 
                 return `
-                    <div class="product-card">
-                        <!-- Tấm kính vô hình bắt sự kiện click chuẩn xác 100% -->
-                        <div class="product-click-glass" onclick="openProductDetailPopup('${p.code}')"></div>
-                        
+                    <div class="product-card" onclick="openProductDetailPopup('${p.code}')">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper">
                             <img class="product-img" src="${p.img || 'https://via.placeholder.com/400?text=No+Image'}" alt="${p.name}">
