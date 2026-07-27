@@ -48,12 +48,11 @@
         
         .logo-box { display: flex; align-items: center; }
         .logo-circle { 
-            width: 115px; height: 115px; /* Phóng to logo lên 115px cực rõ nét */
+            width: 115px; height: 115px; 
             border-radius: 50%; 
-            background: transparent; /* Loại bỏ nền trắng đục */
+            background: transparent; 
             display: flex; align-items: center; justify-content: center;
             overflow: hidden;
-            /* Làm mờ và làm dịu đường viền bao quanh logo */
             box-shadow: 0 4px 20px rgba(31, 78, 69, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
@@ -87,26 +86,27 @@
             border: 1px dashed rgba(56, 122, 111, 0.25);
         }
 
-        /* Khối Banner trượt vuốt trái CSS mượt mà */
+        /* KHỐI BANNER CẢI TIẾN: Giảm chiều cao 1 nửa + Viền kính mờ nghệ thuật */
         .hero-banner { 
             max-width: 1200px; width: 100%; margin: 25px auto 0; padding: 0 20px; box-sizing: border-box;
         }
         .banner-wrapper {
             position: relative; width: 100%; 
-            border-radius: 32px; /* Tăng bo góc sâu nghệ thuật hơn */
+            border-radius: 32px; 
             overflow: hidden;
-            box-shadow: 0 12px 35px rgba(31, 78, 69, 0.08);
-            border: 5px solid #ffffff; box-sizing: border-box;
+            /* Đổi sang viền kính mờ (Glassmorphism border) siêu sang */
+            border: 4px solid rgba(255, 255, 255, 0.4); 
+            box-sizing: border-box;
+            box-shadow: 0 15px 35px rgba(31, 78, 69, 0.1);
             background: #ffffff;
-            aspect-ratio: 1024 / 571; /* Khóa cứng khung khớp chuẩn tỷ lệ ảnh 1024x571 của PO */
+            aspect-ratio: 1024 / 285; /* Cắt giảm chính xác một nửa chiều cao gốc */
         }
         
-        /* Cấu trúc thanh trượt dịch chuyển tịnh tiến theo trục X */
         .banner-slider-track {
             display: flex;
             width: 100%;
             height: 100%;
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); /* Vuốt trái chậm rãi mượt mà */
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .banner-slide {
             flex: 0 0 100%;
@@ -116,19 +116,29 @@
             transition: opacity 1.2s ease;
         }
         .banner-slide.active {
-            opacity: 1; /* Hiện dần tự nhiên khi vào khung hình */
+            opacity: 1;
         }
-        .banner-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* Cưỡng bức lấy phần tâm chính giữa của ảnh banner */
+        .banner-slide img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            object-position: center center; 
+            display: block; 
+        }
 
-        /* Cưỡng bức Khối lọc dạt lề phải tuyệt đối 100% */
+        /* BỘ LỌC KHÓA CỨNG LỀ PHẢI */
         .filter-section {
-            max-width: 1200px; margin: 35px auto 0; padding: 0 20px; box-sizing: border-box;
-            display: flex !important; 
-            justify-content: flex-end !important; /* Đẩy sang phải */
+            max-width: 1200px; 
+            margin: 30px auto 0; 
+            padding: 0 20px; 
+            box-sizing: border-box;
+            display: flex !important;
+            justify-content: flex-end !important; /* Ép layout cha dạt phải */
         }
         .sort-box {
-            display: block;
-            margin-left: auto; /* Bổ trợ đẩy lề phải tối đa */
+            margin-left: auto !important; /* Triệt tiêu hoàn toàn căn giữa */
+            margin-right: 0 !important;
         }
         .sort-box select {
             padding: 11px 26px; border-radius: 30px; border: 1px solid rgba(56, 122, 111, 0.25);
@@ -183,7 +193,7 @@
             .nav-container { flex-direction: column; gap: 15px; justify-content: center; }
             .menu-categories { justify-content: center; gap: 8px; }
             .filter-section { justify-content: center !important; }
-            .banner-wrapper { aspect-ratio: auto; height: 220px; }
+            .banner-wrapper { aspect-ratio: auto; height: 140px; }
         }
     </style>
 </head>
@@ -212,13 +222,13 @@
         <div class="vision-box" id="vision-text-box"></div>
     </div>
 
-    <!-- Khối Banner dạng trượt Slider Track -->
     <div class="hero-banner" id="banner-root-area" style="display: none;">
         <div class="banner-wrapper">
             <div class="banner-slider-track" id="carousel-slider-track"></div>
         </div>
     </div>
 
+    <!-- Khối filter riêng biệt cưỡng bức -->
     <div class="filter-section">
         <div class="sort-box">
             <select id="sort-selector" onchange="renderProductsGrid()">
@@ -354,7 +364,6 @@
                 track.innerHTML = htmlSlides;
                 document.getElementById('banner-root-area').style.display = 'block';
                 
-                // Cài đặt thời gian đổi ảnh lên 8000ms (8 giây) theo mong muốn của PO
                 if(totalSlidesCount > 1) {
                     clearInterval(slideInterval);
                     slideInterval = setInterval(moveToNextSlide, 8000);
@@ -371,7 +380,6 @@
             currentSlideIndex = (currentSlideIndex + 1) % totalSlidesCount;
             slides[currentSlideIndex].classList.add('active');
             
-            // Dịch chuyển track sang trái tính theo phần trăm vị trí slide
             track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
         }
 
