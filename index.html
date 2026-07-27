@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
+    <title>Cửa Hàng Vô Tri - Creative Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -226,7 +226,7 @@
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* ==================== POPUP LIQUID GLASS STYLES ==================== */
+        /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES ==================== */
         .popup-overlay {
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -302,10 +302,13 @@
         }
         .btn-action-main:hover { background: var(--emerald-soft); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(31, 78, 69, 0.25); }
         .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        /* Đã nâng nhãn text in hoa Uppercase cho 2 nút phụ */
         .btn-action-sub {
             text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px;
             border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border);
             cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
         .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
 
@@ -408,7 +411,7 @@
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
                 
                 <!-- Vị trí Mô tả mới dành riêng cho hàng Đặt trước -->
-                <div id="popupLeftDescWrapper" style="display: none; mt-4">
+                <div id="popupLeftDescWrapper" style="display: none; margin-top: 15px;">
                     <span class="popup-section-title">Mô tả sản phẩm</span>
                     <div class="popup-desc-box" id="popupProductLeftDesc"></div>
                 </div>
@@ -472,6 +475,7 @@
         let popupActiveProduct = null;
         let popupActiveImgIndex = 0;
         let popupImagesArray = [];
+        let popupAutoplayInterval = null; // Quản lý bộ đếm tự chuyển ảnh 5s
 
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": {
@@ -712,6 +716,7 @@
             }).join('');
         }
 
+        // ĐÃ KHẮC PHỤC: Chuyển chữ "giấy" thành "Giấy" viết hoa chữ cái đầu tiên chuẩn chỉnh
         function formatOptionToVietnamese(text) {
             return text.replace(/_/g, ' ')
                        .replace(/Khong Man/g, 'Không màng')
@@ -736,17 +741,14 @@
 
             document.getElementById('popupProductTitle').innerText = prod.name;
             
-            // LOGIC DỜI BỐ CỤC MÔ TẢ ĐỘNG THEO YÊU CẦU CỦA PO
             const isPreorderProduct = prod.stock.toLowerCase().includes('đặt trước');
             const descContent = prod.desc || "Sản phẩm handmade chất lượng cao, thiết kế độc quyền tỉ mỉ.";
 
             if (isPreorderProduct) {
-                // Hàng đặt trước -> Chuyển mô tả sang bên trái, ẩn mô tả bên phải
                 document.getElementById('popupLeftDescWrapper').style.display = 'block';
                 document.getElementById('popupRightDescWrapper').style.display = 'none';
                 document.getElementById('popupProductLeftDesc').innerText = descContent;
             } else {
-                // Hàng có sẵn -> Giữ mô tả ở bên phải, ẩn mô tả bên trái
                 document.getElementById('popupLeftDescWrapper').style.display = 'none';
                 document.getElementById('popupRightDescWrapper').style.display = 'block';
                 document.getElementById('popupProductDesc').innerText = descContent;
@@ -772,6 +774,9 @@
             }
 
             renderPopupSlider();
+            
+            // ĐÃ THÊM: Kích hoạt Carousel tự động nhảy ảnh chi tiết mỗi 5s
+            startPopupAutoplay();
 
             const checkGiaBlock = document.getElementById('popupCheckGiaBlock');
             const radioSpace = document.getElementById('popupDynamicRadioSpace');
@@ -908,8 +913,7 @@
                 nextBtn.style.display = 'flex';
                 nextBtn.onclick = function(e) {
                     e.stopPropagation();
-                    popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length;
-                    renderPopupSlider();
+                    nextPopupImage();
                 };
             }
 
@@ -924,7 +928,31 @@
             }
         }
 
+        // Hàm hỗ trợ dịch chuyển sang hình ảnh tiếp theo
+        function nextPopupImage() {
+            if(popupImagesArray.length <= 1) return;
+            popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length;
+            renderPopupSlider();
+        }
+
+        // ĐÃ THÊM: Khởi động vòng lặp tự động chuyển slide ảnh mỗi 5000ms (5 giây)
+        function startPopupAutoplay() {
+            stopPopupAutoplay(); // Xóa vòng lặp cũ trước tránh trùng lặp bộ đếm
+            if(popupImagesArray.length > 1) {
+                popupAutoplayInterval = setInterval(nextPopupImage, 5000);
+            }
+        }
+
+        // Dừng đếm thời gian chuyển ảnh khi đóng popup
+        function stopPopupAutoplay() {
+            if(popupAutoplayInterval) {
+                clearInterval(popupAutoplayInterval);
+                popupAutoplayInterval = null;
+            }
+        }
+
         function closeProductPopup() {
+            stopPopupAutoplay(); // Hủy bỏ hoàn toàn bộ đếm thời gian 5s
             document.getElementById('liquidProductPopup').classList.remove('open');
             popupActiveProduct = null;
         }
