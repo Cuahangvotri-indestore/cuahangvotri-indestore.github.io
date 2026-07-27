@@ -226,7 +226,7 @@
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES ==================== */
+        /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES (ĐÃ TĂNG SIZE ẢNH VÀ TEXT) ==================== */
         .popup-overlay {
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -237,7 +237,7 @@
         
         .popup-container {
             background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
-            border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 960px; width: 100%;
+            border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; /* Tăng max-width toàn khung */
             box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18), inset 0 4px 20px rgba(255, 255, 255, 0.5);
             display: flex; max-height: 85vh; overflow: hidden; position: relative;
             transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
@@ -253,11 +253,11 @@
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
 
         .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-        .popup-image-viewport { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 320px; }
-        .popup-main-image { max-width: 100%; max-height: 320px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        .popup-image-viewport { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 420px; } /* Đẩy min-height rộng ra */
+        .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); } /* Cho ảnh to lên */
         
         .popup-nav-btn {
-            position: absolute; right: 10px; width: 36px; height: 36px; border-radius: 50%;
+            position: absolute; right: 10px; width: 40px; height: 40px; border-radius: 50%;
             background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
             display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;
         }
@@ -266,35 +266,35 @@
         .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); transition: all 0.3s; }
         .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
 
-        .popup-right-side { width: 50%; padding: 30px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
+        .popup-right-side { width: 50%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
         .popup-scroll-box { flex: 1; margin-bottom: 20px; padding-right: 5px; }
         .popup-scroll-box::-webkit-scrollbar { width: 4px; }
         .popup-scroll-box::-webkit-scrollbar-thumb { background: rgba(31, 78, 69, 0.15); border-radius: 10px; }
         
-        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 20px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 12px 0; padding-right: 25px; line-height: 1.4; }
-        .popup-section-title { font-size: 11px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
-        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 12px 16px; font-size: 14px; color: #4f6a65; line-height: 1.6; margin-bottom: 16px; }
-        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 12px 18px; border-radius: 18px; margin-bottom: 18px; }
-        .popup-price-label { font-size: 12px; font-weight: 700; color: var(--emerald-dark); }
-        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 22px; font-weight: 700; color: var(--emerald-dark); }
+        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 24px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 14px 0; padding-right: 25px; line-height: 1.4; } /* Tăng size tên SP */
+        .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; } /* Tăng size tiêu đề mục */
+        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 14px 18px; font-size: 15px; color: #4f6a65; line-height: 1.6; margin-bottom: 18px; } /* Tăng size mô tả */
+        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 14px 20px; border-radius: 18px; margin-bottom: 20px; }
+        .popup-price-label { font-size: 13px; font-weight: 700; color: var(--emerald-dark); }
+        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); } /* Tăng size hiển thị giá tiền */
 
-        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 16px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.01); }
-        .radio-group-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 18px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.01); }
+        .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-group-wrapper:last-child { margin-bottom: 0; }
-        .radio-title-label { font-size: 12px; font-weight: 700; color: var(--emerald-dark); }
+        .radio-title-label { font-size: 14px; font-weight: 700; color: var(--emerald-dark); } /* Tăng size nhãn chọn */
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
         .custom-radio-btn {
-            display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255,255,255,0.7);
-            border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 13px; font-weight: 700;
+            display: flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255,255,255,0.7);
+            border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; /* Tăng size text nút chọn */
             color: var(--emerald-dark); cursor: pointer; transition: all 0.2s ease;
         }
-        .custom-radio-btn input { accent-color: var(--emerald-dark); margin: 0; transform: scale(0.95); }
+        .custom-radio-btn input { accent-color: var(--emerald-dark); margin: 0; transform: scale(1.05); }
         .custom-radio-btn:hover { background: #ffffff; }
 
         .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
         .btn-action-main {
-            text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 14px;
+            text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px;
             border-radius: 18px; background: var(--emerald-dark); color: #fff;
             letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer;
             box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); transition: all 0.3s;
@@ -303,7 +303,7 @@
         .btn-action-main:hover { background: var(--emerald-soft); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(31, 78, 69, 0.25); }
         .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-action-sub {
-            text-decoration: none; text-align: center; font-weight: 700; font-size: 13px; padding: 11px;
+            text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px;
             border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border);
             cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
@@ -313,7 +313,32 @@
             .popup-container { flex-direction: column; max-height: 90vh; overflow-y: auto; }
             .popup-left-side, .popup-right-side { width: 100%; padding: 20px; }
             .popup-left-side { border-right: none; border-bottom: 1px solid var(--liquid-border); }
-            .popup-image-viewport { min-height: 240px; }
+            .popup-image-viewport { min-height: 280px; }
+        }
+
+        /* ==================== KHÔI PHỤC HOÀN TOÀN STYLE FOOTER BAN ĐẦU CỦA PO ==================== */
+        footer {
+            background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
+            text-align: center; margin-top: auto; backdrop-filter: blur(var(--blur-value)); box-shadow: 0 -10px 30px rgba(31, 78, 69, 0.03);
+        }
+        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .footer-links { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+        .footer-btn {
+            text-decoration: none; font-weight: 700; font-size: 14px; padding: 11px 28px; border-radius: 40px;
+            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--liquid-border); backdrop-filter: blur(5px);
+        }
+        .btn-fb { background: rgba(234, 242, 249, 0.5); color: #1877f2; }
+        .btn-zl { background: rgba(237, 245, 247, 0.5); color: #0068ff; }
+        .btn-sp { background: rgba(255, 242, 238, 0.5); color: var(--shopee-color); }
+        .footer-btn:hover { transform: translateY(-2px); opacity: 0.9; box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
+        .footer-copy { font-size: 13px; color: #8e9cae; margin: 0; font-weight: 500; }
+
+        @media (max-width: 1024px) {
+            .nav-container { flex-direction: column; gap: 15px; justify-content: center; }
+            .right-nav-box { align-items: center; }
+            .menu-categories { justify-content: center; gap: 8px; }
+            .filter-section { justify-content: center; }
+            .banner-wrapper { aspect-ratio: auto; height: 160px; }
         }
     </style>
 </head>
@@ -805,7 +830,6 @@
             container.appendChild(wrapper);
         }
 
-        // HÀM TÍNH TOÁN GIÁ CÓ TÍCH HỢP TÍNH NĂNG NHẬN DIỆN TEXT "Chưa có" CỦA PO
         function calculatePopupDynamicPrice() {
             if(!popupActiveProduct || !popupActiveProduct.boCauHinh) return;
 
@@ -839,7 +863,6 @@
                 }
             }
 
-            // Thuật toán kiểm tra nếu giá trị trả về là chuỗi chữ "Chưa có" thì hiện text, ngược lại format tiền tệ đ
             const priceDisplayEl = document.getElementById('popupDynamicPrice');
             if (String(computedPrice).trim() === "Chưa có") {
                 priceDisplayEl.innerText = "Chưa có";
