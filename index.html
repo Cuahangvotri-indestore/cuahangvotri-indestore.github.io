@@ -59,10 +59,13 @@
             box-shadow: var(--liquid-shadow);
         }
         
+        /* Cấu hình lại container cha để hỗ trợ cấu trúc slogan bám góc dưới phải */
         .nav-container { 
             max-width: 1300px; margin: 0 auto; 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px 24px; box-sizing: border-box;
+            padding: 20px 24px 35px 24px; /* Tăng padding bottom để tạo không gian cho slogan bám dưới */
+            box-sizing: border-box;
+            position: relative; /* Kích hoạt không gian định vị tuyệt đối */
         }
         
         .logo-box { flex-shrink: 0; display: flex; align-items: center; }
@@ -81,18 +84,19 @@
         .logo-circle:hover { transform: scale(1.05) rotate(2deg); }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* Cụm điều hướng bên phải bao gồm cả Menu và Slogan nằm dưới */
+        /* Cụm điều hướng căn giữa hoàn toàn bố cục */
         .right-nav-box {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 12px;
+            justify-content: center;
+            align-items: center;
             flex: 1;
         }
 
         nav { width: 100%; }
         .menu-categories { 
-            display: flex; justify-content: flex-end; align-items: center;
+            display: flex; 
+            justify-content: center; /* Trả Menu về căn giữa chính diện */
+            align-items: center;
             gap: 15px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; 
         }
         
@@ -123,22 +127,23 @@
             transform: translateY(-3px) scale(1.02);
         }
 
-        /* KHU VỰC CÂU TẦM NHÌN: Tách biệt hẳn nằm dưới Menu, canh phải tuyệt đối */
+        /* ĐỊNH VỊ CÂU TẦM NHÌN: Khóa cứng bám góc dưới cùng bên phải (Bottom Right) */
         .header-slogan-area {
-            width: 100%;
+            position: absolute;
+            bottom: 8px; /* Bám sát lề dưới */
+            right: 24px; /* Bám sát lề phải */
             text-align: right;
-            padding-right: 5px;
             display: none; 
         }
         .header-slogan-text {
             font-family: 'Comfortaa', sans-serif;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--emerald-dark);
-            line-height: 1.4;
             margin: 0;
             font-style: italic;
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            opacity: 0.85;
         }
 
         /* Banner */
@@ -246,9 +251,9 @@
         .footer-copy { font-size: 13px; color: #8e9cae; margin: 0; font-weight: 500; }
 
         @media (max-width: 1024px) {
-            .nav-container { flex-direction: column; gap: 15px; justify-content: center; }
+            .nav-container { flex-direction: column; gap: 15px; justify-content: center; padding-bottom: 20px; }
             .right-nav-box { align-items: center; }
-            .header-slogan-area { text-align: center; padding-right: 0; }
+            .header-slogan-area { position: static; text-align: center; padding-right: 0; margin-top: 5px; }
             .menu-categories { justify-content: center; gap: 8px; }
             .filter-section { justify-content: center; }
             .banner-wrapper { aspect-ratio: auto; height: 160px; }
@@ -261,12 +266,12 @@
 
     <header>
         <div class="nav-container">
-            <!-- Cột trái: Logo -->
+            <!-- Logo bên lề trái -->
             <div class="logo-box">
                 <div class="logo-circle" id="shop-logo-box"></div>
             </div>
             
-            <!-- Cột phải: Gom gọn Menu và Slogan nằm bên dưới canh phải -->
+            <!-- Khối chứa điều hướng ở giữa và slogan bám đáy phải -->
             <div class="right-nav-box">
                 <nav>
                     <ul class="menu-categories">
@@ -401,7 +406,6 @@
                 document.getElementById('shop-logo-box').innerHTML = `<img src="${logoUrl}" alt="Logo Shop">`;
             }
 
-            // Nạp dữ liệu Slogan canh phải dưới Menu
             if(globalStoreData.config['Tam_Nhin'] && String(globalStoreData.config['Tam_Nhin']).trim() !== "") {
                 document.getElementById('header-slogan-content').innerText = `"${globalStoreData.config['Tam_Nhin']}"`;
                 document.getElementById('header-slogan-root').style.display = 'block';
