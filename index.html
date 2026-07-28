@@ -88,19 +88,24 @@
         .dropdown-item { padding: 12px 24px; font-size: 15px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; }
         .dropdown-item:hover { background: var(--emerald-soft); color: #ffffff; }
         .dropdown-item.selected { background: rgba(31, 78, 69, 0.1); color: var(--emerald-dark); }
-       /* Đẩy lưới sản phẩm xuống một chút để cách ly hoàn toàn với thanh menu trên, loại bỏ triệt để việc bị che khuất lớp kính */
+       /* Tăng khoảng cách khối chính và thêm padding an toàn bên trong lưới để tránh tuyệt đối vùng bị header che khuất */
         .main-content { 
             max-width: 1300px; 
             width: 100%; 
-            margin: 45px auto 70px; 
-            padding: 0 24px; 
+            margin: 50px auto 70px; 
+            padding: 10px 24px 0 24px; 
             box-sizing: border-box; 
             flex: 1; 
             position: relative;
             z-index: 5;
         }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
-        
+       .product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); 
+            gap: 35px; 
+            /* Đảm bảo khung lưới bắt đầu hoàn toàn sạch sẽ, không bị chồng lấn không gian với phía trên */
+            padding-top: 10px; 
+        }
        /* Đảm bảo mỗi thẻ card luôn ở tầng tương tác cao nhất, không bị bất kỳ vùng kính mờ nào phía trên cản trở */
         .product-card { 
             background: rgba(255, 255, 255, 0.4); 
