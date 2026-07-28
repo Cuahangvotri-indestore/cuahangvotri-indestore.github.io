@@ -93,21 +93,31 @@
         
         /* HOVER SCALE ĐỒNG BỘ LOGO VÀ CLICK BẤT TỬ */
        .product-card { 
-            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
-            transition: box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
-            /* Chống bôi đen văn bản khi click nhanh */
+            background: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(var(--blur-value)); 
+            border-radius: 32px; 
+            border: 1.5px solid var(--liquid-border);
+            transition: box-shadow 0.3s ease; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; /* Bắt buộc phải có để làm mốc định vị cho lớp kính */
+            overflow: hidden; 
+            box-shadow: var(--liquid-shadow); 
+            min-height: 405px; 
+            cursor: pointer;
             user-select: none;
-            -webkit-user-select: none;
         }
         .product-card:hover { 
-            transform: none !important; box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); border-color: rgba(56, 122, 111, 0.45); 
+            transform: none !important; 
+            box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); 
+            border-color: rgba(56, 122, 111, 0.45); 
         }
         
-        /* Lớp kính trong suốt phủ kín card, nhận diện 100% mọi cú click ở mọi ngóc ngách, chặn đứng lỗi bôi đen chữ */
+        /* Tấm khiên phủ kín toàn bộ card, nằm lớp trên cùng (z-index: 20) để hứng trọn 100% mọi cú click */
         .product-card-shield {
             position: absolute;
             inset: 0;
-            z-index: 10;
+            z-index: 20;
             cursor: pointer;
             background: transparent;
         }
