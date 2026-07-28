@@ -34,7 +34,6 @@
         }
         .nav-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 24px; box-sizing: border-box; }
         
-        /* Khôi phục hiệu ứng zoom logo mượt mà sang xịn */
         .logo-circle { 
             width: 135px; height: 135px; border-radius: 50%; background: rgba(255, 255, 255, 0.25);
             display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--liquid-border);
@@ -98,7 +97,6 @@
         .main-content { max-width: 1300px; width: 100%; margin: 15px auto 60px; padding: 0 24px; box-sizing: border-box; flex: 1; position: relative; z-index: 5; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
-        /* CARD SẢN PHẨM HOẠT ĐỘNG CHUẨN XÁC, CLICK NHẠY 100% */
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
@@ -228,19 +226,6 @@
                         <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                     <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-                    
-                    <div id="popupLeftInfoWrapper" style="display: none; margin-top: 10px;">
-                        <h2 class="popup-title-text" id="popupLeftProductTitle" style="font-size: 20px; margin-bottom: 10px;"></h2>
-                        <span class="popup-section-title">Mô tả sản phẩm</span>
-                        <div class="popup-desc-box" id="popupProductLeftDesc"></div>
-                    </div>
-                </div>
-
-                <div id="popupLeftButtonsGroup" style="display: none; padding-top: 15px;">
-                    <div class="btn-action-sub-grid">
-                        <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
-                        <a class="btn-action-sub" id="btnPopupZaloConsultLeft" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
-                    </div>
                 </div>
             </div>
             
@@ -263,10 +248,10 @@
                 </div>
                 
                 <div class="popup-actions-wrapper">
-                    <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank"><i class="fa-solid fa-bag-shopping"></i> Mua ngay nhé</a>
-                    <div class="btn-action-sub-grid" id="popupRightButtonsGroup">
+                    <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank"><i class="fa-solid fa-bag-shopping"></i> MUA NGAY TRÊN SHOPEE</a>
+                    <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
                         <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
-                        <a class="btn-action-sub" id="btnPopupZaloConsultRight" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                        <a class="btn-action-sub" id="btnPopupZaloConsult" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
                     </div>
                 </div>
             </div>
@@ -407,7 +392,6 @@
             document.getElementById('footer-social-links').innerHTML = htmlLinks;
         }
 
-        /* HÀM RENDER GRID GẮN TRỰC TIẾP ONCLICK VÀO THẺ CARD ĐẢM BẢO CLICK MỌI VÙNG ĐỀU ĂN 100% */
         function renderProductsGrid() {
             let displayList = [...globalStoreData.products];
             if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
@@ -440,32 +424,23 @@
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
 
-                if (isPreorder) {
-                    document.getElementById('popupLeftInfoWrapper').style.display = 'block';
-                    document.getElementById('popupLeftProductTitle').innerText = prod.name;
-                    document.getElementById('popupProductLeftDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
-                    document.getElementById('popupLeftButtonsGroup').style.display = 'block';
-                    document.getElementById('btnPopupZaloConsultLeft').href = shopZalo;
-                    
-                    document.getElementById('popupRightProductTitle').style.display = 'none';
-                    document.getElementById('popupRightDescWrapper').style.display = 'none';
-                    document.getElementById('popupRightButtonsGroup').style.display = 'none';
-                } else {
-                    document.getElementById('popupLeftInfoWrapper').style.display = 'none';
-                    document.getElementById('popupLeftButtonsGroup').style.display = 'none';
-                    
-                    document.getElementById('popupRightProductTitle').style.display = 'block';
-                    document.getElementById('popupRightProductTitle').innerText = prod.name;
-                    document.getElementById('popupRightDescWrapper').style.display = 'block';
-                    document.getElementById('popupProductDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
-                    document.getElementById('popupRightButtonsGroup').style.display = 'grid';
-                    document.getElementById('btnPopupZaloConsultRight').href = shopZalo;
-                }
+                const titleEl = document.getElementById('popupRightProductTitle');
+                if(titleEl) titleEl.innerText = prod.name;
+                
+                const descEl = document.getElementById('popupProductDesc');
+                if(descEl) descEl.innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
 
                 const buyBtn = document.getElementById('btnPopupMainBuy');
-                buyBtn.href = prod.shopeeLink || shopZalo;
-                buyBtn.innerHTML = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
-                document.getElementById('popupSubButtonsGroup').style.display = isPreorder ? 'none' : 'grid';
+                if(buyBtn) {
+                    buyBtn.href = prod.shopeeLink || shopZalo;
+                    buyBtn.innerHTML = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
+                }
+
+                const zaloConsult = document.getElementById('btnPopupZaloConsult');
+                if(zaloConsult) zaloConsult.href = shopZalo;
+
+                const subButtons = document.getElementById('popupSubButtonsGroup');
+                if(subButtons) subButtons.style.display = isPreorder ? 'grid' : 'grid';
 
                 buildPopupSliderDOM(); 
                 renderPopupSliderEffects(); 
@@ -473,13 +448,14 @@
 
                 const checkBlock = document.getElementById('popupCheckGiaBlock');
                 const radioSpace = document.getElementById('popupDynamicRadioSpace');
-                radioSpace.innerHTML = '';
+                if(radioSpace) radioSpace.innerHTML = '';
 
                 if(!prod.boCauHinh || !sheetsPhuDataMatrix[prod.boCauHinh]) {
-                    checkBlock.style.display = 'none'; 
-                    document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
+                    if(checkBlock) checkBlock.style.display = 'none'; 
+                    const priceEl = document.getElementById('popupDynamicPrice');
+                    if(priceEl) priceEl.innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
                 } else {
-                    checkBlock.style.display = 'block'; 
+                    if(checkBlock) checkBlock.style.display = 'block'; 
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
                         buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", [...new Set(matrix.data.map(d => d.Loai_Thiep))], matrix.data[0].Loai_Thiep);
@@ -496,13 +472,15 @@
                     }
                     calculatePopupDynamicPrice();
                 }
-                document.getElementById('liquidProductPopup').classList.add('open');
+                const popupEl = document.getElementById('liquidProductPopup');
+                if(popupEl) popupEl.classList.add('open');
             } catch (err) {
                 console.error("Lỗi khi mở popup theo index:", err);
             }
         }
 
         function buildPopupRadioRow(container, groupName, groupTitle, elementsList, activeValue) {
+            if(!container) return;
             const wrapper = document.createElement('div'); wrapper.className = "radio-group-wrapper";
             wrapper.innerHTML = `<span class="radio-title-label">${groupTitle}</span>`;
             const flex = document.createElement('div'); flex.className = "radio-options-flex";
@@ -539,29 +517,50 @@
                 }
             }
 
-            if (priceVal === "Chưa có" || String(priceVal).trim() === "Chưa có") {
-                document.getElementById('popupDynamicPrice').innerText = "Chưa có";
-            } else {
-                document.getElementById('popupDynamicPrice').innerText = Number(priceVal).toLocaleString('vi-VN') + " đ";
+            const priceEl = document.getElementById('popupDynamicPrice');
+            if(priceEl) {
+                if (priceVal === "Chưa có" || String(priceVal).trim() === "Chưa có") {
+                    priceEl.innerText = "Chưa có";
+                } else {
+                    priceEl.innerText = Number(priceVal).toLocaleString('vi-VN') + " đ";
+                }
             }
         }
 
-        function buildPopupSliderDOM() { document.getElementById('popupImageViewportTrack').innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item ${idx===0?'active':''}"><img class="popup-main-image" src="${url}"></div>`).join(''); }
-        function renderPopupSliderEffects() {
-            const slides = document.querySelectorAll('.popup-slide-item'); slides.forEach((s, idx) => idx === popupActiveImgIndex ? s.classList.add('active') : s.classList.remove('active'));
-            document.getElementById('btnNextPopupImg').style.display = popupImagesArray.length <= 1 ? 'none' : 'flex';
-            document.getElementById('btnNextPopupImg').onclick = (e) => { e.stopPropagation(); popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length; renderPopupSliderEffects(); };
-            document.getElementById('popupImgDotsSpace').innerHTML = popupImagesArray.length > 1 ? popupImagesArray.map((_, idx) => `<span class="popup-dot ${idx===popupActiveImgIndex?'active':''}"></span>`).join('') : '';
+        function buildPopupSliderDOM() { 
+            const track = document.getElementById('popupImageViewportTrack');
+            if(track) track.innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item ${idx===0?'active':''}"><img class="popup-main-image" src="${url}"></div>`).join(''); 
         }
-        function startPopupAutoplay() { stopPopupAutoplay(); if(popupImagesArray.length > 1) popupAutoplayInterval = setInterval(() => { popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length; renderPopupSliderEffects(); }, 5000); }
+
+        function renderPopupSliderEffects() {
+            const slides = document.querySelectorAll('.popup-slide-item'); 
+            slides.forEach((s, idx) => idx === popupActiveImgIndex ? s.classList.add('active') : s.classList.remove('active'));
+            
+            const nextBtn = document.getElementById('btnNextPopupImg');
+            if(nextBtn) {
+                nextBtn.style.display = popupImagesArray.length <= 1 ? 'none' : 'flex';
+                nextBtn.onclick = (e) => { e.stopPropagation(); popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length; renderPopupSliderEffects(); };
+            }
+            const dotsSpace = document.getElementById('popupImgDotsSpace');
+            if(dotsSpace) dotsSpace.innerHTML = popupImagesArray.length > 1 ? popupImagesArray.map((_, idx) => `<span class="popup-dot ${idx===popupActiveImgIndex?'active':''}"></span>`).join('') : '';
+        }
+
+        function startPopupAutoplay() { 
+            stopPopupAutoplay(); 
+            if(popupImagesArray.length > 1) popupAutoplayInterval = setInterval(() => { popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length; renderPopupSliderEffects(); }, 5000); 
+        }
+
         function stopPopupAutoplay() { if(popupAutoplayInterval) { clearInterval(popupAutoplayInterval); popupAutoplayInterval = null; } }
         
         function closeProductPopup() { 
             stopPopupAutoplay(); 
-            document.getElementById('liquidProductPopup').classList.remove('open'); 
+            const popupEl = document.getElementById('liquidProductPopup');
+            if(popupEl) popupEl.classList.remove('open'); 
             popupActiveProduct = null;
-            document.getElementById('popupImageViewportTrack').innerHTML = '';
+            const track = document.getElementById('popupImageViewportTrack');
+            if(track) track.innerHTML = '';
         }
+        
         function closeProductPopupOutside(e) { if(e.target.classList.contains('popup-overlay')) closeProductPopup(); }
         
         function formatOptionToVietnamese(t) { 
