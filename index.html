@@ -325,7 +325,7 @@
             document.getElementById('footer-social-links').innerHTML = htmlLinks;
         }
 
-        function renderProductsGrid() {
+       function renderProductsGrid() {
             let displayList = [...globalStoreData.products];
             if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
             else if (currentSortValue === 'price-desc') displayList.sort((a, b) => b.basePrice - a.basePrice);
@@ -334,7 +334,7 @@
             document.getElementById('product-list-view').innerHTML = displayList.map(p => {
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                 return `
-                    <div class="product-card" onclick="openProductDetailPopupByCode('${p.code}')">
+                    <div class="product-card" data-code="${p.code}">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
                         <div class="product-info">
@@ -344,6 +344,16 @@
                     </div>`;
             }).join('');
         }
+
+        // Ủy quyền sự kiện toàn cục - Bấm vào bất cứ đâu trên Card là mở ngay lập tức, không bao giờ lỗi lúc được lúc không
+        document.getElementById('product-list-view').addEventListener('click', function(e) {
+            const card = e.target.closest('.product-card');
+            if (!card) return;
+            const productCode = card.getAttribute('data-code');
+            if (productCode) {
+                openProductDetailPopupByCode(productCode);
+            }
+        });
 
         function openProductDetailPopupByCode(productCode) {
             try {
