@@ -274,6 +274,11 @@
             }
         };
 
+        function sanitizeText(str) {
+            if (!str) return '';
+            return String(str).replace(/["']/g, '').replace(/<[^>]*>?/gm, '');
+        }
+
         function toggleDropdown() { document.getElementById('customSortDropdown').classList.toggle('open'); }
         function selectDropdownOption(value, text) {
             currentSortValue = value; document.getElementById('dropdownCurrentText').innerText = text;
@@ -303,44 +308,50 @@
             } catch (e) { return []; }
         }
 
-       async function initSprint1HomePage() {
-            const configRows = await fetchSheetRows('Cau_Hinh_Shop');
-            configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
-            if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
-            if(globalStoreData.config['Logo_Shop']) document.getElementById('shop-logo-box').innerHTML = `<img src="${parseDirectImageUrl(globalStoreData.config['Logo_Shop'])}" alt="Logo Shop">`;
-            if(globalStoreData.config['Tam_Nhin']) { document.getElementById('vision-text-content').innerText = `"${globalStoreData.config['Tam_Nhin']}"`; document.getElementById('vision-area').style.display = 'block'; }
-            setupBannerCarousel(); renderFooterSocials();
+        async function initSprint1HomePage() {
+            try {
+                const configRows = await fetchSheetRows('Cau_Hinh_Shop');
+                configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
+                if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
+                if(globalStoreData.config['Logo_Shop']) document.getElementById('shop-logo-box').innerHTML = `<img src="${parseDirectImageUrl(globalStoreData.config['Logo_Shop'])}" alt="Logo Shop">`;
+                if(globalStoreData.config['Tam_Nhin']) { document.getElementById('vision-text-content').innerText = `"${globalStoreData.config['Tam_Nhin']}"`; document.getElementById('vision-area').style.display = 'block'; }
+                setupBannerCarousel(); renderFooterSocials();
 
-            const productRows = await fetchSheetRows('Danh_Sach_SanPham');
-            productRows.forEach((row, idx) => {
-                // Chỉ cần dòng có tồn tại và có ít nhất tên sản phẩm (cột c[1]), còn lại có gì lấy nấy không ràng buộc!
-                if(row && row.c && row.c[1] && row.c[1].v) {
-                    let pPrice = 0; 
-                    if(row.c[7] && row.c[7].v) {
-                        pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
+                const productRows = await fetchSheetRows('Danh_Sach_SanPham');
+                globalStoreData.products = [];
+                
+                productRows.forEach((row, idx) => {
+                    if(row && row.c) {
+                        let pPrice = 0; 
+                        if(row.c[7] && row.c[7].v) {
+                            pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
+                        }
+
+                        let pName = (row.c[1] && row.c[1].v) ? sanitizeText(row.c[1].v) : `Sản phẩm ${idx + 1}`;
+                        let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
+                        let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
+
+                        globalStoreData.products.push({
+                            sheetIndex: idx, 
+                            code: cleanCode, 
+                            name: pName, 
+                            category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v) : 'KHÁC',
+                            img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
+                            detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
+                            desc: (row.c[5] && row.c[5].v) ? sanitizeText(row.c[5].v) : '', 
+                            basePrice: pPrice, 
+                            shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '', 
+                            stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
+                            boCauHinh: (row.c[11] && row.c[11].v) ? String(row.c[11].v).trim() : ''
+                        });
                     }
-
-                    // Tự động tạo mã code an toàn nếu cột Mã SP bị trống
-                    let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
-                    let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
-
-                    globalStoreData.products.push({
-                        sheetIndex: idx, 
-                        code: cleanCode, 
-                        name: sanitizeText(row.c[1].v), 
-                        category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v) : 'KHÁC',
-                        img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
-                        detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
-                        desc: (row.c[5] && row.c[5].v) ? sanitizeText(row.c[5].v) : '', 
-                        basePrice: pPrice, 
-                        shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '', 
-                        stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
-                        boCauHinh: (row.c[11] && row.c[11].v) ? String(row.c[11].v).trim() : ''
-                    });
-                }
-            });
-            renderProductsGrid();
+                });
+                renderProductsGrid();
+            } catch (err) {
+                console.error("Lỗi khởi tạo trang chủ:", err);
+            }
         }
+
         function setupBannerCarousel() {
             let bannerUrls = [];
             for(let i=1; i<=3; i++) { if(globalStoreData.config[`Banner_${i}`]) bannerUrls.push(parseDirectImageUrl(globalStoreData.config[`Banner_${i}`])); }
@@ -364,7 +375,7 @@
             document.getElementById('footer-social-links').innerHTML = htmlLinks;
         }
 
-       function renderProductsGrid() {
+        function renderProductsGrid() {
             let displayList = [...globalStoreData.products];
             if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
             else if (currentSortValue === 'price-desc') displayList.sort((a, b) => b.basePrice - a.basePrice);
@@ -383,15 +394,6 @@
                     </div>`;
             }).join('');
         }
-        // Ủy quyền sự kiện toàn cục - Bấm vào bất cứ đâu trên Card là mở ngay lập tức, không bao giờ lỗi lúc được lúc không
-        document.getElementById('product-list-view').addEventListener('click', function(e) {
-            const card = e.target.closest('.product-card');
-            if (!card) return;
-            const productCode = card.getAttribute('data-code');
-            if (productCode) {
-                openProductDetailPopupByCode(productCode);
-            }
-        });
 
         function openProductDetailPopupByIndex(sheetIndex) {
             try {
@@ -450,6 +452,7 @@
                 console.error("Lỗi khi mở popup theo index:", err);
             }
         }
+
         function buildPopupRadioRow(container, groupName, groupTitle, elementsList, activeValue) {
             const wrapper = document.createElement('div'); wrapper.className = "radio-group-wrapper";
             wrapper.innerHTML = `<span class="radio-title-label">${groupTitle}</span>`;
@@ -483,23 +486,15 @@
         }
         function startPopupAutoplay() { stopPopupAutoplay(); if(popupImagesArray.length > 1) popupAutoplayInterval = setInterval(() => { popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length; renderPopupSliderEffects(); }, 5000); }
         function stopPopupAutoplay() { if(popupAutoplayInterval) { clearInterval(popupAutoplayInterval); popupAutoplayInterval = null; } }
-        function closeProductPopup() {
+        
+        function closeProductPopup() { 
             stopPopupAutoplay(); 
-            document.getElementById('liquidProductPopup').classList.remove('open');
-            popupActiveProduct = null;
-            
-            // Ép trình duyệt tái tạo lại toàn bộ lưới sản phẩm để giải phóng sạch sẽ bộ nhớ đệm DOM State
-            setTimeout(() => {
-                renderProductsGrid();
-            }, 150);
+            document.getElementById('liquidProductPopup').classList.remove('open'); 
+            popupActiveProduct = null; 
         }
-
-        function closeProductPopupOutside(e) {
-            if(e.target.classList.contains('popup-overlay')) {
-                closeProductPopup();
-            }
-        }
+        function closeProductPopupOutside(e) { if(e.target.classList.contains('popup-overlay')) closeProductPopup(); }
         function formatOptionToVietnamese(t) { return t.replace(/_/g, ' ').replace(/Khong Man/g, 'Không màng').replace(/Co Man/g, 'Có màng').replace(/In 1 Mat/g, 'In 1 mặt').replace(/In 2 Mat/g, 'In 2 mặt').replace(/Giay_Ford_/g, 'Giấy Ford '); }
+        
         window.onload = initSprint1HomePage;
     </script>
 </body>
