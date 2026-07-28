@@ -215,7 +215,7 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM (Phân tách thông minh theo cấu hình hoặc đặt trước) -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
@@ -395,16 +395,15 @@
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
-                
-                // Kiểm tra điều kiện: Nếu là sản phẩm cấu hình check giá (Thiệp, Sticker, Card) hoặc Đặt trước
-                const isConfigCheck = (prod.boCauHinh === 'GIA_THIEP' || prod.boCauHinh === 'GIA_TEM_STICKER' || prod.boCauHinh === 'GIA_CARD' || prod.stock.toLowerCase().includes('đặt trước'));
+                const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
+                const isConfigCheck = (prod.boCauHinh === 'GIA_THIEP' || prod.boCauHinh === 'GIA_TEM_STICKER' || prod.boCauHinh === 'GIA_CARD');
 
                 const leftSide = document.getElementById('popupLeftSideContainer');
                 const rightScrollBox = document.getElementById('popupRightScrollBox');
                 const actionsWrapper = document.getElementById('popupActionsWrapperContainer');
 
                 if (isConfigCheck) {
-                    // BỐC CỤC TRÁI (Tên -> Ảnh lớn -> Mô tả -> 2 nút tương tác)
+                    // BỐC CỤC TRÁI (Tên -> Ảnh lớn -> Mô tả -> 2 nút)
                     leftSide.innerHTML = `
                         <div>
                             <h2 class="popup-title-text">${prod.name}</h2>
@@ -435,7 +434,7 @@
                         </div>
                     `;
                 } else {
-                    // BỐC CỤC CHUẨN CŨ CHO CÁC SẢN PHẨM KHÁC (Trái chỉ chứa ảnh lớn, phải chứa Tên, Mô tả, Giá, Các nút)
+                    // BỐC CỤC CŨ (Trái chỉ ảnh, phải chứa Tên, Mô tả, Giá, Các nút)
                     leftSide.innerHTML = `
                         <div class="popup-image-container-wrapper" style="margin: auto 0;">
                             <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
@@ -459,7 +458,7 @@
                     `;
                 }
 
-                // Cập nhật nút Mua và tương tác bên phải
+                // Nút hành động phải: Có sẵn chỉ có nút Mua; Đặt trước (card/tem) hoặc check giá có đủ nút
                 const buyBtnHref = prod.shopeeLink || shopZalo;
                 const buyBtnText = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
                 
@@ -467,13 +466,19 @@
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                     `;
-                } else {
+                } else if (isPreorder) {
+                    // Đặt trước (Card/Tem không check giá) -> Toàn bộ nút nằm bên phải
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                         <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
                             <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
                             <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
                         </div>
+                    `;
+                } else {
+                    // Có sẵn -> Chỉ có nút Mua trên shopee (hoặc qua Zalo) bên phải
+                    actionsWrapper.innerHTML = `
+                        <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                     `;
                 }
 
