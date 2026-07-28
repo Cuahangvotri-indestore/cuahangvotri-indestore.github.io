@@ -37,17 +37,18 @@
             width: 135px; height: 135px; border-radius: 50%; background: rgba(255, 255, 255, 0.25);
             display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--liquid-border);
             box-shadow: 0 12px 35px rgba(31, 78, 69, 0.12), inset 0 10px 20px rgba(255, 255, 255, 0.7);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .logo-circle:hover { transform: scale(1.05) rotate(2deg); }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .right-nav-box { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; flex: 1; }
         .menu-categories { display: flex; justify-content: flex-end; align-items: center; gap: 15px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+        
+        /* Tăng size chữ và độ đậm cho nút danh mục menu */
         .menu-item { 
-            font-weight: 700; font-size: 15px; cursor: pointer; padding: 12px 28px; border-radius: 40px; 
-            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%); border: 1px solid var(--liquid-border); 
+            font-weight: 700; font-size: 16px; cursor: pointer; padding: 12px 28px; border-radius: 40px; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%); border: 1.5px solid var(--liquid-border); 
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); color: var(--emerald-dark); text-transform: uppercase; 
             box-shadow: 0 6px 20px rgba(31, 78, 69, 0.04), inset 0 4px 10px rgba(255, 255, 255, 0.6); position: relative; overflow: hidden;
+            letter-spacing: 0.5px;
         }
         .menu-item::before {
             content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%;
@@ -70,7 +71,9 @@
         .banner-slide { flex: 0 0 100%; width: 100%; height: 100%; opacity: 0.3; transition: opacity 1.2s ease; }
         .banner-slide.active { opacity: 1; }
         .banner-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .filter-section { max-width: 1300px; margin: 35px auto 0; padding: 0 24px; box-sizing: border-box; display: flex; justify-content: flex-end; width: 100%; }
+        
+        /* Thu hẹp khoảng cách bộ lọc và cân đối hài hòa */
+        .filter-section { max-width: 1300px; margin: 20px auto 0; padding: 0 24px; box-sizing: border-box; display: flex; justify-content: flex-end; width: 100%; }
         .custom-dropdown { position: relative; display: inline-block; min-width: 230px; z-index: 10; }
         .dropdown-trigger {
             padding: 14px 24px; border-radius: 40px; border: 1.5px solid var(--liquid-border);
@@ -88,63 +91,17 @@
         .dropdown-item { padding: 12px 24px; font-size: 15px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; }
         .dropdown-item:hover { background: var(--emerald-soft); color: #ffffff; }
         .dropdown-item.selected { background: rgba(31, 78, 69, 0.1); color: var(--emerald-dark); }
-       /* Tăng khoảng cách khối chính và thêm padding an toàn bên trong lưới để tránh tuyệt đối vùng bị header che khuất */
-        .main-content { 
-            max-width: 1300px; 
-            width: 100%; 
-            margin: 50px auto 70px; 
-            padding: 10px 24px 0 24px; 
-            box-sizing: border-box; 
-            flex: 1; 
-            position: relative;
-            z-index: 5;
-        }
-       .product-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); 
-            gap: 35px; 
-            /* Đảm bảo khung lưới bắt đầu hoàn toàn sạch sẽ, không bị chồng lấn không gian với phía trên */
-            padding-top: 10px; 
-        }
-       /* Đảm bảo mỗi thẻ card luôn ở tầng tương tác cao nhất, không bị bất kỳ vùng kính mờ nào phía trên cản trở */
-        .product-card { 
-            background: rgba(255, 255, 255, 0.4); 
-            backdrop-filter: blur(var(--blur-value)); 
-            border-radius: 32px; 
-            border: 1.5px solid var(--liquid-border);
-            transition: box-shadow 0.3s ease; 
-            display: flex; 
-            flex-direction: column; 
-            position: relative; 
-            overflow: hidden; 
-            box-shadow: var(--liquid-shadow); 
-            min-height: 405px; 
-            cursor: pointer;
-            user-select: none;
-            isolation: isolate; /* Cô lập tầng hiển thị, giúp bắt chuột nhạy tuyệt đối */
-            z-index: 10;
-        }
         
-        .product-card:hover { 
-            transform: none !important; 
-            box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); 
-            border-color: rgba(56, 122, 111, 0.45); 
+        .main-content { max-width: 1300px; width: 100%; margin: 15px auto 60px; padding: 0 24px; box-sizing: border-box; flex: 1; position: relative; z-index: 5; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
+        
+        .product-card { 
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
+            transition: box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
+            user-select: none;
         }
-
-        /* Bí quyết tối thượng: Biến mọi thành phần con bên trong thành "vô hình" trước mọi cú click chuột, giúp lực click luôn chạm thẳng vào card ở mọi ngóc ngách */
-        .product-card > * {
-            pointer-events: none;
-        }
-        /* Tấm khiên phủ kín toàn bộ card, nằm lớp trên cùng (z-index: 20) để hứng trọn 100% mọi cú click */
-        .product-card-shield {
-            position: absolute;
-            inset: 0;
-            z-index: 20;
-            cursor: pointer;
-            background: transparent;
-        }
-       
-        .product-card-click-shield { position: absolute; inset: 0; z-index: 50; cursor: pointer; background: transparent; }
+        .product-card:hover { box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); border-color: rgba(56, 122, 111, 0.45); }
+        .product-card > * { pointer-events: none; }
         .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
@@ -158,25 +115,8 @@
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
         /* POPUP CHI TIẾT SẢN PHẨM */
-       /* Đảm bảo khi popup đóng, nó phải bị vô hiệu hóa hoàn toàn tương tác chuột, không bao giờ che khuất các sản phẩm bên dưới */
-        .popup-overlay { 
-            position: fixed; 
-            inset: 0; 
-            z-index: 200; 
-            background: rgba(31, 78, 69, 0.15); 
-            backdrop-filter: blur(12px); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px; 
-            opacity: 0; 
-            pointer-events: none; /* Bắt buộc phải có để không bị cản chuột khi ẩn */
-            transition: opacity 0.4s ease; 
-        }
-       .popup-overlay.open { 
-            opacity: 1; 
-            pointer-events: auto; /* Chỉ mở khóa nhận chuột khi popup thực sự được bật lên */
-        }
+        .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 85vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
         .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
         .popup-close-btn { position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 10; }
@@ -206,13 +146,31 @@
         .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px; border-radius: 18px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); }
         .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px; border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
-        footer { background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px; text-align: center; margin-top: auto; }
-        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .footer-links { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
-        .footer-btn { text-decoration: none; font-weight: 700; font-size: 14px; padding: 11px 28px; border-radius: 40px; border: 1px solid var(--liquid-border); }
-        .btn-fb { background: rgba(234, 242, 249, 0.5); color: #1877f2; }
-        .btn-zl { background: rgba(237, 245, 247, 0.5); color: #0068ff; }
-        .btn-sp { background: rgba(255, 242, 238, 0.5); color: var(--shopee-color); }
+
+        /* Footer Liquid Glass & Copyright UI tối ưu */
+        footer { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-top: 1px solid var(--liquid-border); padding: 35px 24px; text-align: center; margin-top: auto; }
+        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .footer-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        
+        .footer-btn { 
+            text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 30px; border-radius: 40px; 
+            border: 1.5px solid var(--liquid-border); background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%);
+            backdrop-filter: blur(15px); box-shadow: 0 6px 20px rgba(31, 78, 69, 0.04), inset 0 4px 10px rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+        .footer-btn:hover {
+            transform: translateY(-2px); background: var(--emerald-soft); color: #ffffff !important; border-color: var(--emerald-soft);
+            box-shadow: 0 10px 25px rgba(56, 122, 111, 0.3);
+        }
+        .btn-fb { color: #1877f2; }
+        .btn-zl { color: #0068ff; }
+        .btn-sp { color: var(--shopee-color); }
+        
+        .footer-copyright {
+            font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700;
+            color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin-top: 5px;
+        }
+
         @media (max-width: 1024px) { .nav-container { flex-direction: column; gap: 15px; } .right-nav-box { align-items: center; } .menu-categories { justify-content: center; } .banner-wrapper { aspect-ratio: auto; height: 160px; } }
     </style>
 </head>
@@ -252,6 +210,7 @@
     </div>
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
+
     <!-- POPUP CHI TIẾT SẢN PHẨM -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
@@ -283,10 +242,15 @@
         </div>
     </div>
 
-    <footer><div class="footer-content"><div class="footer-links" id="footer-social-links"></div><p>© 2026 CỬA HÀNG VÔ TRI Powered by Github & INDE.</p></div></footer>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links" id="footer-social-links"></div>
+            <p class="footer-copyright">© 2026 CỬA HÀNG VÔ TRI Powered by Github & INDE.</p>
+        </div>
+    </footer>
 
     <script>
-       const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0'; 
+        const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0'; 
         let globalStoreData = { products: [], config: {} };
         let currentSlideIndex = 0, slideInterval, totalSlidesCount = 0, currentSortValue = 'default';
         let popupActiveProduct = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
