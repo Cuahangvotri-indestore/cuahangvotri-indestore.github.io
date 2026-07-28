@@ -158,8 +158,25 @@
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
         /* POPUP CHI TIẾT SẢN PHẨM */
-        .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
-        .popup-overlay.open { opacity: 1; pointer-events: auto; }
+       /* Đảm bảo khi popup đóng, nó phải bị vô hiệu hóa hoàn toàn tương tác chuột, không bao giờ che khuất các sản phẩm bên dưới */
+        .popup-overlay { 
+            position: fixed; 
+            inset: 0; 
+            z-index: 200; 
+            background: rgba(31, 78, 69, 0.15); 
+            backdrop-filter: blur(12px); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+            opacity: 0; 
+            pointer-events: none; /* Bắt buộc phải có để không bị cản chuột khi ẩn */
+            transition: opacity 0.4s ease; 
+        }
+       .popup-overlay.open { 
+            opacity: 1; 
+            pointer-events: auto; /* Chỉ mở khóa nhận chuột khi popup thực sự được bật lên */
+        }
         .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 85vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
         .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
         .popup-close-btn { position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 10; }
