@@ -116,26 +116,28 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM (Cột Trái: Tên, Mô tả ở trên; Ảnh & Nút ở dưới) */
+        /* POPUP CHI TIẾT SẢN PHẨM (Cố định khung ảnh lớn đồng nhất, thứ tự: Tên -> Ảnh -> Mô tả -> Nút) */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
-        .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 85vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
+        .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1150px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 90vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
         .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
         .popup-close-btn { position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 10; }
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
         
-        .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow-y: auto; }
-        .popup-image-container-wrapper { position: relative; width: 100%; }
-        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 280px; width: 100%; overflow: hidden; }
+        .popup-left-side { width: 52%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow-y: auto; }
+        
+        /* Cố định kích cỡ khung ảnh chi tiết lớn hơn, rộng rãi và đồng nhất 100% ở mọi sản phẩm */
+        .popup-image-container-wrapper { position: relative; width: 100%; margin: 12px 0; }
+        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; height: 340px; width: 100%; overflow: hidden; background: rgba(255,255,255,0.25); border-radius: 28px; border: 1px solid var(--liquid-border); }
         .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
         .popup-slide-item.active { opacity: 1; pointer-events: auto; }
-        .popup-main-image { max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 24px; }
-        .popup-nav-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; }
+        .popup-main-image { width: 100%; height: 100%; object-fit: contain; border-radius: 28px; padding: 10px; box-sizing: border-box; }
+        .popup-nav-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 8px; margin-bottom: 8px; }
-        .popup-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
-        .popup-dot.active { background: var(--emerald-dark); width: 14px; border-radius: 10px; }
+        .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
+        .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
         
-        .popup-right-side { width: 50%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
+        .popup-right-side { width: 48%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
         .popup-scroll-box { flex: 1; margin-bottom: 20px; }
         .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 22px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 10px 0; line-height: 1.4; }
         .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
@@ -213,28 +215,31 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM (Cột Trái: Tên, Mô tả ở trên; Ảnh & Nút ở dưới) -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM (Thứ tự cột Trái: Tên -> Ảnh lớn cố định -> Mô tả -> 2 nút tương tác) -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
-            <!-- CỘT TRÁI: Tên & Mô tả ở trên, Slider ảnh & 2 nút ở dưới -->
+            <!-- CỘT TRÁI -->
             <div class="popup-left-side">
                 <div>
+                    <!-- 1. Tên sản phẩm ở trên cùng -->
                     <h2 class="popup-title-text" id="popupLeftProductTitle">Tên sản phẩm</h2>
-                    <span class="popup-section-title">Mô tả sản phẩm</span>
-                    <div class="popup-desc-box" id="popupProductLeftDesc">Mô tả chi tiết sản phẩm.</div>
-                </div>
 
-                <div style="margin-top: 10px;">
+                    <!-- 2. Khung ảnh chi tiết phóng to & cố định kích cỡ đồng nhất 100% -->
                     <div class="popup-image-container-wrapper">
                         <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
                         <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                     <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+
+                    <!-- 3. Phần mô tả nằm dưới khung ảnh -->
+                    <span class="popup-section-title">Mô tả sản phẩm</span>
+                    <div class="popup-desc-box" id="popupProductLeftDesc">Mô tả chi tiết sản phẩm.</div>
                 </div>
 
-                <div style="padding-top: 15px;">
+                <!-- 4. Hai nút tương tác ở dưới cùng cột trái -->
+                <div style="padding-top: 10px;">
                     <div class="btn-action-sub-grid">
                         <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
                         <a class="btn-action-sub" id="btnPopupZaloConsult" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
@@ -242,7 +247,7 @@
                 </div>
             </div>
             
-            <!-- CỘT PHẢI: Giá hiển thị, Check giá tùy chọn & Nút Mua ngay -->
+            <!-- CỘT PHẢI: Giá, Check giá tùy chọn & Nút Mua ngay -->
             <div class="popup-right-side">
                 <div class="popup-scroll-box">
                     <div class="popup-price-tag-row" style="margin-top: 10px;">
