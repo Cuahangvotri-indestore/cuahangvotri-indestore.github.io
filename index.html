@@ -88,11 +88,21 @@
         .dropdown-item { padding: 12px 24px; font-size: 15px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; }
         .dropdown-item:hover { background: var(--emerald-soft); color: #ffffff; }
         .dropdown-item.selected { background: rgba(31, 78, 69, 0.1); color: var(--emerald-dark); }
-        .main-content { max-width: 1300px; width: 100%; margin: 25px auto 70px; padding: 0 24px; box-sizing: border-box; flex: 1; }
+       /* Đẩy lưới sản phẩm xuống một chút để cách ly hoàn toàn với thanh menu trên, loại bỏ triệt để việc bị che khuất lớp kính */
+        .main-content { 
+            max-width: 1300px; 
+            width: 100%; 
+            margin: 45px auto 70px; 
+            padding: 0 24px; 
+            box-sizing: border-box; 
+            flex: 1; 
+            position: relative;
+            z-index: 5;
+        }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
-        /* HOVER SCALE ĐỒNG BỘ LOGO VÀ CLICK BẤT TỬ */
-       .product-card { 
+       /* Đảm bảo mỗi thẻ card luôn ở tầng tương tác cao nhất, không bị bất kỳ vùng kính mờ nào phía trên cản trở */
+        .product-card { 
             background: rgba(255, 255, 255, 0.4); 
             backdrop-filter: blur(var(--blur-value)); 
             border-radius: 32px; 
@@ -106,6 +116,8 @@
             min-height: 405px; 
             cursor: pointer;
             user-select: none;
+            isolation: isolate; /* Cô lập tầng hiển thị, giúp bắt chuột nhạy tuyệt đối */
+            z-index: 10;
         }
         
         .product-card:hover { 
