@@ -116,7 +116,7 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM (Cố định khung ảnh lớn đồng nhất, thứ tự: Tên -> Ảnh -> Mô tả -> Nút) */
+        /* POPUP CHI TIẾT SẢN PHẨM */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1150px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 90vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
@@ -126,7 +126,7 @@
         
         .popup-left-side { width: 52%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow-y: auto; }
         
-        /* Cố định kích cỡ khung ảnh chi tiết lớn hơn, rộng rãi và đồng nhất 100% ở mọi sản phẩm */
+        /* Khung ảnh cố định kích cỡ lớn đồng nhất */
         .popup-image-container-wrapper { position: relative; width: 100%; margin: 12px 0; }
         .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; height: 340px; width: 100%; overflow: hidden; background: rgba(255,255,255,0.25); border-radius: 28px; border: 1px solid var(--liquid-border); }
         .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
@@ -215,54 +215,18 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM (Thứ tự cột Trái: Tên -> Ảnh lớn cố định -> Mô tả -> 2 nút tương tác) -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM (Phân tách thông minh chuẩn xác theo từng loại sản phẩm) -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
             <!-- CỘT TRÁI -->
-            <div class="popup-left-side">
-                <div>
-                    <!-- 1. Tên sản phẩm ở trên cùng -->
-                    <h2 class="popup-title-text" id="popupLeftProductTitle">Tên sản phẩm</h2>
-
-                    <!-- 2. Khung ảnh chi tiết phóng to & cố định kích cỡ đồng nhất 100% -->
-                    <div class="popup-image-container-wrapper">
-                        <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
-                        <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-
-                    <!-- 3. Phần mô tả nằm dưới khung ảnh -->
-                    <span class="popup-section-title">Mô tả sản phẩm</span>
-                    <div class="popup-desc-box" id="popupProductLeftDesc">Mô tả chi tiết sản phẩm.</div>
-                </div>
-
-                <!-- 4. Hai nút tương tác ở dưới cùng cột trái -->
-                <div style="padding-top: 10px;">
-                    <div class="btn-action-sub-grid">
-                        <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
-                        <a class="btn-action-sub" id="btnPopupZaloConsult" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
-                    </div>
-                </div>
-            </div>
+            <div class="popup-left-side" id="popupLeftSideContainer"></div>
             
-            <!-- CỘT PHẢI: Giá, Check giá tùy chọn & Nút Mua ngay -->
-            <div class="popup-right-side">
-                <div class="popup-scroll-box">
-                    <div class="popup-price-tag-row" style="margin-top: 10px;">
-                        <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
-                        <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
-                    </div>
-                    <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
-                        <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
-                        <div id="popupDynamicRadioSpace"></div>
-                    </div>
-                </div>
-                
-                <div class="popup-actions-wrapper">
-                    <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank"><i class="fa-solid fa-bag-shopping"></i> MUA NGAY TRÊN SHOPEE</a>
-                </div>
+            <!-- CỘT PHẢI -->
+            <div class="popup-right-side" id="popupRightSideContainer">
+                <div class="popup-scroll-box" id="popupRightScrollBox"></div>
+                <div class="popup-actions-wrapper" id="popupActionsWrapperContainer"></div>
             </div>
         </div>
     </div>
@@ -431,21 +395,85 @@
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
+                const isThiepCuoi = (prod.boCauHinh === 'GIA_THIEP');
 
-                const titleEl = document.getElementById('popupLeftProductTitle');
-                if(titleEl) titleEl.innerText = prod.name;
-                
-                const descEl = document.getElementById('popupProductLeftDesc');
-                if(descEl) descEl.innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
+                const leftSide = document.getElementById('popupLeftSideContainer');
+                const rightScrollBox = document.getElementById('popupRightScrollBox');
+                const actionsWrapper = document.getElementById('popupActionsWrapperContainer');
 
-                const buyBtn = document.getElementById('btnPopupMainBuy');
-                if(buyBtn) {
-                    buyBtn.href = prod.shopeeLink || shopZalo;
-                    buyBtn.innerHTML = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
+                if (isThiepCuoi) {
+                    // BỐC CỤC MỚI CHO THIỆP CƯỚI (Trái: Tên -> Ảnh lớn -> Mô tả -> 2 nút)
+                    leftSide.innerHTML = `
+                        <div>
+                            <h2 class="popup-title-text">${prod.name}</h2>
+                            <div class="popup-image-container-wrapper">
+                                <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
+                                <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                            <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+                            <span class="popup-section-title">Mô tả sản phẩm</span>
+                            <div class="popup-desc-box">${prod.desc || "Sản phẩm creative handmade tinh tế."}</div>
+                        </div>
+                        <div style="padding-top: 10px;">
+                            <div class="btn-action-sub-grid">
+                                <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
+                                <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                            </div>
+                        </div>
+                    `;
+
+                    rightScrollBox.innerHTML = `
+                        <div class="popup-price-tag-row" style="margin-top: 10px;">
+                            <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
+                            <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
+                        </div>
+                        <div class="check-price-block" id="popupCheckGiaBlock">
+                            <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
+                            <div id="popupDynamicRadioSpace"></div>
+                        </div>
+                    `;
+                } else {
+                    // BỐC CỤC CHUẨN CŨ CHO CÁC SẢN PHẨM CÒN LẠI (Trái chỉ chứa ảnh lớn, phải chứa Tên, Mô tả, Giá, Các nút)
+                    leftSide.innerHTML = `
+                        <div class="popup-image-container-wrapper" style="margin: auto 0;">
+                            <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
+                            <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                        <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+                    `;
+
+                    rightScrollBox.innerHTML = `
+                        <h2 class="popup-title-text">${prod.name}</h2>
+                        <span class="popup-section-title">Mô tả sản phẩm</span>
+                        <div class="popup-desc-box">${prod.desc || "Sản phẩm creative handmade tinh tế."}</div>
+                        <div class="popup-price-tag-row">
+                            <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
+                            <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
+                        </div>
+                        <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
+                            <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
+                            <div id="popupDynamicRadioSpace"></div>
+                        </div>
+                    `;
                 }
 
-                const zaloConsult = document.getElementById('btnPopupZaloConsult');
-                if(zaloConsult) zaloConsult.href = shopZalo;
+                // Cập nhật nút Mua và tương tác bên phải
+                const buyBtnHref = prod.shopeeLink || shopZalo;
+                const buyBtnText = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
+                
+                if (isThiepCuoi) {
+                    actionsWrapper.innerHTML = `
+                        <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
+                    `;
+                } else {
+                    actionsWrapper.innerHTML = `
+                        <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
+                        <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
+                            <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
+                            <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                        </div>
+                    `;
+                }
 
                 buildPopupSliderDOM(); 
                 renderPopupSliderEffects(); 
@@ -453,8 +481,7 @@
 
                 const checkBlock = document.getElementById('popupCheckGiaBlock');
                 const radioSpace = document.getElementById('popupDynamicRadioSpace');
-                if(radioSpace) radioSpace.innerHTML = '';
-
+                
                 if(!prod.boCauHinh || !sheetsPhuDataMatrix[prod.boCauHinh]) {
                     if(checkBlock) checkBlock.style.display = 'none'; 
                     const priceEl = document.getElementById('popupDynamicPrice');
