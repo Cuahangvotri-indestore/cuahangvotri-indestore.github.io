@@ -196,31 +196,23 @@
         .main-content { max-width: 1300px; width: 100%; margin: 25px auto 70px; padding: 0 24px; box-sizing: border-box; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
-        /* GIAO DIỆN NỀN MÓNG THU GỌN CHUẨN SẠCH */
+        /* ĐÃ NÂNG CẤP HOVER THU PHÓNG GIỐNG LOGO: Thay đổi translateY sang cơ chế scale(1.03) mượt mà */
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); -webkit-backdrop-filter: blur(var(--blur-value));
             border-radius: 32px; border: 1.5px solid var(--liquid-border);
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), box-shadow 0.4s ease; 
             display: flex; flex-direction: column; position: relative; overflow: hidden; 
-            box-shadow: var(--liquid-shadow); min-height: 405px;
+            box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
         }
         .product-card:hover { 
-            transform: translateY(-8px); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4); border-color: rgba(56, 122, 111, 0.45);
+            transform: scale(1.03); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4); border-color: rgba(56, 122, 111, 0.45);
         }
-
-        /* ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Khai báo CSS đầy đủ cho Mặt nạ Kính lỏng bảo vệ */
-        /* Tạo hiệu ứng lướt sáng loáng khi rà chuột vào và nhận diện click mở Popup nhạy 100% */
-        .product-super-mask {
-            position: absolute; inset: 0; z-index: 50; cursor: pointer; background: transparent;
-            overflow: hidden; border-radius: 32px; transition: all 0.4s ease;
+        
+        /* GIẢI PHÁP ĐỒNG BỘ TUẦN TỰ: Vô hiệu hóa tương tác của mọi phần tử con bên dưới */
+        /* Ép trình duyệt dồn toàn bộ sự kiện click phẳng từ mọi pixel lên trực tiếp hàm onclick của thẻ cha */
+        .product-card * {
+            pointer-events: none !important;
         }
-        .product-super-mask::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
-            transform: skewX(-25deg); transition: 0.75s;
-        }
-        .product-card:hover .product-super-mask::before { left: 200%; }
-        .product-card:hover .product-super-mask { background: rgba(31, 78, 69, 0.02); }
 
         .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -310,33 +302,169 @@
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
         .custom-radio-btn {
-            display: flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255,255,255,0.7);
+            display: flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255, 255, 255, 0.7);
             border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700;
             color: var(--emerald-dark); cursor: pointer; transition: all 0.2s ease;
         }
         .custom-radio-btn input { accent-color: var(--emerald-dark); margin: 0; transform: scale(1.05); }
         .custom-radio-btn:hover { background: #ffffff; }
 
-        .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-action-main {
-            text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px;
-            border-radius: 18px; background: var(--emerald-dark); color: #fff;
-            letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer;
-            box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); transition: all 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn-action-main:hover { background: var(--emerald-soft); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(31, 78, 69, 0.25); }
-        .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        
-        .btn-action-sub {
-            text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px;
-            border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border);
-            cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
+        /* Bảo vệ tương tác các nút bấm chọn bên trong Popup */
+        .popup-container * { pointer-events: auto !important; }
 
-        /* Bảo vệ tương tác các nút chọn trong popup */
+        footer {
+            background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
+            text-align: center; margin-top: auto; backdrop-filter: blur(var(--blur-value)); box-shadow: 0 -10px 30px rgba(31, 78, 69, 0.03);
+        }
+        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .footer-links { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+        .footer-btn {
+            text-decoration: none; font-weight: 700; font-size: 14px; padding: 11px 28px; border-radius: 40px;
+            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--liquid-border); backdrop-filter: blur(5px);
+        }
+        .btn-fb { background: rgba(234, 242, 249, 0.5); color: #1877f2; }
+        .btn-zl { background: rgba(237, 245, 247, 0.5); color: #0068ff; }
+        .btn-sp { background: rgba(255, 242, 238, 0.5); color: var(--shopee-color); }
+        .footer-btn:hover { transform: translateY(-2px); opacity: 0.9; box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
+        .footer-copy { font-size: 13px; color: #8e9cae; margin: 0; font-weight: 500; }
+
+        @media (max-width: 1024px) {
+            .nav-container { flex-direction: column; gap: 15px; justify-content: center; }
+            .right-nav-box { align-items: center; }
+            .menu-categories { justify-content: center; gap: 8px; }
+            .filter-section { justify-content: center; }
+            .banner-wrapper { aspect-ratio: auto; height: 160px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ĐÃ CẬP NHẬT: Thanh bar ngang dùng dấu - -->
+    <div class="top-bar">🌸 CỬA HÀNG VÔ TRI - CREATIVE HANDMADE & PRINTING 🌸</div>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo-box">
+                <div class="logo-circle" id="shop-logo-box"></div>
+            </div>
+            
+            <div class="right-nav-box">
+                <nav>
+                    <ul class="menu-categories">
+                        <li class="menu-item active">Home</li>
+                        <li class="menu-item">Đồ len</li>
+                        <li class="menu-item">In ấn</li>
+                        <li class="menu-item">Giấy</li>
+                        <li class="menu-item">In 3D</li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="vision-container" id="vision-area">
+        <p class="vision-text" id="vision-text-content"></p>
+    </div>
+
+    <div class="hero-banner" id="banner-root-area" style="display: none;">
+        <div class="banner-wrapper">
+            <div class="banner-slider-track" id="carousel-slider-track"></div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <div class="custom-dropdown" id="customSortDropdown">
+            <div class="dropdown-trigger" onclick="toggleDropdown()">
+                <span id="dropdownCurrentText">Sắp xếp: Mới nhất</span>
+                <span class="dropdown-arrow"></span>
+            </div>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item selected" onclick="selectDropdownOption('default', 'Sắp xếp: Mới nhất')">Sắp xếp: Mới nhất</li>
+                <li class="dropdown-item" onclick="selectDropdownOption('price-asc', 'Giá: Thấp đến Cao')">Giá: Thấp đến Cao</li>
+                <li class="dropdown-item" onclick="selectDropdownOption('price-desc', 'Giá: Cao đến Thấp')">Giá: Cao đến Thấp</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="product-grid" id="product-list-view"></div>
+    </div>
+
+    <!-- CỬA SỔ POPUP CHI TIẾT SẢN PHẨM & MAPPING GIÁ SPRINT 2 -->
+    <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
+        <div class="popup-container">
+            
+            <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="popup-left-side">
+                <div class="popup-image-container-wrapper">
+                    <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
+                    <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                
+                <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+                
+                <!-- Vị trí Mô tả mới dành riêng cho hàng Đặt trước -->
+                <div id="popupLeftDescWrapper" style="display: none; margin-top: 15px;">
+                    <span class="popup-section-title">Mô tả sản phẩm</span>
+                    <div class="popup-desc-box" id="popupProductLeftDesc"></div>
+                </div>
+            </div>Layer, .popup-container { transform: scale(1) translateY(0); }
+        
+        .popup-close-btn {
+            position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px;
+            background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;
+            transition: all 0.3s ease; z-index: 10;
+        }
+        .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
+
+        .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; overflow-y: auto; }
+        
+        .popup-image-container-wrapper { position: relative; width: 100%; }
+        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 420px; width: 100%; overflow: hidden; }
+        
+        .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
+        .popup-slide-item.active { opacity: 1; pointer-events: auto; }
+        .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        
+        .popup-nav-btn {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; z-index: 20;
+        }
+        .popup-nav-btn:hover { background: var(--emerald-soft); color: #fff; }
+        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 15px; }
+        .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); transition: all 0.3s; }
+        .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
+
+        .popup-right-side { width: 50%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
+        .popup-scroll-box { flex: 1; margin-bottom: 20px; padding-right: 5px; }
+        .popup-left-side::-webkit-scrollbar, .popup-scroll-box::-webkit-scrollbar { width: 4px; }
+        .popup-left-side::-webkit-scrollbar-thumb, .popup-scroll-box::-webkit-scrollbar-thumb { background: rgba(31, 78, 69, 0.15); border-radius: 10px; }
+        
+        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 24px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 14px 0; padding-right: 25px; line-height: 1.4; }
+        .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 14px 18px; font-size: 15px; color: #4f6a65; line-height: 1.6; margin-bottom: 18px; }
+        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 14px 20px; border-radius: 18px; margin-bottom: 20px; }
+        .popup-price-label { font-size: 12px; font-weight: 700; color: var(--emerald-dark); }
+        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); }
+
+        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 18px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.01); }
+        .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .radio-group-wrapper:last-child { margin-bottom: 0; }
+        .radio-title-label { font-size: 14px; font-weight: 700; color: var(--emerald-dark); }
+        .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
+        
+        .custom-radio-btn {
+            display: flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700;
+            color: var(--emerald-dark); cursor: pointer; transition: all 0.2s ease;
+        }
+        .custom-radio-btn input { accent-color: var(--emerald-dark); margin: 0; transform: scale(1.05); }
+        .custom-radio-btn:hover { background: #ffffff; }
+
+        /* Tránh dính click-through sang lớp mask bên ngoài */
         .popup-container * { pointer-events: auto !important; }
 
         footer {
@@ -695,6 +823,7 @@
             container.innerHTML = htmlLinks;
         }
 
+        // ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Sử dụng trực tiếp onclick của thẻ cha card. Click bất kì điểm nào đều mở popup ngay tắp lự
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
@@ -719,10 +848,7 @@
                 const badgeClass = isPreorder ? 'status-preorder' : 'status-available';
 
                 return `
-                    <div class="product-card">
-                        <!-- LỚP KÍNH SIÊU MẶT NẠ PHỦ KÍN 100%: Bảo vệ cú click mở Popup ăn ngay nhạy bén -->
-                        <div class="product-super-mask" onclick="openProductDetailPopup('${p.code}')"></div>
-                        
+                    <div class="product-card" onclick="openProductDetailPopup('${p.code}')">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper">
                             <img class="product-img" src="${p.img || 'https://via.placeholder.com/400?text=No+Image'}" alt="${p.name}">
