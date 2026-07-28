@@ -1,4 +1,454 @@
-async function initSprint1HomePage() {
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+
+    <style>
+
+        :root { 
+
+            --mint-light: #f2faf7; --mint-bg: #e6f6f3; 
+
+            --emerald-dark: #1f4e45; --emerald-soft: #387a6f;
+
+            --text-color: #2c3e50; --shopee-color: #ea501f;
+
+            --liquid-border: rgba(255, 255, 255, 0.65);
+
+            --liquid-shadow: 0 15px 35px rgba(31, 78, 69, 0.08), inset 0 4px 15px rgba(255, 255, 255, 0.6);
+
+            --blur-value: 25px;
+
+        }
+
+        body { 
+
+            font-family: 'Quicksand', 'Comfortaa', sans-serif; margin: 0; padding: 0; 
+
+            background: linear-gradient(135deg, #f7fcfb 0%, var(--mint-bg) 50%, #dbf2ee 100%);
+
+            background-attachment: fixed; background-size: cover; color: var(--text-color);
+
+            display: flex; flex-direction: column; min-height: 100vh; font-size: 17px; font-weight: 500;
+
+        }
+
+        .top-bar {
+
+            background: var(--emerald-dark); color: #ffffff; text-align: center; font-size: 14px; 
+
+            padding: 12px 0; font-weight: 700; font-family: 'Comfortaa', sans-serif; box-shadow: 0 4px 15px rgba(31, 78, 69, 0.1);
+
+        }
+
+        header { 
+
+            background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-bottom: 1px solid var(--liquid-border);
+
+            position: sticky; top: 0; z-index: 100; box-shadow: var(--liquid-shadow);
+
+        }
+
+        .nav-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 24px; box-sizing: border-box; }
+
+        .logo-circle { 
+
+            width: 135px; height: 135px; border-radius: 50%; background: rgba(255, 255, 255, 0.25);
+
+            display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--liquid-border);
+
+            box-shadow: 0 12px 35px rgba(31, 78, 69, 0.12), inset 0 10px 20px rgba(255, 255, 255, 0.7);
+
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        }
+
+        .logo-circle:hover { transform: scale(1.05) rotate(2deg); }
+
+        .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .right-nav-box { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; flex: 1; }
+
+        .menu-categories { display: flex; justify-content: flex-end; align-items: center; gap: 15px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+
+        .menu-item { 
+
+            font-weight: 700; font-size: 15px; cursor: pointer; padding: 12px 28px; border-radius: 40px; 
+
+            background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%); border: 1px solid var(--liquid-border); 
+
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); color: var(--emerald-dark); text-transform: uppercase; 
+
+            box-shadow: 0 6px 20px rgba(31, 78, 69, 0.04), inset 0 4px 10px rgba(255, 255, 255, 0.6); position: relative; overflow: hidden;
+
+        }
+
+        .menu-item::before {
+
+            content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%;
+
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent); transform: skewX(-25deg); transition: 0.75s;
+
+        }
+
+        .menu-item:hover::before { left: 125%; }
+
+        .menu-item.active, .menu-item:hover { 
+
+            background: var(--emerald-soft); color: #ffffff; border-color: var(--emerald-soft);
+
+            box-shadow: 0 10px 25px rgba(56, 122, 111, 0.3), inset 0 2px 6px rgba(255, 255, 255, 0.2); transform: translateY(-3px) scale(1.02);
+
+        }
+
+        .vision-container { max-width: 1300px; width: 100%; margin: 25px auto 0; padding: 0 24px; box-sizing: border-box; display: none; text-align: center; }
+
+        .vision-text { font-family: 'Comfortaa', sans-serif; font-size: 16px; font-weight: 700; color: var(--emerald-dark); margin: 0; font-style: italic; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8); }
+
+        .hero-banner { max-width: 1300px; width: 100%; margin: 15px auto 0; padding: 0 24px; box-sizing: border-box; }
+
+        .banner-wrapper {
+
+            position: relative; width: 100%; border-radius: 40px; overflow: hidden; box-sizing: border-box;
+
+            box-shadow: 0 20px 50px rgba(31, 78, 69, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.4);
+
+            background: rgba(255, 255, 255, 0.15); aspect-ratio: 1024 / 285; backdrop-filter: blur(10px);
+
+        }
+
+        .banner-slider-track { display: flex; width: 100%; height: 100%; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .banner-slide { flex: 0 0 100%; width: 100%; height: 100%; opacity: 0.3; transition: opacity 1.2s ease; }
+
+        .banner-slide.active { opacity: 1; }
+
+        .banner-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .filter-section { max-width: 1300px; margin: 35px auto 0; padding: 0 24px; box-sizing: border-box; display: flex; justify-content: flex-end; width: 100%; }
+
+        .custom-dropdown { position: relative; display: inline-block; min-width: 230px; z-index: 10; }
+
+        .dropdown-trigger {
+
+            padding: 14px 24px; border-radius: 40px; border: 1.5px solid var(--liquid-border);
+
+            background: rgba(255, 255, 255, 0.5); color: var(--emerald-dark); font-weight: 700; font-size: 15px; cursor: pointer;
+
+            box-shadow: var(--liquid-shadow); transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; align-items: center; justify-content: space-between;
+
+        }
+
+        .dropdown-trigger:hover { background: rgba(255, 255, 255, 0.7); transform: translateY(-2px); }
+
+        .dropdown-arrow { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--emerald-dark); }
+
+        .custom-dropdown.open .dropdown-arrow { transform: rotate(180deg); }
+
+        .dropdown-menu {
+
+            position: absolute; top: calc(100% + 8px); right: 0; width: 100%; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(30px);
+
+            border-radius: 24px; border: 1.5px solid var(--liquid-border); box-shadow: 0 20px 40px rgba(31, 78, 69, 0.15); padding: 8px 0; margin: 0; list-style: none; display: none;
+
+        }
+
+        .custom-dropdown.open .dropdown-menu { display: block; animation: liquidFloat 0.3s ease; }
+
+        .dropdown-item { padding: 12px 24px; font-size: 15px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; }
+
+        .dropdown-item:hover { background: var(--emerald-soft); color: #ffffff; }
+
+        .dropdown-item.selected { background: rgba(31, 78, 69, 0.1); color: var(--emerald-dark); }
+
+        .main-content { max-width: 1300px; width: 100%; margin: 25px auto 70px; padding: 0 24px; box-sizing: border-box; flex: 1; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
+
+        
+
+        /* HOVER SCALE ĐỒNG BỘ LOGO */
+
+        .product-card { 
+
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
+
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), box-shadow 0.4s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
+
+        }
+
+        .product-card:hover { transform: scale(1.03); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); border-color: rgba(56, 122, 111, 0.45); }
+
+        .product-card-click-shield { position: absolute; inset: 0; z-index: 50; cursor: pointer; background: transparent; }
+
+        .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
+
+        .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
+
+        .product-title { font-size: 17px; margin: 0 0 12px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; min-height: 48px; display: flex; align-items: center; justify-content: center; }
+
+        .product-price { 
+
+            font-size: 18px; font-weight: 700; color: var(--emerald-soft); background: rgba(255, 255, 255, 0.5); 
+
+            padding: 8px 20px; border-radius: 25px; display: inline-block; margin-top: auto; border: 1px solid var(--liquid-border); font-family: 'Comfortaa', sans-serif;
+
+        }
+
+        .badge-status { position: absolute; top: 15px; left: 15px; padding: 6px 16px; font-size: 12px; font-weight: 700; border-radius: 35px; z-index: 2; border: 1px solid var(--liquid-border); }
+
+        .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
+
+        .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
+
+
+
+        /* POPUP CHI TIẾT SẢN PHẨM */
+
+        .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+
+        .popup-overlay.open { opacity: 1; pointer-events: auto; }
+
+        .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 85vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
+
+        .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
+
+        .popup-close-btn { position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 10; }
+
+        .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
+
+        .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; overflow-y: auto; }
+
+        .popup-image-container-wrapper { position: relative; width: 100%; }
+
+        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 420px; width: 100%; overflow: hidden; }
+
+        .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
+
+        .popup-slide-item.active { opacity: 1; pointer-events: auto; }
+
+        .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; }
+
+        .popup-nav-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; }
+
+        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 15px; }
+
+        .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
+
+        .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
+
+        .popup-right-side { width: 50%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
+
+        .popup-scroll-box { flex: 1; margin-bottom: 20px; }
+
+        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 24px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 14px 0; line-height: 1.4; }
+
+        .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+
+        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 14px 18px; font-size: 15px; color: #4f6a65; line-height: 1.6; margin-bottom: 18px; }
+
+        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 14px 20px; border-radius: 18px; margin-bottom: 20px; }
+
+        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); }
+
+        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 18px; }
+
+        .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+
+        .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
+
+        .custom-radio-btn { display: flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255, 255, 255, 0.7); border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; }
+
+        .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+
+        .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px; border-radius: 18px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); }
+
+        .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px; border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
+
+        footer { background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px; text-align: center; margin-top: auto; }
+
+        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+        .footer-links { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+
+        .footer-btn { text-decoration: none; font-weight: 700; font-size: 14px; padding: 11px 28px; border-radius: 40px; border: 1px solid var(--liquid-border); }
+
+        .btn-fb { background: rgba(234, 242, 249, 0.5); color: #1877f2; }
+
+        .btn-zl { background: rgba(237, 245, 247, 0.5); color: #0068ff; }
+
+        .btn-sp { background: rgba(255, 242, 238, 0.5); color: var(--shopee-color); }
+
+        @media (max-width: 1024px) { .nav-container { flex-direction: column; gap: 15px; } .right-nav-box { align-items: center; } .menu-categories { justify-content: center; } .banner-wrapper { aspect-ratio: auto; height: 160px; } }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div class="top-bar">🌸 CỬA HÀNG VÔ TRI - CREATIVE HANDMADE & PRINTING 🌸</div>
+
+
+
+    <header>
+
+        <div class="nav-container">
+
+            <div class="logo-box"><div class="logo-circle" id="shop-logo-box"></div></div>
+
+            <div class="right-nav-box">
+
+                <nav>
+
+                    <ul class="menu-categories">
+
+                        <li class="menu-item active">Home</li>
+
+                        <li class="menu-item">Đồ len</li>
+
+                        <li class="menu-item">In ấn</li>
+
+                        <li class="menu-item">Giấy</li>
+
+                        <li class="menu-item">In 3D</li>
+
+                    </ul>
+
+                </nav>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <div class="vision-container" id="vision-area"><p class="vision-text" id="vision-text-content"></p></div>
+
+    <div class="hero-banner" id="banner-root-area" style="display: none;"><div class="banner-wrapper"><div class="banner-slider-track" id="carousel-slider-track"></div></div></div>
+
+
+
+    <div class="filter-section">
+
+        <div class="custom-dropdown" id="customSortDropdown">
+
+            <div class="dropdown-trigger" onclick="toggleDropdown()"><span id="dropdownCurrentText">Sắp xếp: Mới nhất</span><span class="dropdown-arrow"></span></div>
+
+            <ul class="dropdown-menu">
+
+                <li class="dropdown-item selected" onclick="selectDropdownOption('default', 'Sắp xếp: Mới nhất')">Sắp xếp: Mới nhất</li>
+
+                <li class="dropdown-item" onclick="selectDropdownOption('price-asc', 'Giá: Thấp đến Cao')">Giá: Thấp đến Cao</li>
+
+                <li class="dropdown-item" onclick="selectDropdownOption('price-desc', 'Giá: Cao đến Thấp')">Giá: Cao đến Thấp</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
+
+
+
+    <!-- POPUP CHI TIẾT SẢN PHẨM -->
+
+    <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
+
+        <div class="popup-container">
+
+            <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="popup-left-side">
+
+                <div class="popup-image-container-wrapper">
+
+                    <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
+
+                    <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+
+                </div>
+
+                <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+
+                <div id="popupLeftDescWrapper" style="display: none; margin-top: 15px;"><span class="popup-section-title">Mô tả sản phẩm</span><div class="popup-desc-box" id="popupProductLeftDesc"></div></div>
+
+            </div>
+
+            
+
+            <div class="popup-right-side">
+
+                <div class="popup-scroll-box">
+
+                    <h2 class="popup-title-text" id="popupProductTitle">Tên sản phẩm</h2>
+
+                    <div id="popupRightDescWrapper"><span class="popup-section-title">Mô tả sản phẩm</span><div class="popup-desc-box" id="popupProductDesc"></div></div>
+
+                    <div class="popup-price-tag-row"><span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span><span class="popup-price-number" id="popupDynamicPrice">0 đ</span></div>
+
+                    <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;"><span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span><div id="popupDynamicRadioSpace"></div></div>
+
+                </div>
+
+                <div class="popup-actions-wrapper">
+
+                    <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank"><i class="fa-solid fa-bag-shopping"></i> Mua ngay nhé</a>
+
+                    <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
+
+                        <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
+
+                        <a class="btn-action-sub" id="btnPopupZaloConsult" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <footer><div class="footer-content"><div class="footer-links" id="footer-social-links"></div><p>© 2026 CỬA HÀNG VÔ TRI Powered by Github & INDE.</p></div></footer>
+
+
+
+    <script>
+
+       async function initSprint1HomePage() {
             const configRows = await fetchSheetRows('Cau_Hinh_Shop');
             configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
             if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
@@ -104,3 +554,9 @@ async function initSprint1HomePage() {
             }
             document.getElementById('liquidProductPopup').classList.add('open');
         }
+
+    </script>
+
+</body>
+
+</html>
