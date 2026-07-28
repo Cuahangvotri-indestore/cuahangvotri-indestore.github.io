@@ -346,51 +346,69 @@
         }
 
         function openProductDetailPopupByCode(productCode) {
-            const prod = globalStoreData.products.find(p => p.code === productCode);
-            if(!prod) return;
-            
-            popupActiveProduct = prod; popupActiveImgIndex = 0;
-            popupImagesArray = prod.detailImgs ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : [prod.img];
-
-            document.getElementById('popupProductTitle').innerText = prod.name;
-            const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
-            
-            document.getElementById('popupLeftDescWrapper').style.display = isPreorder ? 'block' : 'none';
-            document.getElementById('popupRightDescWrapper').style.display = isPreorder ? 'none' : 'block';
-            document.getElementById(isPreorder ? 'popupProductLeftDesc' : 'popupProductDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
-
-            const buyBtn = document.getElementById('btnPopupMainBuy');
-            const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
-            document.getElementById('btnPopupZaloConsult').href = shopZalo;
-            buyBtn.href = prod.shopeeLink || shopZalo;
-            buyBtn.innerHTML = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
-            document.getElementById('popupSubButtonsGroup').style.display = isPreorder ? 'grid' : 'none';
-
-            buildPopupSliderDOM(); renderPopupSliderEffects(); startPopupAutoplay();
-            const checkBlock = document.getElementById('popupCheckGiaBlock');
-            const radioSpace = document.getElementById('popupDynamicRadioSpace');
-            radioSpace.innerHTML = '';
-
-            if(!prod.boCauHinh || !sheetsPhuDataMatrix[prod.boCauHinh]) {
-                checkBlock.style.display = 'none'; document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
-            } else {
-                checkBlock.style.display = 'block'; const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
-                if(prod.boCauHinh === 'GIA_THIEP') {
-                    buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", [...new Set(matrix.data.map(d => d.Loai_Thiep))], matrix.data[0].Loai_Thiep);
-                    buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(matrix.data.map(d => d.Kieu_In))], matrix.data[0].Kieu_In);
-                    buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
+            try {
+                const prod = globalStoreData.products.find(p => p.code === productCode);
+                if(!prod) return;
+                
+                popupActiveProduct = prod; 
+                popupActiveImgIndex = 0;
+                
+                // Khắc phục triệt để: Nếu cột Ảnh Chi Tiết bị bỏ trống trên Sheets, tự động lấy Ảnh Đại Diện
+                if (prod.detailImgs && typeof prod.detailImgs === 'string' && prod.detailImgs.trim() !== "") {
+                    popupImagesArray = prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim()));
+                } else if (prod.img) {
+                    popupImagesArray = [prod.img];
                 } else {
-                    const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
-                    if(cleanH.some(h => h.includes('_Mat_'))) {
-                        buildPopupRadioRow(radioSpace, "Card_Mat", "Số mặt in:", ["In_1_Mat", "In_2_Mat"], "In_1_Mat");
-                        buildPopupRadioRow(radioSpace, "Card_Man", "Cán màng:", ["Khong_Man", "Co_Man"], "Khong_Man");
-                    } else {
-                        buildPopupRadioRow(radioSpace, "Single_Option", "Tùy chọn phân loại:", cleanH, cleanH[0]);
-                    }
+                    popupImagesArray = ['https://via.placeholder.com/400'];
                 }
-                calculatePopupDynamicPrice();
+
+                document.getElementById('popupProductTitle').innerText = prod.name || 'Sản phẩm handmade';
+                const isPreorder = prod.stock ? prod.stock.toLowerCase().includes('đặt trước') : false;
+                
+                document.getElementById('popupLeftDescWrapper').style.display = isPreorder ? 'block' : 'none';
+                document.getElementById('popupRightDescWrapper').style.display = isPreorder ? 'none' : 'block';
+                document.getElementById(isPreorder ? 'popupProductLeftDesc' : 'popupProductDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
+
+                const buyBtn = document.getElementById('btnPopupMainBuy');
+                const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
+                document.getElementById('btnPopupZaloConsult').href = shopZalo;
+                buyBtn.href = prod.shopeeLink || shopZalo;
+                buyBtn.innerHTML = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
+                document.getElementById('popupSubButtonsGroup').style.display = isPreorder ? 'grid' : 'none';
+
+                buildPopupSliderDOM(); 
+                renderPopupSliderEffects(); 
+                startPopupAutoplay();
+
+                const checkBlock = document.getElementById('popupCheckGiaBlock');
+                const radioSpace = document.getElementById('popupDynamicRadioSpace');
+                radioSpace.innerHTML = '';
+
+                if(!prod.boCauHinh || !sheetsPhuDataMatrix[prod.boCauHinh]) {
+                    checkBlock.style.display = 'none'; 
+                    document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice || 0).toLocaleString('vi-VN') + " đ";
+                } else {
+                    checkBlock.style.display = 'block'; 
+                    const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
+                    if(prod.boCauHinh === 'GIA_THIEP') {
+                        buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", [...new Set(matrix.data.map(d => d.Loai_Thiep))], matrix.data[0].Loai_Thiep);
+                        buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(matrix.data.map(d => d.Kieu_In))], matrix.data[0].Kieu_In);
+                        buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
+                    } else {
+                        const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
+                        if(cleanH.some(h => h.includes('_Mat_'))) {
+                            buildPopupRadioRow(radioSpace, "Card_Mat", "Số mặt in:", ["In_1_Mat", "In_2_Mat"], "In_1_Mat");
+                            buildPopupRadioRow(radioSpace, "Card_Man", "Cán màng:", ["Khong_Man", "Co_Man"], "Khong_Man");
+                        } else {
+                            buildPopupRadioRow(radioSpace, "Single_Option", "Tùy chọn phân loại:", cleanH, cleanH[0]);
+                        }
+                    }
+                    calculatePopupDynamicPrice();
+                }
+                document.getElementById('liquidProductPopup').classList.add('open');
+            } catch (err) {
+                console.error("Lỗi khi mở popup sản phẩm:", err);
             }
-            document.getElementById('liquidProductPopup').classList.add('open');
         }
 
         function buildPopupRadioRow(container, groupName, groupTitle, elementsList, activeValue) {
