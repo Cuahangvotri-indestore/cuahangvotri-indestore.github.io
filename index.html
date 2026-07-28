@@ -303,7 +303,7 @@
             } catch (e) { return []; }
         }
 
-        async function initSprint1HomePage() {
+       async function initSprint1HomePage() {
             const configRows = await fetchSheetRows('Cau_Hinh_Shop');
             configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
             if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
@@ -313,20 +313,34 @@
 
             const productRows = await fetchSheetRows('Danh_Sach_SanPham');
             productRows.forEach((row, idx) => {
-                if(row && row.c && row.c[1]) {
-                    let pPrice = 0; if(row.c[7] && row.c[7].v) pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
-                    if(row.c[10] && String(row.c[10].v).trim().toLowerCase() === 'hiện') {
-                        globalStoreData.products.push({
-                            sheetIndex: idx, code: row.c[0] ? String(row.c[0].v).trim() : 'PROD_' + idx, name: String(row.c[1].v).trim(), category: row.c[2] ? String(row.c[2].v).trim() : 'KHÁC',
-                            img: parseDirectImageUrl(row.c[3] ? row.c[3].v : ''), detailImgs: row.c[4] ? String(row.c[4].v).trim() : '', desc: row.c[5] ? String(row.c[5].v).trim() : '',
-                            basePrice: pPrice, shopeeLink: row.c[8] ? String(row.c[8].v).trim() : '', stock: row.c[9] ? String(row.c[9].v).trim() : 'Có sẵn', boCauHinh: row.c[11] ? String(row.c[11].v).trim() : ''
-                        });
+                // Chỉ cần dòng có tồn tại và có ít nhất tên sản phẩm (cột c[1]), còn lại có gì lấy nấy không ràng buộc!
+                if(row && row.c && row.c[1] && row.c[1].v) {
+                    let pPrice = 0; 
+                    if(row.c[7] && row.c[7].v) {
+                        pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
                     }
+
+                    // Tự động tạo mã code an toàn nếu cột Mã SP bị trống
+                    let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
+                    let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
+
+                    globalStoreData.products.push({
+                        sheetIndex: idx, 
+                        code: cleanCode, 
+                        name: sanitizeText(row.c[1].v), 
+                        category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v) : 'KHÁC',
+                        img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
+                        detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
+                        desc: (row.c[5] && row.c[5].v) ? sanitizeText(row.c[5].v) : '', 
+                        basePrice: pPrice, 
+                        shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '', 
+                        stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
+                        boCauHinh: (row.c[11] && row.c[11].v) ? String(row.c[11].v).trim() : ''
+                    });
                 }
             });
             renderProductsGrid();
         }
-
         function setupBannerCarousel() {
             let bannerUrls = [];
             for(let i=1; i<=3; i++) { if(globalStoreData.config[`Banner_${i}`]) bannerUrls.push(parseDirectImageUrl(globalStoreData.config[`Banner_${i}`])); }
