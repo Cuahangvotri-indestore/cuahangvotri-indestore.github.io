@@ -373,7 +373,7 @@
             document.getElementById('product-list-view').innerHTML = displayList.map(p => {
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                 return `
-                    <div class="product-card" onclick="openProductDetailPopupByCode('${p.code}')">
+                    <div class="product-card" onclick="openProductDetailPopupByIndex(${p.sheetIndex})">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
                         <div class="product-info">
@@ -394,25 +394,18 @@
             }
         });
 
-        function openProductDetailPopupByCode(productCode) {
+        function openProductDetailPopupByIndex(sheetIndex) {
             try {
-                const prod = globalStoreData.products.find(p => p.code === productCode);
+                // Lấy trực tiếp sản phẩm chuẩn xác 100% thông qua vị trí dòng trên Sheets, không sợ trùng lặp code
+                const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
                 
                 popupActiveProduct = prod; 
                 popupActiveImgIndex = 0;
-                
-                // Khắc phục triệt để: Nếu cột Ảnh Chi Tiết bị bỏ trống trên Sheets, tự động lấy Ảnh Đại Diện
-                if (prod.detailImgs && typeof prod.detailImgs === 'string' && prod.detailImgs.trim() !== "") {
-                    popupImagesArray = prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim()));
-                } else if (prod.img) {
-                    popupImagesArray = [prod.img];
-                } else {
-                    popupImagesArray = ['https://via.placeholder.com/400'];
-                }
+                popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
-                document.getElementById('popupProductTitle').innerText = prod.name || 'Sản phẩm handmade';
-                const isPreorder = prod.stock ? prod.stock.toLowerCase().includes('đặt trước') : false;
+                document.getElementById('popupProductTitle').innerText = prod.name;
+                const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 
                 document.getElementById('popupLeftDescWrapper').style.display = isPreorder ? 'block' : 'none';
                 document.getElementById('popupRightDescWrapper').style.display = isPreorder ? 'none' : 'block';
@@ -435,7 +428,7 @@
 
                 if(!prod.boCauHinh || !sheetsPhuDataMatrix[prod.boCauHinh]) {
                     checkBlock.style.display = 'none'; 
-                    document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice || 0).toLocaleString('vi-VN') + " đ";
+                    document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
                 } else {
                     checkBlock.style.display = 'block'; 
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
@@ -456,10 +449,9 @@
                 }
                 document.getElementById('liquidProductPopup').classList.add('open');
             } catch (err) {
-                console.error("Lỗi khi mở popup sản phẩm:", err);
+                console.error("Lỗi khi mở popup theo index:", err);
             }
         }
-
         function buildPopupRadioRow(container, groupName, groupTitle, elementsList, activeValue) {
             const wrapper = document.createElement('div'); wrapper.className = "radio-group-wrapper";
             wrapper.innerHTML = `<span class="radio-title-label">${groupTitle}</span>`;
