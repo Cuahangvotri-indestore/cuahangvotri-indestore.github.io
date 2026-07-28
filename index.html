@@ -112,7 +112,7 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM & TÙY CHỈNH MÀU RADIO ĐỒNG BỘ UI */
+        /* POPUP CHI TIẾT SẢN PHẨM & TÙY CHỈNH MÀU RADIO THEO TÔNG SHOPEE */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 85vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
@@ -120,14 +120,14 @@
         .popup-close-btn { position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 10; }
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
         
-        .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; overflow-y: auto; }
+        .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow-y: auto; }
         .popup-image-container-wrapper { position: relative; width: 100%; }
-        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 380px; width: 100%; overflow: hidden; }
+        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 340px; width: 100%; overflow: hidden; }
         .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
         .popup-slide-item.active { opacity: 1; pointer-events: auto; }
-        .popup-main-image { max-width: 100%; max-height: 380px; object-fit: contain; border-radius: 24px; }
+        .popup-main-image { max-width: 100%; max-height: 340px; object-fit: contain; border-radius: 24px; }
         .popup-nav-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; }
-        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 12px; margin-bottom: 12px; }
+        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 10px; }
         .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
         .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
         
@@ -143,14 +143,14 @@
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        /* Custom Radio Button đồng bộ màu UI chủ đạo */
+        /* Custom Radio Button đồng bộ màu tông Shopee */
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); 
             border: 1.5px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
             transition: all 0.25s ease;
         }
-        .custom-radio-btn:hover { background: rgba(56, 122, 111, 0.08); border-color: var(--emerald-soft); }
-        .custom-radio-btn input[type="radio"] { accent-color: var(--emerald-dark); width: 16px; height: 16px; cursor: pointer; }
+        .custom-radio-btn:hover { background: rgba(234, 80, 31, 0.06); border-color: var(--shopee-color); }
+        .custom-radio-btn input[type="radio"] { accent-color: var(--shopee-color); width: 16px; height: 16px; cursor: pointer; }
 
         .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
         .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px; border-radius: 18px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); }
@@ -210,24 +210,34 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM (Tối ưu bố cục: Đưa Tên & Mô tả sang Trái cho sản phẩm Đặt trước) -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
             <!-- CỘT TRÁI -->
             <div class="popup-left-side">
-                <div class="popup-image-container-wrapper">
-                    <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
-                    <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                <div>
+                    <div class="popup-image-container-wrapper">
+                        <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
+                        <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+                    
+                    <!-- Đối với sản phẩm Đặt trước: Đưa Tên, Mô tả và 2 nút tương tác sang cột trái -->
+                    <div id="popupLeftInfoWrapper" style="display: none; margin-top: 10px;">
+                        <h2 class="popup-title-text" id="popupLeftProductTitle" style="font-size: 20px; margin-bottom: 10px;"></h2>
+                        <span class="popup-section-title">Mô tả sản phẩm</span>
+                        <div class="popup-desc-box" id="popupProductLeftDesc"></div>
+                    </div>
                 </div>
-                <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-                
-                <!-- Đối với sản phẩm Đặt trước: Tên & Mô tả được đưa hoàn toàn sang trái cho cân đối -->
-                <div id="popupLeftInfoWrapper" style="display: none; margin-top: 15px;">
-                    <h2 class="popup-title-text" id="popupLeftProductTitle" style="font-size: 20px; margin-bottom: 10px;"></h2>
-                    <span class="popup-section-title">Mô tả sản phẩm</span>
-                    <div class="popup-desc-box" id="popupProductLeftDesc"></div>
+
+                <!-- 2 nút tương tác (Xin info & Tư vấn Zalo) sẽ hiện ở cột trái nếu là sản phẩm Đặt trước -->
+                <div id="popupLeftButtonsGroup" style="display: none; padding-top: 15px;">
+                    <div class="btn-action-sub-grid">
+                        <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
+                        <a class="btn-action-sub" id="btnPopupZaloConsultLeft" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                    </div>
                 </div>
             </div>
             
@@ -251,9 +261,10 @@
                 
                 <div class="popup-actions-wrapper">
                     <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank"><i class="fa-solid fa-bag-shopping"></i> Mua ngay nhé</a>
-                    <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
+                    <!-- 2 nút tương tác mặc định nằm ở cột phải cho sản phẩm thường -->
+                    <div class="btn-action-sub-grid" id="popupRightButtonsGroup">
                         <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
-                        <a class="btn-action-sub" id="btnPopupZaloConsult" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                        <a class="btn-action-sub" id="btnPopupZaloConsultRight" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
                     </div>
                 </div>
             </div>
@@ -424,30 +435,35 @@
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
-                
-                // Tối ưu UI: Nếu là sản phẩm đặt trước, đưa Tên và Mô tả sang cột Trái cho thoáng và cân đối
+                const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
+
+                // Phân bổ bố cục: Trả tên sản phẩm về cột phải, nếu là Đặt trước thì đưa Tên, Mô tả & 2 nút tương tác sang cột trái
                 if (isPreorder) {
                     document.getElementById('popupLeftInfoWrapper').style.display = 'block';
                     document.getElementById('popupLeftProductTitle').innerText = prod.name;
                     document.getElementById('popupProductLeftDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
+                    document.getElementById('popupLeftButtonsGroup').style.display = 'block';
+                    document.getElementById('btnPopupZaloConsultLeft').href = shopZalo;
                     
                     document.getElementById('popupRightProductTitle').style.display = 'none';
                     document.getElementById('popupRightDescWrapper').style.display = 'none';
+                    document.getElementById('popupRightButtonsGroup').style.display = 'none';
                 } else {
                     document.getElementById('popupLeftInfoWrapper').style.display = 'none';
+                    document.getElementById('popupLeftButtonsGroup').style.display = 'none';
                     
                     document.getElementById('popupRightProductTitle').style.display = 'block';
                     document.getElementById('popupRightProductTitle').innerText = prod.name;
                     document.getElementById('popupRightDescWrapper').style.display = 'block';
                     document.getElementById('popupProductDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
+                    document.getElementById('popupRightButtonsGroup').style.display = 'grid';
+                    document.getElementById('btnPopupZaloConsultRight').href = shopZalo;
                 }
 
                 const buyBtn = document.getElementById('btnPopupMainBuy');
-                const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
-                document.getElementById('btnPopupZaloConsult').href = shopZalo;
                 buyBtn.href = prod.shopeeLink || shopZalo;
                 buyBtn.innerHTML = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
-                document.getElementById('popupSubButtonsGroup').style.display = isPreorder ? 'grid' : 'none';
+                document.getElementById('popupSubButtonsGroup').style.display = isPreorder ? 'none' : 'grid';
 
                 buildPopupSliderDOM(); 
                 renderPopupSliderEffects(); 
@@ -506,7 +522,6 @@
 
                 let matched = matrix.data.find(d => d.Loai_Thiep === selectedThiep && d.Kieu_In === selectedKieuIn);
                 
-                // Kiểm tra gắt gao: Nếu tổ hợp lựa chọn không tồn tại hoặc giá trị trong cột là chuỗi "Chưa có" / rỗng
                 if (!matched || !matched[selectedGiay] || String(matched[selectedGiay]).trim() === "Chưa có") {
                     priceVal = "Chưa có";
                 } else {
@@ -522,7 +537,6 @@
                 }
             }
 
-            // Hiển thị chuẩn xác tiền tệ hoặc chữ "Chưa có"
             if (priceVal === "Chưa có" || String(priceVal).trim() === "Chưa có") {
                 document.getElementById('popupDynamicPrice').innerText = "Chưa có";
             } else {
@@ -547,6 +561,7 @@
             document.getElementById('popupImageViewportTrack').innerHTML = '';
         }
         function closeProductPopupOutside(e) { if(e.target.classList.contains('popup-overlay')) closeProductPopup(); }
+        
         function formatOptionToVietnamese(t) { 
             return t.replace(/_/g, ' ')
                     .replace(/Khong Man/g, 'Không màng')
