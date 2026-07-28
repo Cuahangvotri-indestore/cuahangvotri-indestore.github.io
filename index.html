@@ -100,19 +100,24 @@
             transition: box-shadow 0.3s ease; 
             display: flex; 
             flex-direction: column; 
-            position: relative; /* Bắt buộc phải có để làm mốc định vị cho lớp kính */
+            position: relative; 
             overflow: hidden; 
             box-shadow: var(--liquid-shadow); 
             min-height: 405px; 
             cursor: pointer;
             user-select: none;
         }
+        
         .product-card:hover { 
             transform: none !important; 
             box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); 
             border-color: rgba(56, 122, 111, 0.45); 
         }
-        
+
+        /* Bí quyết tối thượng: Biến mọi thành phần con bên trong thành "vô hình" trước mọi cú click chuột, giúp lực click luôn chạm thẳng vào card ở mọi ngóc ngách */
+        .product-card > * {
+            pointer-events: none;
+        }
         /* Tấm khiên phủ kín toàn bộ card, nằm lớp trên cùng (z-index: 20) để hứng trọn 100% mọi cú click */
         .product-card-shield {
             position: absolute;
@@ -354,8 +359,7 @@
             document.getElementById('product-list-view').innerHTML = displayList.map(p => {
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                 return `
-                    <div class="product-card">
-                        <div class="product-card-shield" onclick="openProductDetailPopupByCode('${p.code}')"></div>
+                    <div class="product-card" onclick="openProductDetailPopupByCode('${p.code}')">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
                         <div class="product-info">
