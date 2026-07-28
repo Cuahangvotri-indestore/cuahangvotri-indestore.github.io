@@ -215,7 +215,7 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM (Phân tách thông minh chuẩn xác theo từng loại sản phẩm) -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM (Phân tách thông minh theo cấu hình hoặc đặt trước) -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
@@ -395,14 +395,16 @@
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
-                const isThiepCuoi = (prod.boCauHinh === 'GIA_THIEP');
+                
+                // Kiểm tra điều kiện: Nếu là sản phẩm cấu hình check giá (Thiệp, Sticker, Card) hoặc Đặt trước
+                const isConfigCheck = (prod.boCauHinh === 'GIA_THIEP' || prod.boCauHinh === 'GIA_TEM_STICKER' || prod.boCauHinh === 'GIA_CARD' || prod.stock.toLowerCase().includes('đặt trước'));
 
                 const leftSide = document.getElementById('popupLeftSideContainer');
                 const rightScrollBox = document.getElementById('popupRightScrollBox');
                 const actionsWrapper = document.getElementById('popupActionsWrapperContainer');
 
-                if (isThiepCuoi) {
-                    // BỐC CỤC MỚI CHO THIỆP CƯỚI (Trái: Tên -> Ảnh lớn -> Mô tả -> 2 nút)
+                if (isConfigCheck) {
+                    // BỐC CỤC TRÁI (Tên -> Ảnh lớn -> Mô tả -> 2 nút tương tác)
                     leftSide.innerHTML = `
                         <div>
                             <h2 class="popup-title-text">${prod.name}</h2>
@@ -433,7 +435,7 @@
                         </div>
                     `;
                 } else {
-                    // BỐC CỤC CHUẨN CŨ CHO CÁC SẢN PHẨM CÒN LẠI (Trái chỉ chứa ảnh lớn, phải chứa Tên, Mô tả, Giá, Các nút)
+                    // BỐC CỤC CHUẨN CŨ CHO CÁC SẢN PHẨM KHÁC (Trái chỉ chứa ảnh lớn, phải chứa Tên, Mô tả, Giá, Các nút)
                     leftSide.innerHTML = `
                         <div class="popup-image-container-wrapper" style="margin: auto 0;">
                             <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
@@ -461,7 +463,7 @@
                 const buyBtnHref = prod.shopeeLink || shopZalo;
                 const buyBtnText = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
                 
-                if (isThiepCuoi) {
+                if (isConfigCheck) {
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                     `;
