@@ -93,25 +93,23 @@
         .main-content { max-width: 1300px; width: 100%; margin: 15px auto 60px; padding: 0 24px; box-sizing: border-box; flex: 1; position: relative; z-index: 5; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
-        /* CARD SẢN PHẨM KHÓA CHẶT TƯƠNG TÁC ĐẢM BẢO CLICK ĂN NGAY 100% */
+        /* CARD SẢN PHẨM HOẠT ĐỘNG CHUẨN XÁC TRỰC TIẾP */
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
-            user-select: none;
+            user-select: none; z-index: 10;
         }
         .product-card:hover { box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); border-color: rgba(56, 122, 111, 0.45); }
-        .product-card > * { pointer-events: none; }
-        .product-card-shield { position: absolute; inset: 0; z-index: 30; cursor: pointer; background: transparent; }
         
-        .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
+        .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; pointer-events: none; }
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
+        .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; pointer-events: none; }
         .product-title { font-size: 17px; margin: 0 0 12px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; min-height: 48px; display: flex; align-items: center; justify-content: center; }
         .product-price { 
             font-size: 18px; font-weight: 700; color: var(--emerald-soft); background: rgba(255, 255, 255, 0.5); 
             padding: 8px 20px; border-radius: 25px; display: inline-block; margin-top: auto; border: 1px solid var(--liquid-border); font-family: 'Comfortaa', sans-serif;
         }
-        .badge-status { position: absolute; top: 15px; left: 15px; padding: 6px 16px; font-size: 12px; font-weight: 700; border-radius: 35px; z-index: 2; border: 1px solid var(--liquid-border); }
+        .badge-status { position: absolute; top: 15px; left: 15px; padding: 6px 16px; font-size: 12px; font-weight: 700; border-radius: 35px; z-index: 2; border: 1px solid var(--liquid-border); pointer-events: none; }
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
@@ -146,7 +144,6 @@
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        /* Custom Radio Button tông màu Shopee */
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); 
             border: 1.5px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
@@ -405,7 +402,7 @@
             document.getElementById('footer-social-links').innerHTML = htmlLinks;
         }
 
-        /* HÀM RENDER GRID DÙNG LỚP KÍNH CHẮN `.product-card-shield` ĐẢM BẢO CLICK ĂN NGAY 100% */
+        /* HÀM RENDER GRID GẮN TRỰC TIẾP ONCLICK VÀO THẺ CARD ĐẢM BẢO CLICK ĂN 100% */
         function renderProductsGrid() {
             let displayList = [...globalStoreData.products];
             if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
@@ -415,8 +412,7 @@
             document.getElementById('product-list-view').innerHTML = displayList.map(p => {
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                 return `
-                    <div class="product-card">
-                        <div class="product-card-shield" onclick="openProductDetailPopupByIndex(${p.sheetIndex})"></div>
+                    <div class="product-card" onclick="openProductDetailPopupByIndex(${p.sheetIndex})">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
                         <div class="product-info">
