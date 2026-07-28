@@ -92,11 +92,16 @@
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
         /* HOVER SCALE ĐỒNG BỘ LOGO VÀ CLICK BẤT TỬ */
-        .product-card { 
+       .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), box-shadow 0.4s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
         }
         .product-card:hover { transform: scale(1.03); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); border-color: rgba(56, 122, 111, 0.45); }
+        
+        /* Chìa khóa vàng: Vô hiệu hóa tương tác con để lực click truyền thẳng 100% vào card, click liên tục không bao giờ trượt */
+        .product-card * {
+            pointer-events: none;
+        }
         .product-card-click-shield { position: absolute; inset: 0; z-index: 50; cursor: pointer; background: transparent; }
         .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -329,8 +334,7 @@
             document.getElementById('product-list-view').innerHTML = displayList.map(p => {
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                 return `
-                    <div class="product-card">
-                        <div class="product-card-click-shield" onclick="openProductDetailPopupByCode('${p.code}')"></div>
+                    <div class="product-card" onclick="openProductDetailPopupByCode('${p.code}')">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
                         <div class="product-info">
