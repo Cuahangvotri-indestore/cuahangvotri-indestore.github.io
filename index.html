@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Vô Tri - Creative Handmade</title>
+    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -196,7 +196,7 @@
         .main-content { max-width: 1300px; width: 100%; margin: 25px auto 70px; padding: 0 24px; box-sizing: border-box; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
-        /* HOVER THU PHÓNG ĐỒNG BỘ LOGO */
+        /* HOVER THU PHÓNG ĐỒNG BỘ LOGO SCALE 1.03 */
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); -webkit-backdrop-filter: blur(var(--blur-value));
             border-radius: 32px; border: 1.5px solid var(--liquid-border);
@@ -204,14 +204,11 @@
             display: flex; flex-direction: column; position: relative; overflow: hidden; 
             box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
         }
-        /* ÉP CỨNG SỰ KIỆN HOVER KHÔNG BỊ TRÔI TRẠNG THÁI */
         .product-card:hover { 
-            transform: scale(1.03) !important; 
-            box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4) !important; 
-            border-color: rgba(56, 122, 111, 0.45) !important;
+            transform: scale(1.03); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4); border-color: rgba(56, 122, 111, 0.45);
         }
         
-        /* GIẢI PHÁP PHẲNG TUYỆT ĐỐI: Dùng thẻ phụ bao phủ riêng biệt bẫy click */
+        /* Tấm kính bọc đè phẳng cục bộ độc lập nhận lệnh click gán cứng z-index */
         .product-card-click-shield {
             position: absolute; inset: 0; z-index: 50; cursor: pointer; background: transparent;
         }
@@ -310,6 +307,28 @@
         }
         .custom-radio-btn input { accent-color: var(--emerald-dark); margin: 0; transform: scale(1.05); }
         .custom-radio-btn:hover { background: #ffffff; }
+
+        .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .btn-action-main {
+            text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px;
+            border-radius: 18px; background: var(--emerald-dark); color: #fff;
+            letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer;
+            box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-action-main:hover { background: var(--emerald-soft); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(31, 78, 69, 0.25); }
+        .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .btn-action-sub {
+            text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px;
+            border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border);
+            cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
+
+        /* Bảo vệ tương tác các nút bấm chọn bên trong Popup */
+        .popup-container * { pointer-events: auto !important; }
 
         footer {
             background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
@@ -666,6 +685,7 @@
             container.innerHTML = htmlLinks;
         }
 
+        // ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Mapping click theo Số nguyên mảng (i) để tránh gãy cú pháp chuỗi ký tự đặc biệt ở sản phẩm số 2
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
@@ -685,14 +705,16 @@
                 return;
             }
 
-            container.innerHTML = displayList.map(p => {
+            let gridHtml = '';
+            for (let i = 0; i < displayList.length; i++) {
+                const p = displayList[i];
                 const isPreorder = p.stock.toLowerCase().includes('đặt trước');
                 const badgeClass = isPreorder ? 'status-preorder' : 'status-available';
 
-                return `
+                gridHtml += `
                     <div class="product-card">
-                        <!-- Tấm kính bọc đè phẳng bắt click mở Popup -->
-                        <div class="product-card-click-shield" onclick="openProductDetailPopup('${p.code}')"></div>
+                        <!-- Tấm chắn an toàn bắt click dựa trên số nguyên index mảng, chống lỗi ký tự Sheets tuyệt đối -->
+                        <div class="product-card-click-shield" onclick="openProductDetailPopupByIndex(${i}, '${p.code}')"></div>
                         
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper">
@@ -706,7 +728,8 @@
                         </div>
                     </div>
                 `;
-            }).join('');
+            }
+            container.innerHTML = gridHtml;
         }
 
         function formatOptionToVietnamese(text) {
@@ -718,10 +741,26 @@
                        .replace(/Giay_Ford_/g, 'Giấy Ford ');
         }
 
-        function openProductDetailPopup(productCode) {
-            const prod = globalStoreData.products.find(p => p.code === productCode);
-            if(!prod) return;
+        // Tạo hàm trung gian bọc dữ liệu an toàn dựa trên mảng động hiển thị thực tế thời gian thực
+        function openProductDetailPopupByIndex(arrayIndex, fallbackCode) {
+            const listContainer = document.getElementById('product-list-view');
+            // Bốc mảng sắp xếp hiện tại
+            let displayList = [...globalStoreData.products];
+            if (currentSortValue === 'default') {
+                displayList.sort((a, b) => b.sheetIndex - a.sheetIndex);
+            } else if (currentSortValue === 'price-asc') {
+                displayList.sort((a, b) => a.basePrice - b.basePrice);
+            } else if (currentSortValue === 'price-desc') {
+                displayList.sort((a, b) => b.basePrice - a.basePrice);
+            }
 
+            const targetProduct = displayList[arrayIndex] || globalStoreData.products.find(p => p.code === fallbackCode);
+            if(targetProduct) {
+                openProductDetailPopupCore(targetProduct);
+            }
+        }
+
+        function openProductDetailPopupCore(prod) {
             popupActiveProduct = prod;
             popupActiveImgIndex = 0;
             
@@ -963,15 +1002,10 @@
             }
         }
 
-        // ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Reset sạch bộ nhớ đệm đóng/mở tương tác khi close popup
         function closeProductPopup() {
             stopPopupAutoplay(); 
             document.getElementById('liquidProductPopup').classList.remove('open');
             popupActiveProduct = null;
-            // Khóa lệnh ép buộc làm sạch bộ nhận diện tương tác của trình duyệt
-            setTimeout(() => {
-                renderProductsGrid();
-            }, 100);
         }
 
         function closeProductPopupOutside(e) {
