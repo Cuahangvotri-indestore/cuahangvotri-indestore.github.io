@@ -286,7 +286,7 @@
     <footer><div class="footer-content"><div class="footer-links" id="footer-social-links"></div><p>© 2026 CỬA HÀNG VÔ TRI Powered by Github & INDE.</p></div></footer>
 
     <script>
-        const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0'; 
+       const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0'; 
         let globalStoreData = { products: [], config: {} };
         let currentSlideIndex = 0, slideInterval, totalSlidesCount = 0, currentSortValue = 'default';
         let popupActiveProduct = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
@@ -356,10 +356,7 @@
                 
                 productRows.forEach((row, idx) => {
                     if(row && row.c && row.c[1] && row.c[1].v) {
-                        // Kiểm tra trạng thái hiển thị (cột thứ 11, index 10: hiện / ẩn)
                         let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
-                        
-                        // Nếu là 'ẩn' thì bỏ qua không đưa lên web
                         if (statusVal === 'ẩn') return;
 
                         let pPrice = 0; 
@@ -530,7 +527,8 @@
         function closeProductPopup() { 
             stopPopupAutoplay(); 
             document.getElementById('liquidProductPopup').classList.remove('open'); 
-            popupActiveProduct = null; 
+            popupActiveProduct = null;
+            document.getElementById('popupImageViewportTrack').innerHTML = '';
         }
         function closeProductPopupOutside(e) { if(e.target.classList.contains('popup-overlay')) closeProductPopup(); }
         function formatOptionToVietnamese(t) { return t.replace(/_/g, ' ').replace(/Khong Man/g, 'Không màng').replace(/Co Man/g, 'Có màng').replace(/In 1 Mat/g, 'In 1 mặt').replace(/In 2 Mat/g, 'In 2 mặt').replace(/Giay_Ford_/g, 'Giấy Ford '); }
