@@ -396,14 +396,16 @@
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
-                const isConfigCheck = (prod.boCauHinh === 'GIA_THIEP' || prod.boCauHinh === 'GIA_TEM_STICKER' || prod.boCauHinh === 'GIA_CARD');
+                
+                // Chỉ riêng thiệp cưới mới đưa mô tả và tên sang trái
+                const isThiepCuoi = (prod.boCauHinh === 'GIA_THIEP');
 
                 const leftSide = document.getElementById('popupLeftSideContainer');
                 const rightScrollBox = document.getElementById('popupRightScrollBox');
                 const actionsWrapper = document.getElementById('popupActionsWrapperContainer');
 
-                if (isConfigCheck) {
-                    // BỐC CỤC TRÁI (Tên -> Ảnh lớn -> Mô tả -> 2 nút)
+                if (isThiepCuoi) {
+                    // BỐC CỤC TRÁI DÀNH CHO THIỆP CƯỚI (Tên -> Ảnh lớn -> Mô tả -> 2 nút)
                     leftSide.innerHTML = `
                         <div>
                             <h2 class="popup-title-text">${prod.name}</h2>
@@ -434,7 +436,7 @@
                         </div>
                     `;
                 } else {
-                    // BỐC CỤC CŨ (Trái chỉ ảnh, phải chứa Tên, Mô tả, Giá, Các nút)
+                    // BỐC CỤC CHO CÁC SẢN PHẨM CÒN LẠI (Card, Tem, Đặt trước, Có sẵn -> Trái chỉ chứa ảnh)
                     leftSide.innerHTML = `
                         <div class="popup-image-container-wrapper" style="margin: auto 0;">
                             <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
@@ -458,16 +460,16 @@
                     `;
                 }
 
-                // Nút hành động phải: Có sẵn chỉ có nút Mua; Đặt trước (card/tem) hoặc check giá có đủ nút
+                // Cấu hình nút hành động phải theo đúng yêu cầu
                 const buyBtnHref = prod.shopeeLink || shopZalo;
                 const buyBtnText = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
                 
-                if (isConfigCheck) {
+                if (isThiepCuoi) {
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                     `;
                 } else if (isPreorder) {
-                    // Đặt trước (Card/Tem không check giá) -> Toàn bộ nút nằm bên phải
+                    // Đặt trước (Card, Tem...) -> Toàn bộ nút nằm bên phải
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                         <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
@@ -476,7 +478,7 @@
                         </div>
                     `;
                 } else {
-                    // Có sẵn -> Chỉ có nút Mua trên shopee (hoặc qua Zalo) bên phải
+                    // Có sẵn -> Chỉ có nút Mua bên phải
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                     `;
