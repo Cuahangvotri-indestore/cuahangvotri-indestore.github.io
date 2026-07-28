@@ -437,7 +437,7 @@
                         </div>
                     `;
                 } else if (isCardOrTem) {
-                    // Card & Tem: Chỉ đưa Tên lên trên ảnh bên trái, Mô tả vẫn giữ bên phải
+                    // Card & Tem: Chỉ đưa Tên lên trên ảnh bên trái, Mô tả giữ bên phải
                     leftSide.innerHTML = `
                         <div>
                             <h2 class="popup-title-text">${prod.name}</h2>
@@ -462,7 +462,7 @@
                         </div>
                     `;
                 } else {
-                    // Các sản phẩm khác (Có sẵn / Đặt trước thường)
+                    // Các sản phẩm có sẵn / khác (Trái chỉ ảnh)
                     leftSide.innerHTML = `
                         <div class="popup-image-container-wrapper" style="margin: auto 0;">
                             <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
@@ -494,7 +494,15 @@
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                     `;
-                } else if (isCardOrTem || isPreorder) {
+                } else if (isCardOrTem) {
+                    actionsWrapper.innerHTML = `
+                        <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
+                        <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
+                            <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
+                            <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                        </div>
+                    `;
+                } else if (isPreorder) {
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                         <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
@@ -503,6 +511,7 @@
                         </div>
                     `;
                 } else {
+                    // Sản phẩm có sẵn -> Chỉ có nút Mua (hoặc qua Zalo)
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                     `;
