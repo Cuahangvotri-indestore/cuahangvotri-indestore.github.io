@@ -94,10 +94,16 @@
         /* HOVER SCALE ĐỒNG BỘ LOGO VÀ CLICK BẤT TỬ */
        .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), box-shadow 0.4s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
+            /* Đã lược bỏ hiệu ứng transform scale để tối ưu tuyệt đối cho cú click */
+            transition: box-shadow 0.3s ease; 
+            display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
         }
-        .product-card:hover { transform: scale(1.03); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); border-color: rgba(56, 122, 111, 0.45); }
-        
+        .product-card:hover { 
+            /* Không còn scale nữa, chỉ giữ lại hiệu ứng bóng đổ mượt mà */
+            transform: none !important; 
+            box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); 
+            border-color: rgba(56, 122, 111, 0.45); 
+        }
         /* Chìa khóa vàng: Vô hiệu hóa tương tác con để lực click truyền thẳng 100% vào card, click liên tục không bao giờ trượt */
         .product-card * {
             pointer-events: none;
