@@ -196,7 +196,7 @@
         .main-content { max-width: 1300px; width: 100%; margin: 25px auto 70px; padding: 0 24px; box-sizing: border-box; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
-        /* LAYOUT CARD THU GỌN THEO SPRINT 1 CHUẨN SẠCH */
+        /* GIAO DIỆN NỀN MÓNG THU GỌN CHUẨN SẠCH */
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); -webkit-backdrop-filter: blur(var(--blur-value));
             border-radius: 32px; border: 1.5px solid var(--liquid-border);
@@ -208,21 +208,29 @@
             transform: translateY(-8px); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4); border-color: rgba(56, 122, 111, 0.45);
         }
 
-        /* LỚP MÀN CHẮN TRONG SUỐT HOÀN HẢO: Bao phủ 100% bề mặt card ở lớp trên cùng */
-        /* Bảo đảm click bất cứ điểm nào cũng trúng mục tiêu mở popup, không dính lỗi ăn lẹm liên kết */
-        .product-card::after {
-            content: ""; position: absolute; inset: 0; z-index: 10; cursor: pointer; background: transparent;
+        /* ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Khai báo CSS đầy đủ cho Mặt nạ Kính lỏng bảo vệ */
+        /* Tạo hiệu ứng lướt sáng loáng khi rà chuột vào và nhận diện click mở Popup nhạy 100% */
+        .product-super-mask {
+            position: absolute; inset: 0; z-index: 50; cursor: pointer; background: transparent;
+            overflow: hidden; border-radius: 32px; transition: all 0.4s ease;
         }
+        .product-super-mask::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+            transform: skewX(-25deg); transition: 0.75s;
+        }
+        .product-card:hover .product-super-mask::before { left: 200%; }
+        .product-card:hover .product-super-mask { background: rgba(31, 78, 69, 0.02); }
 
         .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
         .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
         
-        /* TÊN SẢN PHẨM TO ĐẬM */
+        /* TÊN DANH MỤC TO ĐẬM */
         .product-title { font-size: 17px; margin: 0 0 12px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; min-height: 48px; display: flex; align-items: center; justify-content: center; }
         
-        /* GIÁ TIỀN TO ĐẬM */
+        /* GIÁ SẢN PHẨM TO ĐẬM */
         .product-price { 
             font-size: 18px; font-weight: 700; color: var(--emerald-soft); background: rgba(255, 255, 255, 0.5); 
             padding: 8px 20px; border-radius: 25px; display: inline-block; margin-top: auto; 
@@ -328,7 +336,7 @@
         }
         .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
 
-        /* Bảo vệ tương tác các nút bấm chọn bên trong Popup */
+        /* Bảo vệ tương tác các nút chọn trong popup */
         .popup-container * { pointer-events: auto !important; }
 
         footer {
@@ -437,7 +445,7 @@
                     <!-- Vị trí Mô tả cũ dành riêng cho hàng Có sẵn -->
                     <div id="popupRightDescWrapper">
                         <span class="popup-section-title">Mô tả sản phẩm</span>
-                        <div class="popup-desc-box" id="popupProductDesc">Nội dung mô tả sản phẩm...</div>
+                        <div class="dropdown-item" id="popupProductDesc">Nội dung mô tả sản phẩm...</div>
                     </div>
                     
                     <div class="popup-price-tag-row">
@@ -687,7 +695,6 @@
             container.innerHTML = htmlLinks;
         }
 
-        // ĐÃ LIÊN KẾT TUẦN TỰ: Tận dụng lớp Super Mask trong suốt bọc kín bề mặt, click nhạy bén 100% không lo lỗi đồ họa ảnh chặn
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
@@ -713,7 +720,7 @@
 
                 return `
                     <div class="product-card">
-                        <!-- Tấm kính vô hình phủ tầng z-index cao nhất bọc trọn sự kiện mở popup -->
+                        <!-- LỚP KÍNH SIÊU MẶT NẠ PHỦ KÍN 100%: Bảo vệ cú click mở Popup ăn ngay nhạy bén -->
                         <div class="product-super-mask" onclick="openProductDetailPopup('${p.code}')"></div>
                         
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
