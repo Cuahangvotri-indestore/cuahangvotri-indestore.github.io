@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Vô Tri - Creative Handmade</title>
+    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -196,42 +196,26 @@
         .main-content { max-width: 1300px; width: 100%; margin: 25px auto 70px; padding: 0 24px; box-sizing: border-box; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
-        /* ĐÃ ĐIỀU CHỈNH: Giảm padding từ 22px xuống 16px và min-height từ 440px xuống 405px để rút ngắn chiều cao card */
+        /* GIAO DIỆN SPRINT 1 GỐC NGUYÊN BẢN: Đã loại bỏ sạch sẽ các layer che phủ lỗi */
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); -webkit-backdrop-filter: blur(var(--blur-value));
             border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
             display: flex; flex-direction: column; position: relative; overflow: hidden; 
-            box-shadow: var(--liquid-shadow); min-height: 405px;
+            box-shadow: var(--liquid-shadow); min-height: 440px; cursor: pointer;
         }
         .product-card:hover { 
             transform: translateY(-8px); box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12), inset 0 4px 10px rgba(255, 255, 255, 0.4); border-color: rgba(56, 122, 111, 0.45);
         }
-        
-        /* ĐÃ KHẮC PHỤC TRIỆT ĐỂ: Lớp phủ Liquid Glass cố định tuyệt đối ở z-index cao hơn ảnh, tránh bị hủy hiệu ứng sau click */
-        .product-liquid-glass-layer {
-            position: absolute; inset: 0; z-index: 45; cursor: pointer; background: transparent;
-            transition: all 0.4s ease; overflow: hidden; border-radius: 32px;
-        }
-        .product-liquid-glass-layer::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
-            transform: skewX(-25deg); transition: 0.75s;
-        }
-        .product-card:hover .product-liquid-glass-layer::before { left: 200%; }
-        .product-card:hover .product-liquid-glass-layer { background: rgba(31, 78, 69, 0.02); }
-
-        .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
+        .product-img-wrapper { width: 100%; height: 285px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* ĐÃ ĐIỀU CHỈNH: Giảm nhẹ padding của khối text */
-        .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
-        .product-title { font-size: 16px; margin: 0 0 10px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; min-height: 46px; display: flex; align-items: center; justify-content: center; }
+        .product-info { padding: 22px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
+        .product-title { font-size: 17px; margin: 0 0 12px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.5; min-height: 50px; display: flex; align-items: center; justify-content: center; }
         
-        /* ĐÃ ĐIỀU CHỈNH: Tăng kích thước giá tiền lên 19px như PO yêu cầu */
         .product-price { 
-            font-size: 19px; font-weight: 700; color: var(--emerald-soft); background: rgba(255, 255, 255, 0.5); 
-            padding: 8px 22px; border-radius: 25px; display: inline-block; margin-top: auto; 
+            font-size: 16px; font-weight: 700; color: var(--emerald-soft); background: rgba(255, 255, 255, 0.5); 
+            padding: 8px 20px; border-radius: 25px; display: inline-block; margin-top: auto; 
             border: 1px solid var(--liquid-border); font-family: 'Comfortaa', sans-serif; box-shadow: 0 4px 12px rgba(31, 78, 69, 0.03);
         }
 
@@ -243,7 +227,7 @@
         .badge-status.status-available { color: #1b4d3e; background: rgba(212, 245, 235, 0.7); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* ==================== SPRINT 2 POPUP LIQUID GLASS STYLES ==================== */
+        /* ==================== SPRINT 2 POPUP CHI TIẾT SẢN PHẨM ==================== */
         .popup-overlay {
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -333,9 +317,10 @@
         }
         .btn-action-sub:hover { background: var(--mint-light); transform: translateY(-1px); }
 
-        /* Tránh dính click-through sang lớp mask bên ngoài */
+        /* Bảo vệ tương tác các nút chọn trong popup */
         .popup-container * { pointer-events: auto !important; }
 
+        /* ==================== FOOTER MỊN MÀNG CHUẨN GỐC SPRINT 1 ==================== */
         footer {
             background: rgba(255, 255, 255, 0.35); border-top: 1px solid var(--liquid-border); padding: 40px 24px;
             text-align: center; margin-top: auto; backdrop-filter: blur(var(--blur-value)); box-shadow: 0 -10px 30px rgba(31, 78, 69, 0.03);
@@ -413,13 +398,12 @@
         <div class="product-grid" id="product-list-view"></div>
     </div>
 
-    <!-- CỬA SỔ POPUP CHI TIẾT SẢN PHẨM & MAPPING GIÁ -->
+    <!-- CỬA SỔ POPUP CHI TIẾT SẢN PHẨM & MAPPING GIÁ SPRINT 2 -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
-            <!-- Vùng hiển thị bên trái (Ảnh + Mô tả nếu là sản phẩm Đặt Trước) -->
             <div class="popup-left-side">
                 <div class="popup-image-container-wrapper">
                     <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
@@ -428,19 +412,16 @@
                 
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
                 
-                <!-- Vị trí Mô tả mới dành riêng cho hàng Đặt trước -->
                 <div id="popupLeftDescWrapper" style="display: none; margin-top: 15px;">
                     <span class="popup-section-title">Mô tả sản phẩm</span>
                     <div class="popup-desc-box" id="popupProductLeftDesc"></div>
                 </div>
             </div>
             
-            <!-- Vùng hiển thị bên phải (Thông tin giá + Phân loại chọn) -->
             <div class="popup-right-side">
                 <div class="popup-scroll-box">
                     <h2 class="popup-title-text" id="popupProductTitle">Tên sản phẩm</h2>
                     
-                    <!-- Vị trí Mô tả cũ dành riêng cho hàng Có sẵn -->
                     <div id="popupRightDescWrapper">
                         <span class="popup-section-title">Mô tả sản phẩm</span>
                         <div class="popup-desc-box" id="popupProductDesc">Nội dung mô tả sản phẩm...</div>
@@ -694,6 +675,7 @@
             container.innerHTML = htmlLinks;
         }
 
+        // PHỤC HỒI NGUYÊN BẢN SPRINT 1: Render card thuần túy, bắt onclick trực tiếp lên thẻ cha gãy gọn
         function renderProductsGrid() {
             const container = document.getElementById('product-list-view');
             const sortVal = currentSortValue;
@@ -718,10 +700,7 @@
                 const badgeClass = isPreorder ? 'status-preorder' : 'status-available';
 
                 return `
-                    <div class="product-card">
-                        <!-- Tấm Kính lỏng được cố định vững chắc bằng HTML để chống trôi hiệu ứng sau khi click -->
-                        <div class="product-liquid-glass-layer" onclick="openProductDetailPopup('${p.code}')"></div>
-                        
+                    <div class="product-card" onclick="openProductDetailPopup('${p.code}')">
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper">
                             <img class="product-img" src="${p.img || 'https://via.placeholder.com/400?text=No+Image'}" alt="${p.name}">
@@ -780,10 +759,10 @@
 
             if(prod.shopeeLink && prod.shopeeLink.trim() !== "") {
                 mainBuyBtn.href = prod.shopeeLink;
-                mainBuyBtn.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> Mua ngay trên Shopee`;
+                mainBuyBtn.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> MUA NGAY TRÊN SHOPEE`;
             } else {
                 mainBuyBtn.href = shopZaloLink;
-                mainBuyBtn.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> Mua qua Zalo Shop`;
+                mainBuyBtn.innerHTML = `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO SHOP`;
             }
 
             const subButtonsGroup = document.getElementById('popupSubButtonsGroup');
