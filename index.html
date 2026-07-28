@@ -422,8 +422,22 @@
         }
         function startPopupAutoplay() { stopPopupAutoplay(); if(popupImagesArray.length > 1) popupAutoplayInterval = setInterval(() => { popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length; renderPopupSliderEffects(); }, 5000); }
         function stopPopupAutoplay() { if(popupAutoplayInterval) { clearInterval(popupAutoplayInterval); popupAutoplayInterval = null; } }
-        function closeProductPopup() { stopPopupAutoplay(); document.getElementById('liquidProductPopup').classList.remove('open'); popupActiveProduct = null; }
-        function closeProductPopupOutside(e) { if(e.target.classList.contains('popup-overlay')) closeProductPopup(); }
+        function closeProductPopup() {
+            stopPopupAutoplay(); 
+            document.getElementById('liquidProductPopup').classList.remove('open');
+            popupActiveProduct = null;
+            
+            // Ép trình duyệt tái tạo lại toàn bộ lưới sản phẩm để giải phóng sạch sẽ bộ nhớ đệm DOM State
+            setTimeout(() => {
+                renderProductsGrid();
+            }, 150);
+        }
+
+        function closeProductPopupOutside(e) {
+            if(e.target.classList.contains('popup-overlay')) {
+                closeProductPopup();
+            }
+        }
         function formatOptionToVietnamese(t) { return t.replace(/_/g, ' ').replace(/Khong Man/g, 'Không màng').replace(/Co Man/g, 'Có màng').replace(/In 1 Mat/g, 'In 1 mặt').replace(/In 2 Mat/g, 'In 2 mặt').replace(/Giay_Ford_/g, 'Giấy Ford '); }
         window.onload = initSprint1HomePage;
     </script>
