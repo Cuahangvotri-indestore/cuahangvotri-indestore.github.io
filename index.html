@@ -93,6 +93,7 @@
         .main-content { max-width: 1300px; width: 100%; margin: 15px auto 60px; padding: 0 24px; box-sizing: border-box; flex: 1; position: relative; z-index: 5; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
         
+        /* CARD SẢN PHẨM KHÓA CHẶT TƯƠNG TÁC ĐẢM BẢO CLICK ĂN NGAY 100% */
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
@@ -100,6 +101,8 @@
         }
         .product-card:hover { box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); border-color: rgba(56, 122, 111, 0.45); }
         .product-card > * { pointer-events: none; }
+        .product-card-shield { position: absolute; inset: 0; z-index: 30; cursor: pointer; background: transparent; }
+        
         .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
@@ -112,7 +115,7 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM & TÙY CHỈNH MÀU RADIO THEO TÔNG SHOPEE */
+        /* POPUP CHI TIẾT SẢN PHẨM */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 85vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
@@ -143,7 +146,7 @@
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        /* Custom Radio Button đồng bộ màu tông Shopee */
+        /* Custom Radio Button tông màu Shopee */
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); 
             border: 1.5px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
@@ -224,7 +227,6 @@
                     </div>
                     <div class="popup-dots-row" id="popupImgDotsSpace"></div>
                     
-                    <!-- Đối với sản phẩm Đặt trước: Đưa Tên, Mô tả và 2 nút tương tác sang cột trái -->
                     <div id="popupLeftInfoWrapper" style="display: none; margin-top: 10px;">
                         <h2 class="popup-title-text" id="popupLeftProductTitle" style="font-size: 20px; margin-bottom: 10px;"></h2>
                         <span class="popup-section-title">Mô tả sản phẩm</span>
@@ -232,7 +234,6 @@
                     </div>
                 </div>
 
-                <!-- 2 nút tương tác (Xin info & Tư vấn Zalo) sẽ hiện ở cột trái nếu là sản phẩm Đặt trước -->
                 <div id="popupLeftButtonsGroup" style="display: none; padding-top: 15px;">
                     <div class="btn-action-sub-grid">
                         <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
@@ -261,7 +262,6 @@
                 
                 <div class="popup-actions-wrapper">
                     <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank"><i class="fa-solid fa-bag-shopping"></i> Mua ngay nhé</a>
-                    <!-- 2 nút tương tác mặc định nằm ở cột phải cho sản phẩm thường -->
                     <div class="btn-action-sub-grid" id="popupRightButtonsGroup">
                         <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
                         <a class="btn-action-sub" id="btnPopupZaloConsultRight" href="#" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
@@ -405,6 +405,7 @@
             document.getElementById('footer-social-links').innerHTML = htmlLinks;
         }
 
+        /* HÀM RENDER GRID DÙNG LỚP KÍNH CHẮN `.product-card-shield` ĐẢM BẢO CLICK ĂN NGAY 100% */
         function renderProductsGrid() {
             let displayList = [...globalStoreData.products];
             if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
@@ -414,7 +415,8 @@
             document.getElementById('product-list-view').innerHTML = displayList.map(p => {
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                 return `
-                    <div class="product-card" onclick="openProductDetailPopupByIndex(${p.sheetIndex})">
+                    <div class="product-card">
+                        <div class="product-card-shield" onclick="openProductDetailPopupByIndex(${p.sheetIndex})"></div>
                         <span class="badge-status ${badgeClass}">${p.stock}</span>
                         <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
                         <div class="product-info">
@@ -437,7 +439,6 @@
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
 
-                // Phân bổ bố cục: Trả tên sản phẩm về cột phải, nếu là Đặt trước thì đưa Tên, Mô tả & 2 nút tương tác sang cột trái
                 if (isPreorder) {
                     document.getElementById('popupLeftInfoWrapper').style.display = 'block';
                     document.getElementById('popupLeftProductTitle').innerText = prod.name;
