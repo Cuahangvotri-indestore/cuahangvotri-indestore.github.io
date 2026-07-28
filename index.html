@@ -321,13 +321,19 @@
                 globalStoreData.products = [];
                 
                 productRows.forEach((row, idx) => {
-                    if(row && row.c) {
+                    if(row && row.c && row.c[1] && row.c[1].v) {
+                        // Kiểm tra trạng thái hiển thị (cột thứ 11, index 10: hiện / ẩn)
+                        let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
+                        
+                        // Nếu là 'ẩn' thì bỏ qua không đưa lên web
+                        if (statusVal === 'ẩn') return;
+
                         let pPrice = 0; 
                         if(row.c[7] && row.c[7].v) {
                             pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
                         }
 
-                        let pName = (row.c[1] && row.c[1].v) ? sanitizeText(row.c[1].v) : `Sản phẩm ${idx + 1}`;
+                        let pName = sanitizeText(row.c[1].v);
                         let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
                         let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
 
