@@ -368,7 +368,7 @@
             let displayList = [...globalStoreData.products];
             if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
             else if (currentSortValue === 'price-desc') displayList.sort((a, b) => b.basePrice - a.basePrice);
-            else displayList.sort((a, b) => b.sheetIndex - a.sheetIndex);
+            else displayList.sort((a, b) => a.sheetIndex - b.sheetIndex);
 
             document.getElementById('product-list-view').innerHTML = displayList.map(p => {
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
@@ -383,7 +383,6 @@
                     </div>`;
             }).join('');
         }
-
         // Ủy quyền sự kiện toàn cục - Bấm vào bất cứ đâu trên Card là mở ngay lập tức, không bao giờ lỗi lúc được lúc không
         document.getElementById('product-list-view').addEventListener('click', function(e) {
             const card = e.target.closest('.product-card');
@@ -396,7 +395,6 @@
 
         function openProductDetailPopupByIndex(sheetIndex) {
             try {
-                // Lấy trực tiếp sản phẩm chuẩn xác 100% thông qua vị trí dòng trên Sheets, không sợ trùng lặp code
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
                 
