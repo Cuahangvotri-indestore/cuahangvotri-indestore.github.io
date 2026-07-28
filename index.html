@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cửa Hàng Vô Tri // Creative Handmade</title>
+    <title>Cửa Hàng Vô Tri</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -42,7 +42,6 @@
         .right-nav-box { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; flex: 1; }
         .menu-categories { display: flex; justify-content: flex-end; align-items: center; gap: 15px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
         
-        /* Tăng size chữ và độ đậm cho nút danh mục menu */
         .menu-item { 
             font-weight: 700; font-size: 16px; cursor: pointer; padding: 12px 28px; border-radius: 40px; 
             background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%); border: 1.5px solid var(--liquid-border); 
@@ -72,7 +71,6 @@
         .banner-slide.active { opacity: 1; }
         .banner-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* Thu hẹp khoảng cách bộ lọc và cân đối hài hòa */
         .filter-section { max-width: 1300px; margin: 20px auto 0; padding: 0 24px; box-sizing: border-box; display: flex; justify-content: flex-end; width: 100%; }
         .custom-dropdown { position: relative; display: inline-block; min-width: 230px; z-index: 10; }
         .dropdown-trigger {
@@ -114,23 +112,25 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM */
+        /* POPUP CHI TIẾT SẢN PHẨM & TÙY CHỈNH MÀU RADIO ĐỒNG BỘ UI */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1100px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 85vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
         .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
         .popup-close-btn { position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 10; }
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
+        
         .popup-left-side { width: 50%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; overflow-y: auto; }
         .popup-image-container-wrapper { position: relative; width: 100%; }
-        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 420px; width: 100%; overflow: hidden; }
+        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; min-height: 380px; width: 100%; overflow: hidden; }
         .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
         .popup-slide-item.active { opacity: 1; pointer-events: auto; }
-        .popup-main-image { max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 24px; }
+        .popup-main-image { max-width: 100%; max-height: 380px; object-fit: contain; border-radius: 24px; }
         .popup-nav-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; }
-        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 15px; }
+        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 12px; margin-bottom: 12px; }
         .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
         .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
+        
         .popup-right-side { width: 50%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
         .popup-scroll-box { flex: 1; margin-bottom: 20px; }
         .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 24px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 14px 0; line-height: 1.4; }
@@ -138,40 +138,39 @@
         .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 14px 18px; font-size: 15px; color: #4f6a65; line-height: 1.6; margin-bottom: 18px; }
         .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 14px 20px; border-radius: 18px; margin-bottom: 20px; }
         .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); }
+        
         .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 18px; }
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
-        .custom-radio-btn { display: flex; align-items: center; gap: 6px; padding: 9px 16px; background: rgba(255, 255, 255, 0.7); border: 1px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; }
+        
+        /* Custom Radio Button đồng bộ màu UI chủ đạo */
+        .custom-radio-btn { 
+            display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); 
+            border: 1.5px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
+            transition: all 0.25s ease;
+        }
+        .custom-radio-btn:hover { background: rgba(56, 122, 111, 0.08); border-color: var(--emerald-soft); }
+        .custom-radio-btn input[type="radio"] { accent-color: var(--emerald-dark); width: 16px; height: 16px; cursor: pointer; }
+
         .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
         .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px; border-radius: 18px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); }
         .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px; border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
 
-        /* Footer Liquid Glass & Copyright UI tối ưu */
         footer { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-top: 1px solid var(--liquid-border); padding: 35px 24px; text-align: center; margin-top: auto; }
         .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
         .footer-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        
         .footer-btn { 
             text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 30px; border-radius: 40px; 
             border: 1.5px solid var(--liquid-border); background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%);
             backdrop-filter: blur(15px); box-shadow: 0 6px 20px rgba(31, 78, 69, 0.04), inset 0 4px 10px rgba(255, 255, 255, 0.6);
             transition: all 0.3s ease;
         }
-        .footer-btn:hover {
-            transform: translateY(-2px); background: var(--emerald-soft); color: #ffffff !important; border-color: var(--emerald-soft);
-            box-shadow: 0 10px 25px rgba(56, 122, 111, 0.3);
-        }
-        .btn-fb { color: #1877f2; }
-        .btn-zl { color: #0068ff; }
-        .btn-sp { color: var(--shopee-color); }
-        
-        .footer-copyright {
-            font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700;
-            color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin-top: 5px;
-        }
+        .footer-btn:hover { transform: translateY(-2px); background: var(--emerald-soft); color: #ffffff !important; border-color: var(--emerald-soft); box-shadow: 0 10px 25px rgba(56, 122, 111, 0.3); }
+        .btn-fb { color: #1877f2; } .btn-zl { color: #0068ff; } .btn-sp { color: var(--shopee-color); }
+        .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin-top: 5px; }
 
-        @media (max-width: 1024px) { .nav-container { flex-direction: column; gap: 15px; } .right-nav-box { align-items: center; } .menu-categories { justify-content: center; } .banner-wrapper { aspect-ratio: auto; height: 160px; } }
+        @media (max-width: 1024px) { .nav-container { flex-direction: column; gap: 15px; } .right-nav-box { align-items: center; } .menu-categories { justify-content: center; } .banner-wrapper { aspect-ratio: auto; height: 160px; } .popup-container { flex-direction: column; max-height: 90vh; } .popup-left-side, .popup-right-side { width: 100%; border-right: none; } }
     </style>
 </head>
 <body>
@@ -211,26 +210,45 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM (Tối ưu bố cục: Đưa Tên & Mô tả sang Trái cho sản phẩm Đặt trước) -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <!-- CỘT TRÁI -->
             <div class="popup-left-side">
                 <div class="popup-image-container-wrapper">
                     <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
                     <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
                 <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-                <div id="popupLeftDescWrapper" style="display: none; margin-top: 15px;"><span class="popup-section-title">Mô tả sản phẩm</span><div class="popup-desc-box" id="popupProductLeftDesc"></div></div>
+                
+                <!-- Đối với sản phẩm Đặt trước: Tên & Mô tả được đưa hoàn toàn sang trái cho cân đối -->
+                <div id="popupLeftInfoWrapper" style="display: none; margin-top: 15px;">
+                    <h2 class="popup-title-text" id="popupLeftProductTitle" style="font-size: 20px; margin-bottom: 10px;"></h2>
+                    <span class="popup-section-title">Mô tả sản phẩm</span>
+                    <div class="popup-desc-box" id="popupProductLeftDesc"></div>
+                </div>
             </div>
             
+            <!-- CỘT PHẢI -->
             <div class="popup-right-side">
                 <div class="popup-scroll-box">
-                    <h2 class="popup-title-text" id="popupProductTitle">Tên sản phẩm</h2>
-                    <div id="popupRightDescWrapper"><span class="popup-section-title">Mô tả sản phẩm</span><div class="popup-desc-box" id="popupProductDesc"></div></div>
-                    <div class="popup-price-tag-row"><span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span><span class="popup-price-number" id="popupDynamicPrice">0 đ</span></div>
-                    <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;"><span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span><div id="popupDynamicRadioSpace"></div></div>
+                    <h2 class="popup-title-text" id="popupRightProductTitle">Tên sản phẩm</h2>
+                    <div id="popupRightDescWrapper">
+                        <span class="popup-section-title">Mô tả sản phẩm</span>
+                        <div class="popup-desc-box" id="popupProductDesc"></div>
+                    </div>
+                    <div class="popup-price-tag-row">
+                        <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
+                        <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
+                    </div>
+                    <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
+                        <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
+                        <div id="popupDynamicRadioSpace"></div>
+                    </div>
                 </div>
+                
                 <div class="popup-actions-wrapper">
                     <a class="btn-action-main" id="btnPopupMainBuy" href="#" target="_blank"><i class="fa-solid fa-bag-shopping"></i> Mua ngay nhé</a>
                     <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
@@ -405,12 +423,24 @@
                 popupActiveImgIndex = 0;
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
-                document.getElementById('popupProductTitle').innerText = prod.name;
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 
-                document.getElementById('popupLeftDescWrapper').style.display = isPreorder ? 'block' : 'none';
-                document.getElementById('popupRightDescWrapper').style.display = isPreorder ? 'none' : 'block';
-                document.getElementById(isPreorder ? 'popupProductLeftDesc' : 'popupProductDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
+                // Tối ưu UI: Nếu là sản phẩm đặt trước, đưa Tên và Mô tả sang cột Trái cho thoáng và cân đối
+                if (isPreorder) {
+                    document.getElementById('popupLeftInfoWrapper').style.display = 'block';
+                    document.getElementById('popupLeftProductTitle').innerText = prod.name;
+                    document.getElementById('popupProductLeftDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
+                    
+                    document.getElementById('popupRightProductTitle').style.display = 'none';
+                    document.getElementById('popupRightDescWrapper').style.display = 'none';
+                } else {
+                    document.getElementById('popupLeftInfoWrapper').style.display = 'none';
+                    
+                    document.getElementById('popupRightProductTitle').style.display = 'block';
+                    document.getElementById('popupRightProductTitle').innerText = prod.name;
+                    document.getElementById('popupRightDescWrapper').style.display = 'block';
+                    document.getElementById('popupProductDesc').innerText = prod.desc || "Sản phẩm creative handmade tinh tế.";
+                }
 
                 const buyBtn = document.getElementById('btnPopupMainBuy');
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
@@ -466,16 +496,38 @@
 
         function calculatePopupDynamicPrice() {
             if(!popupActiveProduct || !popupActiveProduct.boCauHinh) return;
-            const matrix = sheetsPhuDataMatrix[popupActiveProduct.boCauHinh]; let price = popupActiveProduct.basePrice;
+            const matrix = sheetsPhuDataMatrix[popupActiveProduct.boCauHinh]; 
+            let priceVal = popupActiveProduct.basePrice;
+
             if(popupActiveProduct.boCauHinh === 'GIA_THIEP') {
-                let matched = matrix.data.find(d => d.Loai_Thiep === document.querySelector(`input[name="Loai_Thiep"]:checked`)?.value && d.Kieu_In === document.querySelector(`input[name="Kieu_In"]:checked`)?.value);
-                let col = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
-                if(matched && matched[col] !== undefined) price = matched[col];
+                let selectedThiep = document.querySelector(`input[name="Loai_Thiep"]:checked`)?.value;
+                let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
+                let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
+
+                let matched = matrix.data.find(d => d.Loai_Thiep === selectedThiep && d.Kieu_In === selectedKieuIn);
+                
+                // Kiểm tra gắt gao: Nếu tổ hợp lựa chọn không tồn tại hoặc giá trị trong cột là chuỗi "Chưa có" / rỗng
+                if (!matched || !matched[selectedGiay] || String(matched[selectedGiay]).trim() === "Chưa có") {
+                    priceVal = "Chưa có";
+                } else {
+                    priceVal = matched[selectedGiay];
+                }
             } else {
                 let row = matrix.data[0], mat = document.querySelector(`input[name="Card_Mat"]:checked`)?.value, man = document.querySelector(`input[name="Card_Man"]:checked`)?.value, sOpt = document.querySelector(`input[name="Single_Option"]:checked`)?.value;
-                if(mat && man) { let key = `${mat}_${man}`; if(row[key] !== undefined) price = row[key]; } else if(sOpt && row[sOpt] !== undefined) price = row[sOpt];
+                if(mat && man) { 
+                    let key = `${mat}_${man}`; 
+                    if(row[key] !== undefined) priceVal = row[key]; 
+                } else if(sOpt && row[sOpt] !== undefined) {
+                    priceVal = row[sOpt];
+                }
             }
-            document.getElementById('popupDynamicPrice').innerText = String(price).trim() === "Chưa có" ? "Chưa có" : Number(price).toLocaleString('vi-VN') + " đ";
+
+            // Hiển thị chuẩn xác tiền tệ hoặc chữ "Chưa có"
+            if (priceVal === "Chưa có" || String(priceVal).trim() === "Chưa có") {
+                document.getElementById('popupDynamicPrice').innerText = "Chưa có";
+            } else {
+                document.getElementById('popupDynamicPrice').innerText = Number(priceVal).toLocaleString('vi-VN') + " đ";
+            }
         }
 
         function buildPopupSliderDOM() { document.getElementById('popupImageViewportTrack').innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item ${idx===0?'active':''}"><img class="popup-main-image" src="${url}"></div>`).join(''); }
@@ -495,7 +547,14 @@
             document.getElementById('popupImageViewportTrack').innerHTML = '';
         }
         function closeProductPopupOutside(e) { if(e.target.classList.contains('popup-overlay')) closeProductPopup(); }
-        function formatOptionToVietnamese(t) { return t.replace(/_/g, ' ').replace(/Khong Man/g, 'Không màng').replace(/Co Man/g, 'Có màng').replace(/In 1 Mat/g, 'In 1 mặt').replace(/In 2 Mat/g, 'In 2 mặt').replace(/Giay_Ford_/g, 'Giấy Ford '); }
+        function formatOptionToVietnamese(t) { 
+            return t.replace(/_/g, ' ')
+                    .replace(/Khong Man/g, 'Không màng')
+                    .replace(/Co Man/g, 'Có màng')
+                    .replace(/In 1 Mat/g, 'In 1 mặt')
+                    .replace(/In 2 Mat/g, 'In 2 mặt')
+                    .replace(/Giay/g, 'Giấy'); 
+        }
         
         window.onload = initSprint1HomePage;
     </script>
