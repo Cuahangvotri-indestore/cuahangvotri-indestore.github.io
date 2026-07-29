@@ -191,7 +191,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách Form Request từ khách hàng</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ tự động từ sheet <b>Form_Requests</b> hoặc <b>Yeu_Cau</b> trên Google Sheets.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Dữ liệu được đồng bộ từ sheet <b>Form_Requests</b> trên Google Sheets.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
@@ -308,7 +308,6 @@
         let adminConfigList = [];
         let adminRequestsList = [];
 
-        // Gắn sự kiện đăng nhập an toàn khi DOM load xong
         document.addEventListener('DOMContentLoaded', () => {
             const loginBtn = document.getElementById('loginButton');
             const passwordInput = document.getElementById('adminPasswordInput');
@@ -411,20 +410,21 @@
             renderConfigList();
         }
 
+        // CHỈ ĐỌC ĐÚNG TỪ SHEET 'Form_Requests' ĐỂ TRÁNH LẤY NHẦM SẢN PHẨM
         async function loadRequestsData() {
-            let requestRows = await fetchSheetRows('Form_Requests');
-            if (requestRows.length === 0) {
-                requestRows = await fetchSheetRows('Yeu_Cau');
-            }
-
+            const requestRows = await fetchSheetRows('Form_Requests');
             adminRequestsList = [];
+            
             requestRows.forEach((row, idx) => {
-                if(row && row.c) {
-                    let timestamp = row.c[0] && row.c[0].v ? row.c[0].v : 'N/A';
+                if(row && row.c && row.c[0] && row.c[0].v) {
+                    let timestamp = row.c[0].v;
                     let customerName = row.c[1] && row.c[1].v ? row.c[1].v : 'Khách hàng';
                     let phone = row.c[2] && row.c[2].v ? row.c[2].v : '';
-                    let content = row.c[3] && row.c[3].v ? row.c[3].v : (row.c[4] && row.c[4].v ? row.c[4].v : 'Không có nội dung');
-                    let status = row.c[5] && row.c[5].v ? row.c[5].v : 'Mới tiếp nhận';
+                    let content = row.c[3] && row.c[3].v ? row.c[3].v : 'Không có nội dung';
+                    let status = row.c[4] && row.c[4].v ? row.c[4].v : 'Mới tiếp nhận';
+
+                    // Lọc bỏ dòng tiêu đề nếu có
+                    if (String(customerName).toLowerCase() === 'tên khách hàng' || String(timestamp).toLowerCase() === 'thời gian') return;
 
                     adminRequestsList.push({
                         time: timestamp,
@@ -456,7 +456,7 @@
                     </tr>
                 `;
             });
-            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Chưa có form request nào từ khách hàng.</td></tr>`;
+            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Chưa có form request nào từ khách hàng (Sheet Form_Requests đang trống).</td></tr>`;
         }
 
         function copyRequestData(idx) {
