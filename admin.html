@@ -191,7 +191,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách Form Request từ khách hàng</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Dữ liệu được đồng bộ từ sheet <b>Form_Requests</b> trên Google Sheets.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ tự động từ sheet <b>Quan_Ly_Form</b> trên Google Sheets.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
@@ -410,19 +410,19 @@
             renderConfigList();
         }
 
-        // ĐẶC TRỊ KIỂM TRA CHUẨN TÊN CỘT ĐỂ KHÔNG BAO GIỜ NHẦN SANG BẢNG SẢN PHẨM
+        // ĐẶC TRỊ TRỎ ĐÚNG TÊN SHEET 'Quan_Ly_Form'
         async function loadRequestsData() {
-            const requestRows = await fetchSheetRows('Form_Requests');
+            const requestRows = await fetchSheetRows('Quan_Ly_Form');
             adminRequestsList = [];
             
             requestRows.forEach((row, idx) => {
                 if(row && row.c) {
-                    // Kiểm tra nếu dòng này là dữ liệu sản phẩm (có chứa mã định dạng sản phẩm dạng LEN-, IN-, 3D-, GIAY-) thì bỏ qua tuyệt đối
                     let col1 = row.c[0] && row.c[0].v ? String(row.c[0].v).trim() : '';
                     let col2 = row.c[1] && row.c[1].v ? String(row.c[1].v).trim() : '';
                     
-                    if (col2.startsWith('LEN-') || col2.startsWith('IN-') || col2.startsWith('3D-') || col2.startsWith('GIAY-') || col2.toLowerCase() === 'tên sản phẩm') {
-                        return; // Bỏ qua nếu lỡ gviz trả về sheet sản phẩm
+                    // Lọc bỏ nếu dính tiêu đề hoặc dữ liệu định dạng sản phẩm
+                    if (col2.startsWith('LEN-') || col2.startsWith('IN-') || col2.startsWith('3D-') || col2.startsWith('GIAY-') || col2.toLowerCase() === 'tên sản phẩm' || col1.toLowerCase() === 'thời gian') {
+                        return;
                     }
 
                     if (col1 && col1 !== 'N/A') {
@@ -457,7 +457,7 @@
                     </tr>
                 `;
             });
-            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Chưa có form request nào từ khách hàng (Sheet Form_Requests đang trống).</td></tr>`;
+            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Chưa có form request nào từ khách hàng (Sheet Quan_Ly_Form đang trống).</td></tr>`;
         }
 
         function copyRequestData(idx) {
