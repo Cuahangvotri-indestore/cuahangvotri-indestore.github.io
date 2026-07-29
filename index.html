@@ -116,7 +116,7 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM: 1 CỘT DỌC COMPACT, THU GỌN KHOẢNG CÁCH */
+        /* POPUP CHI TIẾT SẢN PHẨM: 1 CỘT DỌC COMPACT */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         
@@ -407,8 +407,12 @@
 
                 const contentContainer = document.getElementById('popupSingleColContent');
                 
-                const buyBtnHref = prod.shopeeLink || shopZalo;
-                const buyBtnText = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
+                // KIỂM TRA NẾU KHÔNG CÓ LINK SHOPEE THÌ ẨN NÚT MUA TRÊN SHOPEE
+                const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
+                let mainButtonHTML = "";
+                if (hasShopeeLink) {
+                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
+                }
 
                 contentContainer.innerHTML = `
                     <h2 class="popup-title-text">${prod.name}</h2>
@@ -435,7 +439,7 @@
                     </div>
 
                     <div class="popup-actions-wrapper" id="popupActionsWrapperContainer">
-                        <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
+                        ${mainButtonHTML}
                         ${(isPreorder || hasConfig) ? `
                         <div class="btn-action-sub-grid">
                             <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
@@ -450,7 +454,6 @@
 
                 const checkBlock = document.getElementById('popupCheckGiaBlock');
                 const radioSpace = document.getElementById('popupDynamicRadioSpace');
-                const checkTitleEl = document.getElementById('checkPriceSectionTitle');
                 
                 if(!hasConfig) {
                     if(checkBlock) checkBlock.style.display = 'none'; 
@@ -459,9 +462,6 @@
                 } else {
                     if(checkBlock) checkBlock.style.display = 'block'; 
                     
-                    // LUÔN LUÔN HIỂN THỊ TIÊU ĐỀ LÀ "Check giá tùy chọn" CHUẨN XÁC
-                    if (checkTitleEl) checkTitleEl.innerHTML = `<i class="fa-solid fa-calculator"></i> Check giá tùy chọn`;
-
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
                         buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", [...new Set(matrix.data.map(d => d.Loai_Thiep))], matrix.data[0].Loai_Thiep);
