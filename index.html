@@ -116,46 +116,43 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM: CƠ CHẾ CUỘN TOÀN TRANG MƯỢT MÀ */
+        /* POPUP CHI TIẾT SẢN PHẨM: 1 CỘT DỌC LIỀN MẠCH, MƯỢT MÀ TRÊN MỌI THIẾT BỊ */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         
         .popup-container { 
             background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); 
-            max-width: 1150px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); 
-            display: flex; max-height: 90vh; 
-            overflow-y: auto; /* Dùng chung 1 thanh cuộn mượt mà duy nhất cho cả popup */
+            max-width: 750px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); 
+            display: flex; flex-direction: column; max-height: 90vh; 
+            overflow-y: auto; padding: 35px; box-sizing: border-box;
             position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); 
         }
         .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
-        .popup-close-btn { position: sticky; top: 20px; float: right; margin-left: auto; margin-right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 30; }
+        .popup-close-btn { position: absolute; top: 25px; right: 25px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 30; }
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
         
-        .popup-left-side { width: 52%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .popup-single-col-content { display: flex; flex-direction: column; gap: 20px; width: 100%; }
         
-        .popup-image-container-wrapper { position: relative; width: 100%; margin: 12px 0; }
+        .popup-image-container-wrapper { position: relative; width: 100%; }
         .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; height: 340px; width: 100%; overflow: hidden; background: rgba(255,255,255,0.25); border-radius: 28px; border: 1px solid var(--liquid-border); }
         .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
         .popup-slide-item.active { opacity: 1; pointer-events: auto; }
         .popup-main-image { width: 100%; height: 100%; object-fit: contain; border-radius: 28px; padding: 10px; box-sizing: border-box; }
         .popup-nav-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 8px; margin-bottom: 8px; }
+        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
         .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
         .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
         
-        .popup-right-side { width: 48%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-        .popup-scroll-box { flex: 1; margin-bottom: 20px; }
-        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 22px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 10px 0; line-height: 1.4; }
+        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 22px; color: var(--emerald-dark); font-weight: 700; margin: 0; line-height: 1.4; padding-right: 40px; }
         .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
-        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 12px 16px; font-size: 14px; color: #4f6a65; line-height: 1.6; margin-bottom: 12px; }
-        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 14px 20px; border-radius: 18px; margin-bottom: 20px; }
+        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 14px 18px; font-size: 15px; color: #4f6a65; line-height: 1.6; }
+        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 14px 20px; border-radius: 18px; }
         .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); }
         
         .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 18px; }
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        /* Nút radio màu xanh concept chủ đạo */
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); 
             border: 1.5px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
@@ -164,7 +161,7 @@
         .custom-radio-btn:hover { background: rgba(31, 78, 69, 0.06); border-color: var(--emerald-dark); }
         .custom-radio-btn input[type="radio"] { accent-color: var(--emerald-dark); width: 16px; height: 16px; cursor: pointer; }
 
-        .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 15px; display: flex; flex-direction: column; gap: 10px; }
         .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px; border-radius: 18px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); }
         .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px; border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
@@ -182,14 +179,12 @@
         .btn-fb { color: #1877f2; } .btn-zl { color: #0068ff; } .btn-sp { color: var(--shopee-color); }
         .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin-top: 5px; }
 
-        /* RESPONSIVE MÀN HÌNH HẸP / ĐIỆN THOẠI: CHUYỂN THÀNH 1 CỘT DỌC LIỀN MẠCH, KHÔNG BỊ CHIA CẮT */
         @media (max-width: 1024px) { 
             .nav-container { flex-direction: column; gap: 15px; } 
             .right-nav-box { align-items: center; } 
             .menu-categories { justify-content: center; } 
             .banner-wrapper { aspect-ratio: auto; height: 160px; } 
-            .popup-container { flex-direction: column !important; max-height: 90vh; } 
-            .popup-left-side, .popup-right-side { width: 100% !important; border-right: none !important; padding: 20px !important; } 
+            .popup-container { max-height: 90vh; padding: 20px; } 
             .popup-image-viewport { height: 260px !important; }
         }
     </style>
@@ -231,19 +226,13 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM: 1 CỘT DỌC HOÀN HẢO -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
-            <!-- Nút đóng đặt cố định ở góc trên popup -->
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
-            <!-- CỘT TRÁI -->
-            <div class="popup-left-side" id="popupLeftSideContainer"></div>
-            
-            <!-- CỘT PHẢI -->
-            <div class="popup-right-side" id="popupRightSideContainer">
-                <div class="popup-scroll-box" id="popupRightScrollBox"></div>
-                <div class="popup-actions-wrapper" id="popupActionsWrapperContainer"></div>
+            <div class="popup-single-col-content" id="popupSingleColContent">
+                <!-- Nội dung được render tuần tự: Tên -> Ảnh -> Mô tả -> Giá -> Bảng check giá -> Bộ nút -->
             </div>
         </div>
     </div>
@@ -412,111 +401,48 @@
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
-                const isThiep = (prod.boCauHinh === 'GIA_THIEP');
-                const isCardOrTem = (prod.boCauHinh === 'GIA_CARD' || prod.boCauHinh === 'GIA_TEM_STICKER');
+                const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
+                const hasConfig = (prod.boCauHinh && sheetsPhuDataMatrix[prod.boCauHinh]);
 
-                const leftSide = document.getElementById('popupLeftSideContainer');
-                const rightScrollBox = document.getElementById('popupRightScrollBox');
-                const actionsWrapper = document.getElementById('popupActionsWrapperContainer');
-
-                if (isThiep) {
-                    leftSide.innerHTML = `
-                        <div>
-                            <h2 class="popup-title-text">${prod.name}</h2>
-                            <div class="popup-image-container-wrapper">
-                                <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
-                                <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
-                            </div>
-                            <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-                            <span class="popup-section-title">Mô tả sản phẩm</span>
-                            <div class="popup-desc-box">${prod.desc || "Sản phẩm creative handmade tinh tế."}</div>
-                        </div>
-                        <div style="padding-top: 10px;">
-                            <div class="btn-action-sub-grid">
-                                <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
-                                <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
-                            </div>
-                        </div>
-                    `;
-
-                    rightScrollBox.innerHTML = `
-                        <div class="popup-price-tag-row" style="margin-top: 10px;">
-                            <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
-                            <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
-                        </div>
-                        <div class="check-price-block" id="popupCheckGiaBlock">
-                            <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
-                            <div id="popupDynamicRadioSpace"></div>
-                        </div>
-                    `;
-                } else if (isCardOrTem) {
-                    leftSide.innerHTML = `
-                        <div>
-                            <h2 class="popup-title-text">${prod.name}</h2>
-                            <div class="popup-image-container-wrapper" style="margin-top: 10px;">
-                                <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
-                                <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
-                            </div>
-                            <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-                            <span class="popup-section-title">Mô tả sản phẩm</span>
-                            <div class="popup-desc-box">${prod.desc || "Sản phẩm creative handmade tinh tế."}</div>
-                        </div>
-                    `;
-
-                    rightScrollBox.innerHTML = `
-                        <div class="popup-price-tag-row" style="margin-top: 10px;">
-                            <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
-                            <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
-                        </div>
-                        <div class="check-price-block" id="popupCheckGiaBlock">
-                            <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
-                            <div id="popupDynamicRadioSpace"></div>
-                        </div>
-                    `;
-                } else {
-                    leftSide.innerHTML = `
-                        <div class="popup-image-container-wrapper" style="margin: auto 0;">
-                            <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
-                            <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                        <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-                    `;
-
-                    rightScrollBox.innerHTML = `
-                        <h2 class="popup-title-text">${prod.name}</h2>
-                        <span class="popup-section-title">Mô tả sản phẩm</span>
-                        <div class="popup-desc-box">${prod.desc || "Sản phẩm creative handmade tinh tế."}</div>
-                        <div class="popup-price-tag-row">
-                            <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
-                            <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
-                        </div>
-                        <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
-                            <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
-                            <div id="popupDynamicRadioSpace"></div>
-                        </div>
-                    `;
-                }
-
+                const contentContainer = document.getElementById('popupSingleColContent');
+                
                 const buyBtnHref = prod.shopeeLink || shopZalo;
                 const buyBtnText = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
-                
-                if (isThiep) {
-                    actionsWrapper.innerHTML = `
+
+                // BỐC CỤC 1 CỘT DỌC CHUẨN TỪ TRÊN XUỐNG CHO MỌI THIẾT BỊ: Tên -> Ảnh -> Mô tả -> Giá -> Bảng check giá -> Bộ nút
+                contentContainer.innerHTML = `
+                    <h2 class="popup-title-text">${prod.name}</h2>
+                    
+                    <div class="popup-image-container-wrapper">
+                        <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
+                        <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+
+                    <div>
+                        <span class="popup-section-title">Mô tả sản phẩm</span>
+                        <div class="popup-desc-box">${prod.desc || "Sản phẩm creative handmade tinh tế."}</div>
+                    </div>
+
+                    <div class="popup-price-tag-row">
+                        <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
+                        <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
+                    </div>
+
+                    <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
+                        <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
+                        <div id="popupDynamicRadioSpace"></div>
+                    </div>
+
+                    <div class="popup-actions-wrapper" id="popupActionsWrapperContainer">
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
-                    `;
-                } else if (isCardOrTem) {
-                    actionsWrapper.innerHTML = `
-                        <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
-                        <div class="btn-action-sub-grid" id="popupSubButtonsGroup">
+                        ${(isPreorder || hasConfig) ? `
+                        <div class="btn-action-sub-grid">
                             <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
                             <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
-                        </div>
-                    `;
-                } else {
-                    actionsWrapper.innerHTML = `
-                        <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
-                    `;
-                }
+                        </div>` : ''}
+                    </div>
+                `;
 
                 buildPopupSliderDOM(); 
                 renderPopupSliderEffects(); 
@@ -525,7 +451,7 @@
                 const checkBlock = document.getElementById('popupCheckGiaBlock');
                 const radioSpace = document.getElementById('popupDynamicRadioSpace');
                 
-                if(!prod.boCauHinh || !sheetsPhuDataMatrix[prod.boCauHinh]) {
+                if(!hasConfig) {
                     if(checkBlock) checkBlock.style.display = 'none'; 
                     const priceEl = document.getElementById('popupDynamicPrice');
                     if(priceEl) priceEl.innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
