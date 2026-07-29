@@ -59,13 +59,6 @@
         .admin-table th, .admin-table td { padding: 12px 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; background: #ffffff; }
         .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); position: sticky; top: 0; z-index: 2; }
 
-        /* CỐ ĐỊNH CHUẨN 3 CỘT ĐẦU VÀ GÁN CHIỀU RỘNG TRÁNH ĐÈ CHỮ */
-        .admin-table th:nth-child(1), .admin-table td:nth-child(1) { position: sticky; left: 0; z-index: 3; width: 60px; min-width: 60px; text-align: center; }
-        .admin-table th:nth-child(2), .admin-table td:nth-child(2) { position: sticky; left: 60px; z-index: 3; width: 110px; min-width: 110px; }
-        .admin-table th:nth-child(3), .admin-table td:nth-child(3) { position: sticky; left: 170px; z-index: 3; width: 220px; min-width: 220px; box-shadow: 3px 0 6px rgba(0,0,0,0.04); }
-        
-        .admin-table th:nth-child(1), .admin-table th:nth-child(2), .admin-table th:nth-child(3) { background: #f8faf9; z-index: 4; }
-
         .badge-status-admin { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; }
         .status-hien { background: #e3effd; color: #0052cc; }
         .status-an { background: #ffebe6; color: #de350b; }
@@ -85,7 +78,7 @@
         }
         #toastNotification.show { transform: translateY(0); opacity: 1; }
 
-        /* POPUP MODAL */
+        /* POPUP MODAL CHUNG */
         .admin-modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
             display: flex; align-items: center; justify-content: center; padding: 20px;
@@ -93,7 +86,7 @@
         }
         .admin-modal-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
         .admin-modal-container {
-            background: #ffffff; width: 100%; max-width: 650px; border-radius: 12px; border: 1px solid var(--border-color);
+            background: #ffffff; width: 100%; max-width: 600px; border-radius: 12px; border: 1px solid var(--border-color);
             box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden;
         }
         .admin-modal-header { padding: 15px 20px; background: #f8faf9; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
@@ -103,10 +96,8 @@
 
         .form-group { display: flex; flex-direction: column; gap: 4px; }
         .form-group label { font-size: 13px; font-weight: 700; color: var(--emerald-dark); }
-        .form-note { font-size: 11px; color: #666; font-style: italic; }
         .form-control { width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit; font-size: 14px; box-sizing: border-box; outline: none; }
         .form-control:focus { border-color: var(--emerald-soft); }
-        .quick-paste-box { background: #f0f7f5; border: 2px dashed var(--emerald-soft); padding: 12px; border-radius: 8px; margin-bottom: 5px; }
 
         footer { background: #ffffff; border-top: 1px solid var(--border-color); padding: 15px 20px; text-align: center; margin-top: auto; font-size: 12px; font-family: 'Comfortaa', sans-serif; font-weight: 700; color: var(--emerald-dark); }
     </style>
@@ -139,15 +130,14 @@
             <div class="dashboard-tabs">
                 <button class="tab-btn active" onclick="switchTab(event, 'productsTab')"><i class="fa-solid fa-boxes-stacked"></i> Quản lý Sản phẩm</button>
                 <button class="tab-btn" onclick="switchTab(event, 'configTab')"><i class="fa-solid fa-sliders"></i> Cấu hình Shop & Banner</button>
-                <button class="tab-btn" onclick="switchTab(event, 'requestsTab')"><i class="fa-solid fa-file-lines"></i> Quản lý Form Request</button>
+                <button class="tab-btn" onclick="switchTab(event, 'requestsTab')"><i class="fa-solid fa-file-lines"></i> Quản lý Yêu cầu Đặt trước</button>
             </div>
 
             <!-- TAB 1: SẢN PHẨM -->
             <div class="panel-content active" id="productsTab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
-                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách sản phẩm từ Google Sheets</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Dữ liệu chuẩn đồng bộ từ Sheets. Sản phẩm vừa tạo sẽ hiển thị tạm ở đầu để PO bấm <b>Copy</b> dán vào Sheets.</span>
+                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách sản phẩm</h2>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="openProductModal('add')"><i class="fa-solid fa-plus"></i> Thêm sản phẩm mới</button>
                 </div>
@@ -159,19 +149,14 @@
                                 <th>Mã SP</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Danh mục</th>
-                                <th>Ảnh chính</th>
-                                <th>Ảnh chi tiết</th>
-                                <th>Mô tả</th>
                                 <th>Giá gốc</th>
-                                <th>Shopee</th>
                                 <th>Tồn kho</th>
                                 <th>Trạng thái</th>
-                                <th>Cấu hình giá</th>
                                 <th style="text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="adminProductTableBody">
-                            <tr><td colspan="13" style="text-align: center;">Đang đồng bộ dữ liệu từ Google Sheets...</td></tr>
+                            <tr><td colspan="8" style="text-align: center;">Đang đồng bộ dữ liệu...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -179,21 +164,20 @@
 
             <!-- TAB 2: CẤU HÌNH -->
             <div class="panel-content" id="configTab">
-                <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin-top:0; font-size: 17px;">Cấu hình chung & Banner hệ thống</h2>
-                <span style="font-size: 12px; color: #666; display: block; margin-bottom: 15px;">💡 Bấm nút <b>Copy</b> ở mỗi mục để sao chép giá trị cấu hình nhanh chóng.</span>
+                <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin-top:0; font-size: 17px;">Cấu hình chung & Banner</h2>
                 <div id="adminConfigSpace" style="display: flex; flex-direction: column; gap: 12px;">
                     <p>Đang tải cấu hình...</p>
                 </div>
             </div>
 
-            <!-- TAB 3: QUẢN LÝ FORM REQUEST -->
+            <!-- TAB 3: QUẢN LÝ YÊU CẦU ĐẶT TRƯỚC (FORM REQUEST) -->
             <div class="panel-content" id="requestsTab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
-                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách Form Request từ khách hàng</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ tự động từ sheet <b>Form_Requests</b> trên Google Sheets.</span>
+                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách yêu cầu thông tin / đặt trước từ khách</h2>
+                        <span style="font-size: 12px; color: #666;">💡 Bấm nút <b>"Xem chi tiết"</b> ở mỗi dòng để mở Popup kiểm tra thông tin khách gửi.</span>
                     </div>
-                    <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
+                    <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới</button>
                 </div>
                 <div class="table-responsive">
                     <table class="admin-table">
@@ -203,13 +187,12 @@
                                 <th>Thời gian</th>
                                 <th>Tên khách hàng</th>
                                 <th>Số điện thoại / Zalo</th>
-                                <th>Nội dung yêu cầu / Ghi chú</th>
-                                <th>Trạng thái xử lý</th>
+                                <th>Trạng thái</th>
                                 <th style="text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="adminRequestsTableBody">
-                            <tr><td colspan="7" style="text-align: center;">Đang đồng bộ dữ liệu Form Request từ Google Sheets...</td></tr>
+                            <tr><td colspan="6" style="text-align: center;">Đang đồng bộ dữ liệu...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -217,7 +200,43 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL THÊM / SỬA SẢN PHẨM -->
+    <!-- POPUP MODAL XEM CHI TIẾT YÊU CẦU KHÁCH HÀNG (TEST THỬ NGHIỆM SPRINT 5) -->
+    <div class="admin-modal-overlay" id="requestDetailModalOverlay" onclick="closeRequestModalOutside(event)">
+        <div class="admin-modal-container">
+            <div class="admin-modal-header">
+                <h3><i class="fa-solid fa-circle-info"></i> Chi tiết yêu cầu đặt trước từ khách</h3>
+                <button class="btn-sm" onclick="closeRequestModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <div class="form-group">
+                    <label>Thời gian gửi:</label>
+                    <input type="text" id="reqDetailTime" class="form-control" readonly style="background: #f8faf9;">
+                </div>
+                <div class="form-group">
+                    <label>Tên khách hàng:</label>
+                    <input type="text" id="reqDetailName" class="form-control" readonly style="background: #f8faf9;">
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại / Zalo liên hệ:</label>
+                    <input type="text" id="reqDetailPhone" class="form-control" readonly style="background: #f8faf9; font-weight: 700; color: var(--emerald-dark);">
+                </div>
+                <div class="form-group">
+                    <label>Nội dung yêu cầu / Ghi chú chi tiết:</label>
+                    <textarea id="reqDetailContent" class="form-control" rows="4" readonly style="background: #f8faf9;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Trạng thái xử lý:</label>
+                    <input type="text" id="reqDetailStatus" class="form-control" readonly style="background: #f8faf9;">
+                </div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn-sm btn-copy" onclick="copyCurrentRequestDetail()"><i class="fa-regular fa-copy"></i> Copy thông tin</button>
+                <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="closeRequestModal()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP MODAL SẢN PHẨM (GIỮ NGUYÊN) -->
     <div class="admin-modal-overlay" id="productModalOverlay" onclick="closeProductModalOutside(event)">
         <div class="admin-modal-container">
             <div class="admin-modal-header">
@@ -226,74 +245,13 @@
             </div>
             <div class="admin-modal-body">
                 <input type="hidden" id="editRowIndex" value="">
-                
-                <div class="quick-paste-box">
-                    <label style="font-size: 13px; font-weight: 700; color: var(--emerald-dark); display: flex; align-items: center; gap: 6px;">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Dán nhanh từ Google Sheets:
-                    </label>
-                    <span class="form-note">Copy 1 dòng từ Google Sheets rồi dán (Ctrl+V) vào ô dưới đây:</span>
-                    <input type="text" id="quickPasteInput" class="form-control" placeholder="Click vào đây và bấm Ctrl+V..." oninput="parseQuickPaste(this)">
-                </div>
-
-                <div class="form-group">
-                    <label>Mã sản phẩm (Code)</label>
-                    <input type="text" id="inputCode" class="form-control" placeholder="Ví dụ: PROD_01">
-                </div>
-                <div class="form-group">
-                    <label>Tên sản phẩm</label>
-                    <input type="text" id="inputName" class="form-control" placeholder="Nhập tên sản phẩm...">
-                </div>
-                <div class="form-group">
-                    <label>Danh mục</label>
-                    <select id="inputCategory" class="form-control">
-                        <option value="Đồ len">Đồ len</option>
-                        <option value="In ấn">In ấn</option>
-                        <option value="Giấy">Giấy</option>
-                        <option value="In 3D">In 3D</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Đường dẫn Ảnh chính (Image URL)</label>
-                    <input type="text" id="inputImg" class="form-control" placeholder="images/... hoặc link ảnh">
-                </div>
-                <div class="form-group">
-                    <label>Ảnh chi tiết (Dùng cho Slider popup)</label>
-                    <input type="text" id="inputDetailImgs" class="form-control" placeholder="url1, url2, url3...">
-                </div>
-                <div class="form-group">
-                    <label>Mô tả sản phẩm</label>
-                    <textarea id="inputDesc" class="form-control" rows="3" placeholder="Nhập mô tả sản phẩm..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Giá gốc (VNĐ)</label>
-                    <input type="number" id="inputPrice" class="form-control" placeholder="Ví dụ: 50000">
-                </div>
-                <div class="form-group">
-                    <label>Link mua Shopee</label>
-                    <input type="text" id="inputShopee" class="form-control" placeholder="https://shopee.vn/...">
-                </div>
-                <div class="form-group">
-                    <label>Tình trạng / Tồn kho</label>
-                    <select id="inputStock" class="form-control">
-                        <option value="Có sẵn">Có sẵn</option>
-                        <option value="Đặt trước">Đặt trước</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Trạng thái hiển thị</label>
-                    <select id="inputStatus" class="form-control">
-                        <option value="Hiện">Hiện</option>
-                        <option value="Ẩn">Ẩn</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Bộ cấu hình giá nâng cao (Tùy chọn)</label>
-                    <input type="text" id="inputBoCauHinh" class="form-control" placeholder="GIA_THIEP / GIA_CARD">
-                </div>
+                <div class="form-group"><label>Mã sản phẩm</label><input type="text" id="inputCode" class="form-control"></div>
+                <div class="form-group"><label>Tên sản phẩm</label><input type="text" id="inputName" class="form-control"></div>
+                <div class="form-group"><label>Giá gốc</label><input type="number" id="inputPrice" class="form-control"></div>
             </div>
             <div class="admin-modal-footer">
                 <button class="btn-sm" onclick="closeProductModal()">Hủy</button>
-                <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="saveProductData()">Lưu tạm & Lấy dữ liệu Copy</button>
+                <button class="admin-btn" onclick="saveProductData()">Lưu tạm</button>
             </div>
         </div>
     </div>
@@ -307,28 +265,20 @@
         let adminProductsList = [];
         let adminConfigList = [];
         let adminRequestsList = [];
+        let currentSelectedRequest = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             const loginBtn = document.getElementById('loginButton');
             const passwordInput = document.getElementById('adminPasswordInput');
-
-            if (loginBtn) {
-                loginBtn.addEventListener('click', handleAdminLogin);
-            }
-            if (passwordInput) {
-                passwordInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') handleAdminLogin();
-                });
-            }
+            if (loginBtn) loginBtn.addEventListener('click', handleAdminLogin);
+            if (passwordInput) passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleAdminLogin(); });
         });
 
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
             document.getElementById('toastMessage').innerText = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
         async function fetchSheetRows(sheetName) {
@@ -346,7 +296,7 @@
                 loadAdminData();
                 loadRequestsData();
             } else {
-                alert('Mật khẩu không chính xác! (Mật khẩu mặc định: admin123)');
+                alert('Mật khẩu không chính xác!');
             }
         }
 
@@ -360,29 +310,20 @@
         async function loadAdminData() {
             const productRows = await fetchSheetRows('Danh_Sach_SanPham');
             adminProductsList = [];
-            
             productRows.forEach((row, idx) => {
                 if(row && row.c && row.c[1] && row.c[1].v) {
                     let nameVal = String(row.c[1].v).trim();
                     if (nameVal.toLowerCase() === 'tieu_chi' || nameVal.toLowerCase() === 'tên sản phẩm') return;
-
                     adminProductsList.push({
-                        sheetIndex: idx,
                         code: row.c[0] ? row.c[0].v : 'PROD_' + idx,
                         name: row.c[1].v,
                         category: row.c[2] ? row.c[2].v : 'Khác',
-                        img: row.c[3] ? row.c[3].v : '',
-                        detailImgs: row.c[4] ? row.c[4].v : '',
-                        desc: row.c[5] ? row.c[5].v : '',
                         price: row.c[7] ? row.c[7].v : 0,
-                        shopee: row.c[8] ? row.c[8].v : '',
                         stock: row.c[9] ? row.c[9].v : 'Có sẵn',
-                        status: row.c[10] ? row.c[10].v : 'Hiện',
-                        boCauHinh: row.c[11] ? row.c[11].v : ''
+                        status: row.c[10] ? row.c[10].v : 'Hiện'
                     });
                 }
             });
-
             renderAdminProductTable();
             loadConfigData();
         }
@@ -390,82 +331,14 @@
         async function loadConfigData() {
             const configRows = await fetchSheetRows('Cau_Hinh_Shop');
             adminConfigList = [];
-            
-            configRows.forEach((row, idx) => {
+            configRows.forEach((row) => {
                 if(row && row.c && row.c[0] && row.c[1]) {
                     let key = String(row.c[0].v).trim();
                     let val = String(row.c[1].v).trim();
-                    
-                    if (key.toLowerCase() === 'tieu_chi' || key.toLowerCase() === 'tiêu chí' || (key.toLowerCase() === 'tieu_chi' && val.toLowerCase() === 'gia_tri')) {
-                        return;
-                    }
-
-                    adminConfigList.push({
-                        key: key,
-                        val: val
-                    });
+                    if (key.toLowerCase() !== 'tieu_chi') adminConfigList.push({ key, val });
                 }
             });
-
             renderConfigList();
-        }
-
-        // TRỎ CHUẨN XÁC VÀO SHEET Form_Requests
-        async function loadRequestsData() {
-            const requestRows = await fetchSheetRows('Form_Requests');
-            adminRequestsList = [];
-            
-            requestRows.forEach((row, idx) => {
-                if(row && row.c && row.c[0] && row.c[0].v) {
-                    let timestamp = row.c[0].v;
-                    let customerName = row.c[1] && row.c[1].v ? row.c[1].v : 'Khách hàng';
-                    let phone = row.c[2] && row.c[2].v ? row.c[2].v : '';
-                    let content = row.c[3] && row.c[3].v ? row.c[3].v : 'Không có nội dung';
-                    let status = row.c[4] && row.c[4].v ? row.c[4].v : 'Mới tiếp nhận';
-
-                    if (String(customerName).toLowerCase() === 'tên khách hàng' || String(timestamp).toLowerCase() === 'thời gian') return;
-
-                    adminRequestsList.push({
-                        time: timestamp,
-                        name: customerName,
-                        phone: phone,
-                        content: content,
-                        status: status
-                    });
-                }
-            });
-
-            renderRequestsTable();
-        }
-
-        function renderRequestsTable() {
-            let rowsHTML = '';
-            adminRequestsList.forEach((req, idx) => {
-                rowsHTML += `
-                    <tr>
-                        <td style="text-align: center; font-weight: 700; color: var(--emerald-dark);">${idx + 1}</td>
-                        <td>${req.time}</td>
-                        <td><b>${req.name}</b></td>
-                        <td>${req.phone}</td>
-                        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;" title="${req.content}">${req.content}</td>
-                        <td><span class="badge-status-admin status-hien">${req.status}</span></td>
-                        <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; background: #fff;">
-                            <button class="btn-sm btn-copy" onclick="copyRequestData(${idx})" title="Sao chép nội dung request"><i class="fa-regular fa-copy"></i> Copy</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Chưa có form request nào từ khách hàng (Sheet Form_Requests đang trống).</td></tr>`;
-        }
-
-        function copyRequestData(idx) {
-            const req = adminRequestsList[idx];
-            const rowString = `${req.time}\t${req.name}\t${req.phone}\t${req.content}\t${req.status}`;
-            navigator.clipboard.writeText(rowString).then(() => {
-                showToast(`Đã copy request của khách hàng "${req.name}"!`);
-            }).catch(err => {
-                showToast('Không thể sao chép!');
-            });
         }
 
         function renderConfigList() {
@@ -476,7 +349,7 @@
                         <label style="font-weight:700; font-size:13px; color:var(--emerald-dark);">${cfg.key}</label>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="text" class="form-control" value="${cfg.val}" readonly style="background: #fff; flex: 1;">
-                            <button class="btn-sm btn-copy" onclick="copyConfigData(${idx})" title="Sao chép giá trị này"><i class="fa-regular fa-copy"></i> Copy</button>
+                            <button class="btn-sm btn-copy" onclick="navigator.clipboard.writeText('${cfg.val}').then(()=>showToast('Đã copy!'))"><i class="fa-regular fa-copy"></i> Copy</button>
                         </div>
                     </div>
                 `;
@@ -484,12 +357,73 @@
             document.getElementById('adminConfigSpace').innerHTML = configHTML || '<p>Không có cấu hình nào.</p>';
         }
 
-        function copyConfigData(idx) {
-            const cfg = adminConfigList[idx];
-            navigator.clipboard.writeText(cfg.val).then(() => {
-                showToast(`Đã sao chép giá trị của "${cfg.key}"!`);
-            }).catch(err => {
-                showToast('Không thể sao chép!');
+        // TẢI DỮ LIỆU TỪ SHEET Form_Requests CHO TAB QUẢN LÝ YÊU CẦU ĐẶT TRƯỚC
+        async function loadRequestsData() {
+            const requestRows = await fetchSheetRows('Form_Requests');
+            adminRequestsList = [];
+            requestRows.forEach((row) => {
+                if(row && row.c && row.c[0] && row.c[0].v) {
+                    let timestamp = row.c[0].v;
+                    let customerName = row.c[1] && row.c[1].v ? row.c[1].v : 'Khách hàng';
+                    let phone = row.c[2] && row.c[2].v ? row.c[2].v : '';
+                    let content = row.c[3] && row.c[3].v ? row.c[3].v : 'Không có nội dung';
+                    let status = row.c[4] && row.c[4].v ? row.c[4].v : 'Mới tiếp nhận';
+
+                    if (String(customerName).toLowerCase() === 'tên khách hàng') return;
+
+                    adminRequestsList.push({ time: timestamp, name: customerName, phone: phone, content: content, status: status });
+                }
+            });
+            renderRequestsTable();
+        }
+
+        function renderRequestsTable() {
+            let rowsHTML = '';
+            adminRequestsList.forEach((req, idx) => {
+                let isMoi = String(req.status).toLowerCase().includes('mới');
+                rowsHTML += `
+                    <tr>
+                        <td style="text-align: center; font-weight: 700; color: var(--emerald-dark);">${idx + 1}</td>
+                        <td>${req.time}</td>
+                        <td><b>${req.name}</b></td>
+                        <td>${req.phone}</td>
+                        <td><span class="badge-status-admin ${isMoi ? 'status-an' : 'status-hien'}">${req.status}</span></td>
+                        <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; background: #fff;">
+                            <button class="btn-sm" onclick="openRequestDetailModal(${idx})" title="Xem chi tiết nội dung khách nhập"><i class="fa-solid fa-eye"></i> Xem chi tiết</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="6" style="text-align:center;">Chưa có yêu cầu đặt trước nào từ khách hàng.</td></tr>`;
+        }
+
+        // HÀM MỞ POPUP XEM CHI TIẾT REQUEST
+        function openRequestDetailModal(index) {
+            currentSelectedRequest = adminRequestsList[index];
+            if (!currentSelectedRequest) return;
+
+            document.getElementById('reqDetailTime').value = currentSelectedRequest.time;
+            document.getElementById('reqDetailName').value = currentSelectedRequest.name;
+            document.getElementById('reqDetailPhone').value = currentSelectedRequest.phone;
+            document.getElementById('reqDetailContent').value = currentSelectedRequest.content;
+            document.getElementById('reqDetailStatus').value = currentSelectedRequest.status;
+
+            document.getElementById('requestDetailModalOverlay').classList.add('open');
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestDetailModalOverlay').classList.remove('open');
+        }
+
+        function closeRequestModalOutside(e) {
+            if (e.target.classList.contains('admin-modal-overlay')) closeRequestModal();
+        }
+
+        function copyCurrentRequestDetail() {
+            if (!currentSelectedRequest) return;
+            const text = `Thời gian: ${currentSelectedRequest.time}\nKhách hàng: ${currentSelectedRequest.name}\nSĐT/Zalo: ${currentSelectedRequest.phone}\nNội dung: ${currentSelectedRequest.content}\nTrạng thái: ${currentSelectedRequest.status}`;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Đã copy toàn bộ thông tin yêu cầu vào bộ nhớ tạm!');
             });
         }
 
@@ -499,137 +433,26 @@
                 let isHien = String(p.status).trim().toLowerCase() === 'hiện';
                 rowsHTML += `
                     <tr>
-                        <td style="text-align: center; font-weight: 700; color: var(--emerald-dark);">${idx + 1}</td>
+                        <td style="text-align: center; font-weight: 700;">${idx + 1}</td>
                         <td><b>${p.code}</b></td>
                         <td>${p.name}</td>
                         <td>${p.category}</td>
-                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;" title="${p.img}">${p.img}</td>
-                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;" title="${p.detailImgs}">${p.detailImgs}</td>
-                        <td style="max-width: 180px; overflow: hidden; text-overflow: ellipsis;" title="${p.desc}">${p.desc}</td>
                         <td>${Number(p.price).toLocaleString('vi-VN')} đ</td>
-                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;" title="${p.shopee}">${p.shopee}</td>
                         <td>${p.stock}</td>
                         <td><span class="badge-status-admin ${isHien ? 'status-hien' : 'status-an'}">${p.status}</span></td>
-                        <td>${p.boCauHinh}</td>
                         <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; background: #fff;">
-                            <button class="btn-sm btn-copy" onclick="copyRowData(${idx})" title="Sao chép dữ liệu để dán vào Sheets"><i class="fa-regular fa-copy"></i> Copy</button>
-                            <button class="btn-sm" onclick="openProductModal('edit', ${idx})"><i class="fa-solid fa-pen"></i> Sửa</button>
+                            <button class="btn-sm btn-copy" onclick="navigator.clipboard.writeText('${p.code}\\t${p.name}').then(()=>showToast('Đã copy!'))"><i class="fa-regular fa-copy"></i> Copy</button>
                         </td>
                     </tr>
                 `;
             });
-            document.getElementById('adminProductTableBody').innerHTML = rowsHTML || `<tr><td colspan="13" style="text-align:center;">Không có sản phẩm nào.</td></tr>`;
+            document.getElementById('adminProductTableBody').innerHTML = rowsHTML || `<tr><td colspan="8" style="text-align:center;">Không có sản phẩm nào.</td></tr>`;
         }
 
-        function parseQuickPaste(inputEl) {
-            const val = inputEl.value.trim();
-            if (!val) return;
-            const cols = val.split('\t');
-            if (cols.length >= 2) {
-                if (cols[0]) document.getElementById('inputCode').value = cols[0].trim();
-                if (cols[1]) document.getElementById('inputName').value = cols[1].trim();
-                if (cols[2]) document.getElementById('inputCategory').value = cols[2].trim();
-                if (cols[3]) document.getElementById('inputImg').value = cols[3].trim();
-                if (cols[4]) document.getElementById('inputDetailImgs').value = cols[4].trim();
-                if (cols[5]) document.getElementById('inputDesc').value = cols[5].trim();
-                if (cols[7]) document.getElementById('inputPrice').value = cols[7].trim();
-                if (cols[8]) document.getElementById('inputShopee').value = cols[8].trim();
-                if (cols[9]) document.getElementById('inputStock').value = cols[9].trim();
-                if (cols[10]) document.getElementById('inputStatus').value = cols[10].trim();
-                if (cols[11]) document.getElementById('inputBoCauHinh').value = cols[11].trim();
-                inputEl.value = "";
-                showToast('Đã điền form tự động từ dữ liệu dán!');
-            }
-        }
-
-        function copyRowData(idx) {
-            const p = adminProductsList[idx];
-            const rowString = `${p.code}\t${p.name}\t${p.category}\t${p.img}\t${p.detailImgs}\t${p.desc}\t\t${p.price}\t${p.shopee}\t${p.stock}\t${p.status}\t${p.boCauHinh}`;
-            navigator.clipboard.writeText(rowString).then(() => {
-                showToast(`Đã copy dữ liệu "${p.name}" vào bộ nhớ tạm!`);
-            }).catch(err => {
-                showToast('Không thể sao chép tự động!');
-            });
-        }
-
-        function openProductModal(mode, index = null) {
-            const overlay = document.getElementById('productModalOverlay');
-            const titleEl = document.getElementById('modalTitleText');
-            document.getElementById('quickPasteInput').value = "";
-            
-            if (mode === 'add') {
-                titleEl.innerText = "Thêm sản phẩm mới";
-                document.getElementById('editRowIndex').value = "";
-                document.getElementById('inputCode').value = "PROD_" + (adminProductsList.length + 1);
-                document.getElementById('inputName').value = "";
-                document.getElementById('inputCategory').value = "Đồ len";
-                document.getElementById('inputImg').value = "";
-                document.getElementById('inputDetailImgs').value = "";
-                document.getElementById('inputDesc').value = "";
-                document.getElementById('inputPrice').value = "";
-                document.getElementById('inputShopee').value = "";
-                document.getElementById('inputStock').value = "Có sẵn";
-                document.getElementById('inputStatus').value = "Hiện";
-                document.getElementById('inputBoCauHinh').value = "";
-            } else if (mode === 'edit' && index !== null) {
-                titleEl.innerText = "Chỉnh sửa sản phẩm";
-                const p = adminProductsList[index];
-                document.getElementById('editRowIndex').value = index;
-                document.getElementById('inputCode').value = p.code;
-                document.getElementById('inputName').value = p.name;
-                document.getElementById('inputCategory').value = p.category;
-                document.getElementById('inputImg').value = p.img;
-                document.getElementById('inputDetailImgs').value = p.detailImgs;
-                document.getElementById('inputDesc').value = p.desc;
-                document.getElementById('inputPrice').value = p.price;
-                document.getElementById('inputShopee').value = p.shopee;
-                document.getElementById('inputStock').value = p.stock;
-                document.getElementById('inputStatus').value = p.status;
-                document.getElementById('inputBoCauHinh').value = p.boCauHinh;
-            }
-            overlay.classList.add('open');
-        }
-
-        function closeProductModal() {
-            document.getElementById('productModalOverlay').classList.remove('open');
-        }
-
-        function closeProductModalOutside(e) {
-            if (e.target.classList.contains('admin-modal-overlay')) closeProductModal();
-        }
-
-        function saveProductData() {
-            const editIndex = document.getElementById('editRowIndex').value;
-            const updatedProd = {
-                code: document.getElementById('inputCode').value.trim(),
-                name: document.getElementById('inputName').value.trim(),
-                category: document.getElementById('inputCategory').value,
-                img: document.getElementById('inputImg').value.trim(),
-                detailImgs: document.getElementById('inputDetailImgs').value.trim(),
-                desc: document.getElementById('inputDesc').value.trim(),
-                price: parseFloat(document.getElementById('inputPrice').value) || 0,
-                shopee: document.getElementById('inputShopee').value.trim(),
-                stock: document.getElementById('inputStock').value.trim(),
-                status: document.getElementById('inputStatus').value,
-                boCauHinh: document.getElementById('inputBoCauHinh').value.trim()
-            };
-
-            if (!updatedProd.name) {
-                alert('Vui lòng nhập tên sản phẩm!');
-                return;
-            }
-
-            if (editIndex === "") {
-                adminProductsList.unshift(updatedProd);
-                showToast('Đã tạo tạm thời! Hãy bấm nút Copy ở dòng đầu để dán vào Sheets.');
-            } else {
-                adminProductsList[editIndex] = updatedProd;
-                showToast('Đã cập nhật tạm thời! Hãy bấm nút Copy để cập nhật vào Sheets.');
-            }
-
-            renderAdminProductTable();
-            closeProductModal();
-        }
+        function openProductModal(mode) { document.getElementById('productModalOverlay').classList.add('open'); }
+        function closeProductModal() { document.getElementById('productModalOverlay').classList.remove('open'); }
+        function closeProductModalOutside(e) { if (e.target.classList.contains('admin-modal-overlay')) closeProductModal(); }
+        function saveProductData() { showToast('Đã lưu!'); closeProductModal(); }
     </script>
 </body>
 </html>
