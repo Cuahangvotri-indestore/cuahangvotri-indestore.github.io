@@ -410,29 +410,30 @@
             renderConfigList();
         }
 
-        // CHỈ ĐỌC ĐÚNG TỪ SHEET 'Form_Requests' ĐỂ TRÁNH LẤY NHẦM SẢN PHẨM
+        // ĐẶC TRỊ KIỂM TRA CHUẨN TÊN CỘT ĐỂ KHÔNG BAO GIỜ NHẦN SANG BẢNG SẢN PHẨM
         async function loadRequestsData() {
             const requestRows = await fetchSheetRows('Form_Requests');
             adminRequestsList = [];
             
             requestRows.forEach((row, idx) => {
-                if(row && row.c && row.c[0] && row.c[0].v) {
-                    let timestamp = row.c[0].v;
-                    let customerName = row.c[1] && row.c[1].v ? row.c[1].v : 'Khách hàng';
-                    let phone = row.c[2] && row.c[2].v ? row.c[2].v : '';
-                    let content = row.c[3] && row.c[3].v ? row.c[3].v : 'Không có nội dung';
-                    let status = row.c[4] && row.c[4].v ? row.c[4].v : 'Mới tiếp nhận';
+                if(row && row.c) {
+                    // Kiểm tra nếu dòng này là dữ liệu sản phẩm (có chứa mã định dạng sản phẩm dạng LEN-, IN-, 3D-, GIAY-) thì bỏ qua tuyệt đối
+                    let col1 = row.c[0] && row.c[0].v ? String(row.c[0].v).trim() : '';
+                    let col2 = row.c[1] && row.c[1].v ? String(row.c[1].v).trim() : '';
+                    
+                    if (col2.startsWith('LEN-') || col2.startsWith('IN-') || col2.startsWith('3D-') || col2.startsWith('GIAY-') || col2.toLowerCase() === 'tên sản phẩm') {
+                        return; // Bỏ qua nếu lỡ gviz trả về sheet sản phẩm
+                    }
 
-                    // Lọc bỏ dòng tiêu đề nếu có
-                    if (String(customerName).toLowerCase() === 'tên khách hàng' || String(timestamp).toLowerCase() === 'thời gian') return;
-
-                    adminRequestsList.push({
-                        time: timestamp,
-                        name: customerName,
-                        phone: phone,
-                        content: content,
-                        status: status
-                    });
+                    if (col1 && col1 !== 'N/A') {
+                        adminRequestsList.push({
+                            time: col1,
+                            name: col2 || 'Khách hàng',
+                            phone: row.c[2] && row.c[2].v ? row.c[2].v : '',
+                            content: row.c[3] && row.c[3].v ? row.c[3].v : 'Không có nội dung',
+                            status: row.c[4] && row.c[4].v ? row.c[4].v : 'Mới tiếp nhận'
+                        });
+                    }
                 }
             });
 
