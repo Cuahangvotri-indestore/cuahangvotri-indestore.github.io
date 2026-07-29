@@ -116,15 +116,22 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM (Tối ưu Responsive linh hoạt, tự động chuyển 1 cột mượt mà trên màn hình nhỏ) */
+        /* POPUP CHI TIẾT SẢN PHẨM: CƠ CHẾ CUỘN TOÀN TRANG MƯỢT MÀ */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
-        .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1150px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 90vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
+        
+        .popup-container { 
+            background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); 
+            max-width: 1150px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); 
+            display: flex; max-height: 90vh; 
+            overflow-y: auto; /* Dùng chung 1 thanh cuộn mượt mà duy nhất cho cả popup */
+            position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); 
+        }
         .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
-        .popup-close-btn { position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.6); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 10; }
+        .popup-close-btn { position: sticky; top: 20px; float: right; margin-left: auto; margin-right: 20px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 30; }
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
         
-        .popup-left-side { width: 52%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow-y: auto; }
+        .popup-left-side { width: 52%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         
         .popup-image-container-wrapper { position: relative; width: 100%; margin: 12px 0; }
         .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; height: 340px; width: 100%; overflow: hidden; background: rgba(255,255,255,0.25); border-radius: 28px; border: 1px solid var(--liquid-border); }
@@ -136,7 +143,7 @@
         .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
         .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
         
-        .popup-right-side { width: 48%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto; box-sizing: border-box; }
+        .popup-right-side { width: 48%; padding: 35px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .popup-scroll-box { flex: 1; margin-bottom: 20px; }
         .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 22px; color: var(--emerald-dark); font-weight: 700; margin: 0 0 10px 0; line-height: 1.4; }
         .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
@@ -148,7 +155,7 @@
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        /* ĐỔI MÀU NÚT RADIO SANG XANH CONCEPT CHỦ ĐẠO (--emerald-dark) */
+        /* Nút radio màu xanh concept chủ đạo */
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); 
             border: 1.5px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
@@ -175,13 +182,13 @@
         .btn-fb { color: #1877f2; } .btn-zl { color: #0068ff; } .btn-sp { color: var(--shopee-color); }
         .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin-top: 5px; }
 
-        /* RESPONSIVE MÀN HÌNH HẸP / ĐIỆN THOẠI: CHUYỂN THÀNH 1 CỘT DỌC MƯỢT MÀ, KHÔNG BỊ CHIA ĐÔI CỨNG NHẮC */
+        /* RESPONSIVE MÀN HÌNH HẸP / ĐIỆN THOẠI: CHUYỂN THÀNH 1 CỘT DỌC LIỀN MẠCH, KHÔNG BỊ CHIA CẮT */
         @media (max-width: 1024px) { 
             .nav-container { flex-direction: column; gap: 15px; } 
             .right-nav-box { align-items: center; } 
             .menu-categories { justify-content: center; } 
             .banner-wrapper { aspect-ratio: auto; height: 160px; } 
-            .popup-container { flex-direction: column !important; max-height: 90vh; overflow-y: auto; } 
+            .popup-container { flex-direction: column !important; max-height: 90vh; } 
             .popup-left-side, .popup-right-side { width: 100% !important; border-right: none !important; padding: 20px !important; } 
             .popup-image-viewport { height: 260px !important; }
         }
@@ -227,6 +234,7 @@
     <!-- POPUP CHI TIẾT SẢN PHẨM -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
+            <!-- Nút đóng đặt cố định ở góc trên popup -->
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
             <!-- CỘT TRÁI -->
@@ -412,7 +420,6 @@
                 const actionsWrapper = document.getElementById('popupActionsWrapperContainer');
 
                 if (isThiep) {
-                    // 1. Thiệp: Tên, Ảnh, Mô tả, 2 nút qua trái
                     leftSide.innerHTML = `
                         <div>
                             <h2 class="popup-title-text">${prod.name}</h2>
@@ -443,7 +450,6 @@
                         </div>
                     `;
                 } else if (isCardOrTem) {
-                    // 2. Card & Tem: Tên trên ảnh, Mô tả dưới ảnh (Cả hai nằm bên trái)
                     leftSide.innerHTML = `
                         <div>
                             <h2 class="popup-title-text">${prod.name}</h2>
@@ -468,7 +474,6 @@
                         </div>
                     `;
                 } else {
-                    // 3. Sản phẩm có sẵn / thông thường: Chỉ ảnh bên trái
                     leftSide.innerHTML = `
                         <div class="popup-image-container-wrapper" style="margin: auto 0;">
                             <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
@@ -492,7 +497,6 @@
                     `;
                 }
 
-                // Cấu hình nút hành động phải
                 const buyBtnHref = prod.shopeeLink || shopZalo;
                 const buyBtnText = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
                 
@@ -509,7 +513,6 @@
                         </div>
                     `;
                 } else {
-                    // Sản phẩm có sẵn -> Chỉ có nút Mua (hoặc Zalo)
                     actionsWrapper.innerHTML = `
                         <a class="btn-action-main" id="btnPopupMainBuy" href="${buyBtnHref}" target="_blank">${buyBtnText}</a>
                     `;
