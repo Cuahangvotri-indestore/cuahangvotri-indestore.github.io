@@ -116,7 +116,7 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM */
+        /* POPUP CHI TIẾT SẢN PHẨM (Tối ưu Responsive linh hoạt, tự động chuyển 1 cột mượt mà trên màn hình nhỏ) */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         .popup-container { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); max-width: 1150px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); display: flex; max-height: 90vh; overflow: hidden; position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); }
@@ -126,7 +126,6 @@
         
         .popup-left-side { width: 52%; padding: 30px; border-right: 1px solid var(--liquid-border); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; overflow-y: auto; }
         
-        /* Khung ảnh cố định kích cỡ lớn đồng nhất */
         .popup-image-container-wrapper { position: relative; width: 100%; margin: 12px 0; }
         .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; height: 340px; width: 100%; overflow: hidden; background: rgba(255,255,255,0.25); border-radius: 28px; border: 1px solid var(--liquid-border); }
         .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
@@ -149,14 +148,14 @@
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
         
-        /* Đồng bộ màu các nút radio sang màu nút Mua trên Shopee (--shopee-color) */
+        /* ĐỔI MÀU NÚT RADIO SANG XANH CONCEPT CHỦ ĐẠO (--emerald-dark) */
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); 
             border: 1.5px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
             transition: all 0.25s ease;
         }
-        .custom-radio-btn:hover { background: rgba(234, 80, 31, 0.06); border-color: var(--shopee-color); }
-        .custom-radio-btn input[type="radio"] { accent-color: var(--shopee-color); width: 16px; height: 16px; cursor: pointer; }
+        .custom-radio-btn:hover { background: rgba(31, 78, 69, 0.06); border-color: var(--emerald-dark); }
+        .custom-radio-btn input[type="radio"] { accent-color: var(--emerald-dark); width: 16px; height: 16px; cursor: pointer; }
 
         .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
         .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px; border-radius: 18px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); }
@@ -176,7 +175,16 @@
         .btn-fb { color: #1877f2; } .btn-zl { color: #0068ff; } .btn-sp { color: var(--shopee-color); }
         .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin-top: 5px; }
 
-        @media (max-width: 1024px) { .nav-container { flex-direction: column; gap: 15px; } .right-nav-box { align-items: center; } .menu-categories { justify-content: center; } .banner-wrapper { aspect-ratio: auto; height: 160px; } .popup-container { flex-direction: column; max-height: 90vh; } .popup-left-side, .popup-right-side { width: 100%; border-right: none; } }
+        /* RESPONSIVE MÀN HÌNH HẸP / ĐIỆN THOẠI: CHUYỂN THÀNH 1 CỘT DỌC MƯỢT MÀ, KHÔNG BỊ CHIA ĐÔI CỨNG NHẮC */
+        @media (max-width: 1024px) { 
+            .nav-container { flex-direction: column; gap: 15px; } 
+            .right-nav-box { align-items: center; } 
+            .menu-categories { justify-content: center; } 
+            .banner-wrapper { aspect-ratio: auto; height: 160px; } 
+            .popup-container { flex-direction: column !important; max-height: 90vh; overflow-y: auto; } 
+            .popup-left-side, .popup-right-side { width: 100% !important; border-right: none !important; padding: 20px !important; } 
+            .popup-image-viewport { height: 260px !important; }
+        }
     </style>
 </head>
 <body>
@@ -435,7 +443,7 @@
                         </div>
                     `;
                 } else if (isCardOrTem) {
-                    // 2. Card & Tem: Tên ở trên ảnh, Mô tả ở dưới ảnh (Cả hai nằm bên trái)
+                    // 2. Card & Tem: Tên trên ảnh, Mô tả dưới ảnh (Cả hai nằm bên trái)
                     leftSide.innerHTML = `
                         <div>
                             <h2 class="popup-title-text">${prod.name}</h2>
