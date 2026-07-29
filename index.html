@@ -116,55 +116,56 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM: 1 CỘT DỌC LIỀN MẠCH, MƯỢT MÀ TRÊN MỌI THIẾT BỊ */
+        /* POPUP CHI TIẾT SẢN PHẨM: 1 CỘT DỌC COMPACT, THU GỌN KHOẢNG CÁCH */
         .popup-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         
         .popup-container { 
-            background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(35px); border-radius: 40px; border: 2px solid var(--liquid-border); 
-            max-width: 750px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); 
-            display: flex; flex-direction: column; max-height: 90vh; 
-            overflow-y: auto; padding: 35px; box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.78); backdrop-filter: blur(35px); border-radius: 36px; border: 2px solid var(--liquid-border); 
+            max-width: 680px; width: 100%; box-shadow: 0 30px 70px rgba(31, 78, 69, 0.18); 
+            display: flex; flex-direction: column; max-height: 88vh; 
+            overflow-y: auto; padding: 30px; box-sizing: border-box;
             position: relative; transform: scale(0.92) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15); 
         }
         .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
-        .popup-close-btn { position: absolute; top: 25px; right: 25px; border-radius: 50%; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.3s ease; z-index: 30; }
+        .popup-close-btn { position: absolute; top: 20px; right: 20px; border-radius: 50%; width: 38px; height: 38px; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; transition: all 0.3s ease; z-index: 30; }
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
         
-        .popup-single-col-content { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        .popup-single-col-content { display: flex; flex-direction: column; gap: 14px; width: 100%; }
         
         .popup-image-container-wrapper { position: relative; width: 100%; }
-        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; height: 340px; width: 100%; overflow: hidden; background: rgba(255,255,255,0.25); border-radius: 28px; border: 1px solid var(--liquid-border); }
+        .popup-image-viewport { position: relative; display: flex; align-items: center; justify-content: center; height: 310px; width: 100%; overflow: hidden; background: rgba(255,255,255,0.25); border-radius: 24px; border: 1px solid var(--liquid-border); }
         .popup-slide-item { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
         .popup-slide-item.active { opacity: 1; pointer-events: auto; }
-        .popup-main-image { width: 100%; height: 100%; object-fit: contain; border-radius: 28px; padding: 10px; box-sizing: border-box; }
-        .popup-nav-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .popup-dots-row { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
-        .popup-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
-        .popup-dot.active { background: var(--emerald-dark); width: 16px; border-radius: 10px; }
+        .popup-main-image { width: 100%; height: 100%; object-fit: contain; border-radius: 24px; padding: 8px; box-sizing: border-box; }
+        .popup-nav-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .popup-dots-row { display: flex; justify-content: center; gap: 6px; margin-top: 6px; }
+        .popup-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(31, 78, 69, 0.2); }
+        .popup-dot.active { background: var(--emerald-dark); width: 14px; border-radius: 10px; }
         
-        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 22px; color: var(--emerald-dark); font-weight: 700; margin: 0; line-height: 1.4; padding-right: 40px; }
-        .popup-section-title { font-size: 13px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
-        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 18px; padding: 14px 18px; font-size: 15px; color: #4f6a65; line-height: 1.6; }
-        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 14px 20px; border-radius: 18px; }
-        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); }
+        .popup-title-text { font-family: 'Comfortaa', sans-serif; font-size: 20px; color: var(--emerald-dark); font-weight: 700; margin: 0; line-height: 1.35; padding-right: 45px; }
+        .popup-section-title { font-size: 12px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 16px; padding: 10px 14px; font-size: 14px; color: #4f6a65; line-height: 1.5; }
+        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 12px 18px; border-radius: 16px; }
+        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 24px; font-weight: 700; color: var(--emerald-dark); }
         
-        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 24px; padding: 18px; }
-        .radio-group-wrapper { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-        .radio-options-flex { display: flex; flex-wrap: wrap; gap: 8px; }
+        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 20px; padding: 16px; }
+        .radio-group-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .radio-group-wrapper:last-child { margin-bottom: 0; }
+        .radio-options-flex { display: flex; flex-wrap: wrap; gap: 6px; }
         
         .custom-radio-btn { 
-            display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255, 255, 255, 0.7); 
-            border: 1.5px solid var(--liquid-border); border-radius: 14px; font-size: 14px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
+            display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255, 255, 255, 0.7); 
+            border: 1.5px solid var(--liquid-border); border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
             transition: all 0.25s ease;
         }
         .custom-radio-btn:hover { background: rgba(31, 78, 69, 0.06); border-color: var(--emerald-dark); }
-        .custom-radio-btn input[type="radio"] { accent-color: var(--emerald-dark); width: 16px; height: 16px; cursor: pointer; }
+        .custom-radio-btn input[type="radio"] { accent-color: var(--emerald-dark); width: 15px; height: 15px; cursor: pointer; }
 
-        .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 15px; padding: 15px; border-radius: 18px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 25px rgba(31, 78, 69, 0.15); }
-        .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 12px; border-radius: 16px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
+        .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 13px; border-radius: 16px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(31, 78, 69, 0.12); }
+        .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 13px; padding: 11px; border-radius: 14px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
 
         footer { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-top: 1px solid var(--liquid-border); padding: 35px 24px; text-align: center; margin-top: auto; }
         .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
@@ -185,7 +186,7 @@
             .menu-categories { justify-content: center; } 
             .banner-wrapper { aspect-ratio: auto; height: 160px; } 
             .popup-container { max-height: 90vh; padding: 20px; } 
-            .popup-image-viewport { height: 260px !important; }
+            .popup-image-viewport { height: 240px !important; }
         }
     </style>
 </head>
@@ -226,13 +227,13 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM: 1 CỘT DỌC HOÀN HẢO -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
             <div class="popup-single-col-content" id="popupSingleColContent">
-                <!-- Nội dung được render tuần tự: Tên -> Ảnh -> Mô tả -> Giá -> Bảng check giá -> Bộ nút -->
+                <!-- Nội dung gọn gàng, khoảng cách tối ưu -->
             </div>
         </div>
     </div>
@@ -409,7 +410,6 @@
                 const buyBtnHref = prod.shopeeLink || shopZalo;
                 const buyBtnText = prod.shopeeLink ? `<i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE` : `<i class="fa-solid fa-bag-shopping"></i> MUA QUA ZALO`;
 
-                // BỐC CỤC 1 CỘT DỌC CHUẨN TỪ TRÊN XUỐNG CHO MỌI THIẾT BỊ: Tên -> Ảnh -> Mô tả -> Giá -> Bảng check giá -> Bộ nút
                 contentContainer.innerHTML = `
                     <h2 class="popup-title-text">${prod.name}</h2>
                     
