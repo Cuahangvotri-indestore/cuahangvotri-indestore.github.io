@@ -38,7 +38,7 @@
             width: 135px; height: 135px; border-radius: 50%; background: rgba(255, 255, 255, 0.25);
             display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--liquid-border);
             box-shadow: 0 12px 35px rgba(31, 78, 69, 0.12), inset 0 10px 20px rgba(255, 255, 255, 0.7);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
         }
         .logo-circle:hover { transform: scale(1.08) rotate(3deg); }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -51,7 +51,7 @@
             background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%); border: 1.5px solid var(--liquid-border); 
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); color: var(--emerald-dark); text-transform: uppercase; 
             box-shadow: 0 6px 20px rgba(31, 78, 69, 0.04), inset 0 4px 10px rgba(255, 255, 255, 0.6); position: relative; overflow: hidden;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.5px; text-decoration: none; display: inline-block;
         }
         .menu-item::before {
             content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%;
@@ -116,12 +116,12 @@
         .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
         .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
-        /* POPUP CHI TIẾT SẢN PHẨM: KHÓA CHẶT THAO TÁC CUỘN NỀN (OVERSCROLL-BEHAVIOR) */
+        /* POPUP CHI TIẾT SẢN PHẨM: CỐ ĐỊNH HEADER KHI SCROLL VÀ KHÓA NỀN */
         .popup-overlay { 
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); 
             display: flex; align-items: center; justify-content: center; padding: 20px; 
             opacity: 0; pointer-events: none; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; 
-            overscroll-behavior: contain; /* Ngăn chặn cuộn lan ra nền phía sau */
+            overscroll-behavior: contain; 
         }
         .popup-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; }
         
@@ -135,7 +135,6 @@
         }
         .popup-overlay.open .popup-container { transform: scale(1) translateY(0); }
         
-        /* THANH HEADER CỐ ĐỊNH KHI SCROLL */
         .popup-sticky-header {
             position: sticky; top: 0; z-index: 40;
             background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(20px);
@@ -146,12 +145,10 @@
         .popup-close-btn { position: relative; border-radius: 50%; width: 38px; height: 38px; background: rgba(255, 255, 255, 0.9); border: 1px solid var(--liquid-border); color: var(--emerald-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; transition: all 0.3s ease; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .popup-close-btn:hover { background: var(--emerald-dark); color: #ffffff; transform: rotate(90deg); }
 
-        /* PHẦN NỘI DUNG CUỘN BÊN DƯỚI */
         .popup-scrollable-body {
             overflow-y: auto; padding: 25px; box-sizing: border-box;
             display: flex; flex-direction: column; gap: 14px; flex: 1;
-            overscroll-behavior: contain; /* Giữ focus cuộn tuyệt đối bên trong */
-            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
         }
         
         .popup-image-container-wrapper { position: relative; width: 100%; }
@@ -218,15 +215,13 @@
 
     <header>
         <div class="nav-container">
-            <div class="logo-box"><div class="logo-circle" id="shop-logo-box"></div></div>
+            <div class="logo-box">
+                <div class="logo-circle" id="shop-logo-box" onclick="window.location.href='index.html'"></div>
+            </div>
             <div class="right-nav-box">
                 <nav>
-                    <ul class="menu-categories">
+                    <ul class="menu-categories" id="categoryMenuNav">
                         <li class="menu-item active">Home</li>
-                        <li class="menu-item">Đồ len</li>
-                        <li class="menu-item">In ấn</li>
-                        <li class="menu-item">Giấy</li>
-                        <li class="menu-item">In 3D</li>
                     </ul>
                 </nav>
             </div>
@@ -252,16 +247,12 @@
     <!-- POPUP CHI TIẾT SẢN PHẨM -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
-            <!-- HEADER CỐ ĐỊNH KHI SCROLL -->
             <div class="popup-sticky-header">
                 <h2 class="popup-title-text" id="popupStickyTitle">Tên sản phẩm</h2>
                 <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <!-- THÂN NỘI DUNG CUỘN BÊN DƯỚI -->
-            <div class="popup-scrollable-body" id="popupScrollableBodyContent">
-                <!-- Nội dung render động -->
-            </div>
+            <div class="popup-scrollable-body" id="popupScrollableBodyContent"></div>
         </div>
     </div>
 
@@ -370,10 +361,23 @@
                         });
                     }
                 });
+
+                renderNavigationMenu();
                 renderProductsGrid();
             } catch (err) {
                 console.error("Lỗi khởi tạo trang chủ:", err);
             }
+        }
+
+        function renderNavigationMenu() {
+            const categoriesSet = [...new Set(globalStoreData.products.map(p => p.category))];
+            let menuHTML = `<li class="menu-item active" onclick="window.location.href='index.html'">Home</li>`;
+            
+            categoriesSet.forEach(cat => {
+                menuHTML += `<li class="menu-item" onclick="window.location.href='category.html?cat=${encodeURIComponent(cat)}'">${cat}</li>`;
+            });
+
+            document.getElementById('categoryMenuNav').innerHTML = menuHTML;
         }
 
         function setupBannerCarousel() {
