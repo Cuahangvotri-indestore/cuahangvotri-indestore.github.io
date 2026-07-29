@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -209,8 +208,13 @@
             </div>
             <div class="right-nav-box">
                 <nav>
+                    <!-- CỐ ĐỊNH TĨNH CÁC DANH MỤC TRÊN MENU ĐỂ KHÔNG BỊ GIẬT NHẦY -->
                     <ul class="menu-categories" id="categoryMenuNav">
-                        <!-- Menu render động để tự bắt active state -->
+                        <li class="menu-item" data-cat="home" onclick="window.location.href='index.html'">Home</li>
+                        <li class="menu-item" data-cat="Đồ len" onclick="window.location.href='category.html?cat=Đồ len'">Đồ len</li>
+                        <li class="menu-item" data-cat="In ấn" onclick="window.location.href='category.html?cat=In ấn'">In ấn</li>
+                        <li class="menu-item" data-cat="Giấy" onclick="window.location.href='category.html?cat=Giấy'">Giấy</li>
+                        <li class="menu-item" data-cat="In 3D" onclick="window.location.href='category.html?cat=In 3D'">In 3D</li>
                     </ul>
                 </nav>
             </div>
@@ -307,7 +311,6 @@
             } catch (e) { return []; }
         }
 
-        // Lấy tên danh mục hiện tại từ tham số URL (?cat=...)
         function getCurrentCategoryFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('cat') ? decodeURIComponent(urlParams.get('cat')).trim() : '';
@@ -322,7 +325,6 @@
                 
                 renderFooterSocials();
                 
-                // Lấy danh sách sản phẩm
                 const productRows = await fetchSheetRows('Danh_Sach_SanPham');
                 globalStoreData.products = [];
                 
@@ -356,29 +358,29 @@
                     }
                 });
 
-                renderNavigationMenu();
+                setActiveMenuState();
                 renderCategoryProducts();
             } catch (err) {
                 console.error("Lỗi khởi tạo trang danh mục:", err);
             }
         }
 
-        // Render menu danh mục và tự động bắt active state chuẩn xác
-        function renderNavigationMenu() {
+        // Tự động tô sáng đúng nút menu đang active ngay lập tức mà không cần chờ render động
+        function setActiveMenuState() {
             const currentCat = getCurrentCategoryFromURL();
-            const categoriesSet = [...new Set(globalStoreData.products.map(p => p.category))];
+            const menuItems = document.querySelectorAll('#categoryMenuNav .menu-item');
             
-            let menuHTML = `<li class="menu-item ${!currentCat ? 'active' : ''}" onclick="window.location.href='index.html'">Home</li>`;
-            
-            categoriesSet.forEach(cat => {
-                const isActive = (currentCat.toLowerCase() === cat.toLowerCase());
-                menuHTML += `<li class="menu-item ${isActive ? 'active' : ''}" onclick="window.location.href='category.html?cat=${encodeURIComponent(cat)}'">${cat}</li>`;
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                const itemCat = item.getAttribute('data-cat');
+                if (!currentCat && itemCat === 'home') {
+                    item.classList.add('active');
+                } else if (currentCat && itemCat && itemCat.toLowerCase() === currentCat.toLowerCase()) {
+                    item.classList.add('active');
+                }
             });
-
-            document.getElementById('categoryMenuNav').innerHTML = menuHTML;
         }
 
-        // Lọc và render danh sách sản phẩm theo danh mục đang chọn
         function renderCategoryProducts() {
             const currentCat = getCurrentCategoryFromURL();
             document.getElementById('categoryTitleText').innerText = currentCat ? `Danh mục: ${currentCat}` : "Tất cả sản phẩm";
@@ -414,7 +416,6 @@
             document.getElementById('footer-social-links').innerHTML = htmlLinks;
         }
 
-        // POPUP CHI TIẾT SẢN PHẨM DÙNG CHUNG
         function openProductDetailPopupByIndex(sheetIndex) {
             try {
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
