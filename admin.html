@@ -53,11 +53,18 @@
         .panel-content { display: none; background: #ffffff; border-radius: 12px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .panel-content.active { display: block; }
 
-        .table-responsive { width: 100%; overflow-x: auto; }
+        /* TABLE STICKY SCROLL */
+        .table-responsive { width: 100%; overflow-x: auto; position: relative; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
-        .admin-table th, .admin-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; }
-        .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); }
-        
+        .admin-table th, .admin-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; background: #ffffff; }
+        .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); position: sticky; top: 0; z-index: 2; }
+
+        /* STICKY CỐ ĐỊNH 3 CỘT ĐẦU */
+        .admin-table th:nth-child(1), .admin-table td:nth-child(1) { position: sticky; left: 0; z-index: 3; width: 45px; text-align: center; }
+        .admin-table th:nth-child(2), .admin-table td:nth-child(2) { position: sticky; left: 45px; z-index: 3; }
+        .admin-table th:nth-child(3), .admin-table td:nth-child(3) { position: sticky; left: 145px; z-index: 3; box-shadow: 2px 0 5px rgba(0,0,0,0.03); }
+        .admin-table th:nth-child(1), .admin-table th:nth-child(2), .admin-table th:nth-child(3) { background: #f8faf9; z-index: 4; }
+
         .badge-status-admin { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; }
         .status-hien { background: #e3effd; color: #0052cc; }
         .status-an { background: #ffebe6; color: #de350b; }
@@ -138,7 +145,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách sản phẩm</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Bấm <b>"Copy"</b> để sao chép dòng dữ liệu dán thẳng vào Google Sheets.</span>
+                        <span style="font-size: 12px; color: #666;">💡 3 cột đầu tiên (STT, Mã SP, Tên) được cố định khi cuộn ngang. Bấm <b>"Copy"</b> để sao chép dòng dữ liệu.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="openProductModal('add')"><i class="fa-solid fa-plus"></i> Thêm sản phẩm mới</button>
                 </div>
@@ -146,7 +153,7 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th style="width: 50px;">STT</th>
+                                <th>STT</th>
                                 <th>Mã SP</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Danh mục</th>
@@ -158,7 +165,7 @@
                                 <th>Tồn kho</th>
                                 <th>Trạng thái</th>
                                 <th>Cấu hình giá</th>
-                                <th style="text-align: right; position: sticky; right: 0; background: #f8faf9;">Thao tác</th>
+                                <th style="text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="adminProductTableBody">
@@ -170,7 +177,8 @@
 
             <!-- TAB 2: CẤU HÌNH -->
             <div class="panel-content" id="configTab">
-                <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin-top:0; font-size: 17px;">Cấu hình chung hệ thống</h2>
+                <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin-top:0; font-size: 17px;">Cấu hình chung & Banner hệ thống</h2>
+                <span style="font-size: 12px; color: #666; display: block; margin-bottom: 15px;">💡 Bấm nút <b>Copy</b> ở mỗi mục để sao chép giá trị cấu hình nhanh chóng.</span>
                 <div id="adminConfigSpace" style="display: flex; flex-direction: column; gap: 12px;">
                     <p>Đang tải cấu hình...</p>
                 </div>
@@ -266,6 +274,7 @@
     <script>
         const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0';
         let adminProductsList = [];
+        let adminConfigList = [];
 
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
@@ -341,20 +350,43 @@
 
         async function loadConfigData() {
             const configRows = await fetchSheetRows('Cau_Hinh_Shop');
-            let configHTML = '';
-            configRows.forEach(row => {
+            adminConfigList = [];
+            
+            configRows.forEach((row, idx) => {
                 if(row && row.c && row.c[0] && row.c[1]) {
-                    let key = row.c[0].v;
-                    let val = row.c[1].v;
-                    configHTML += `
-                        <div style="display:flex; flex-direction:column; gap:4px;">
-                            <label style="font-weight:700; font-size:13px; color:var(--emerald-dark);">${key}</label>
-                            <input type="text" class="form-control" value="${val}" readonly>
-                        </div>
-                    `;
+                    adminConfigList.push({
+                        key: row.c[0].v,
+                        val: row.c[1].v
+                    });
                 }
             });
-            document.getElementById('adminConfigSpace').innerHTML = configHTML;
+
+            renderConfigList();
+        }
+
+        function renderConfigList() {
+            let configHTML = '';
+            adminConfigList.forEach((cfg, idx) => {
+                configHTML += `
+                    <div style="display:flex; flex-direction:column; gap:4px; background: #f8faf9; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <label style="font-weight:700; font-size:13px; color:var(--emerald-dark);">${cfg.key}</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="text" class="form-control" value="${cfg.val}" readonly style="background: #fff; flex: 1;">
+                            <button class="btn-sm btn-copy" onclick="copyConfigData(${idx})" title="Sao chép giá trị này"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('adminConfigSpace').innerHTML = configHTML || '<p>Không có cấu hình nào.</p>';
+        }
+
+        function copyConfigData(idx) {
+            const cfg = adminConfigList[idx];
+            navigator.clipboard.writeText(cfg.val).then(() => {
+                showToast(`Đã sao chép giá trị của "${cfg.key}"!`);
+            }).catch(err => {
+                showToast('Không thể sao chép!');
+            });
         }
 
         function saveToLocalStorage() {
