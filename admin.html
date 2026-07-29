@@ -312,12 +312,15 @@
         }
 
         async function loadAdminData() {
-            // Luôn tải trực tiếp chuẩn 100% từ Google Sheets, không lưu vĩnh viễn vào localStorage nữa
             const productRows = await fetchSheetRows('Danh_Sach_SanPham');
             adminProductsList = [];
             
             productRows.forEach((row, idx) => {
                 if(row && row.c && row.c[1] && row.c[1].v) {
+                    // Lọc bỏ dòng tiêu đề thô "Tieu_Chi / Gia_Tri" nếu vô tình dính phải ở bảng sản phẩm
+                    let nameVal = String(row.c[1].v).trim();
+                    if (nameVal.toLowerCase() === 'tieu_chi' || nameVal.toLowerCase() === 'tên sản phẩm') return;
+
                     adminProductsList.push({
                         sheetIndex: idx,
                         code: row.c[0] ? row.c[0].v : 'PROD_' + idx,
@@ -345,9 +348,17 @@
             
             configRows.forEach((row, idx) => {
                 if(row && row.c && row.c[0] && row.c[1]) {
+                    let key = String(row.c[0].v).trim();
+                    let val = String(row.c[1].v).trim();
+                    
+                    // Lọc bỏ dòng tiêu đề "Tieu_Chi" / "Gia_Tri"
+                    if (key.toLowerCase() === 'tieu_chi' || key.toLowerCase() === 'tiêu chí' || (key.toLowerCase() === 'tieu_chi' && val.toLowerCase() === 'gia_tri')) {
+                        return;
+                    }
+
                     adminConfigList.push({
-                        key: row.c[0].v,
-                        val: row.c[1].v
+                        key: key,
+                        val: val
                     });
                 }
             });
@@ -507,7 +518,6 @@
             }
 
             if (editIndex === "") {
-                // Thêm tạm lên đầu danh sách hiển thị để PO bấm copy dán vào Sheets
                 adminProductsList.unshift(updatedProd);
                 showToast('Đã tạo tạm thời! Hãy bấm nút Copy ở dòng đầu để dán vào Sheets.');
             } else {
