@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Mục Sản Phẩm - Cửa Hàng Vô Tri</title>
+    <title>Cửa Hàng Vô Tri</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -215,13 +215,12 @@
             </div>
             <div class="right-nav-box">
                 <nav>
-                    <!-- CỐ ĐỊNH TĨNH ĐÚNG 5 NÚT MENU THEO YÊU CẦU -->
+                    <!-- MENU 4 DANH MỤC GỌN GÀNG (ĐÃ ẨN IN 3D) -->
                     <ul class="menu-categories" id="categoryMenuNav">
                         <li class="menu-item" data-cat="home" onclick="window.location.href='index.html'">Home</li>
                         <li class="menu-item" data-cat="Đồ len" onclick="window.location.href='category.html?cat=Đồ len'">Đồ len</li>
                         <li class="menu-item" data-cat="In ấn" onclick="window.location.href='category.html?cat=In ấn'">In ấn</li>
                         <li class="menu-item" data-cat="Giấy" onclick="window.location.href='category.html?cat=Giấy'">Giấy</li>
-                        <li class="menu-item" data-cat="In 3D" onclick="window.location.href='category.html?cat=In 3D'">In 3D</li>
                     </ul>
                 </nav>
             </div>
@@ -386,7 +385,6 @@
             });
         }
 
-        // Lọc danh mục chuẩn xác và hiển thị thông báo nếu chưa có sản phẩm
         function renderCategoryProducts() {
             const currentCat = getCurrentCategoryFromURL();
 
