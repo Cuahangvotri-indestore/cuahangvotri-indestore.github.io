@@ -372,11 +372,38 @@
         }
 
         function setupBannerCarousel() {
-            let bannerUrls = [];
-            for(let i=1; i<=3; i++) { if(globalStoreData.config[`Banner_${i}`]) bannerUrls.push(parseDirectImageUrl(globalStoreData.config[`Banner_${i}`])); }
-            totalSlidesCount = bannerUrls.length;
+            let banners = [];
+            for(let i=1; i<=3; i++) { 
+                let imgUrl = globalStoreData.config[`Banner_${i}`];
+                let mappingVal = globalStoreData.config[`Mapping_Banner_${i}`];
+                if(imgUrl) {
+                    banners.push({
+                        img: parseDirectImageUrl(imgUrl),
+                        mapping: mappingVal ? String(mappingVal).trim() : ''
+                    });
+                }
+            }
+            totalSlidesCount = banners.length;
             if(totalSlidesCount > 0) {
-                document.getElementById('carousel-slider-track').innerHTML = bannerUrls.map((url, idx) => `<div class="banner-slide ${idx===0?'active':''}"><img src="${url}"></div>`).join('');
+                document.getElementById('carousel-slider-track').innerHTML = banners.map((b, idx) => {
+                    let hasAction = b.mapping !== '';
+                    let actionAttr = '';
+                    let cursorStyle = '';
+
+                    if (hasAction) {
+                        cursorStyle = 'cursor: pointer;';
+                        // Nếu điền tên danh mục (ví dụ: "Đồ len"), tự động trỏ sang category.html?cat=...
+                        // Nếu điền dạng URL bắt đầu bằng http hoặc category.html, giữ nguyên link đó
+                        let targetLink = b.mapping.startsWith('http') || b.mapping.includes('.html') 
+                            ? b.mapping 
+                            : `category.html?cat=${encodeURIComponent(b.mapping)}`;
+                        
+                        actionAttr = `onclick="window.location.href='${targetLink}'"`;
+                    }
+
+                    return `<div class="banner-slide ${idx===0?'active':''}" style="${cursorStyle}" ${actionAttr}><img src="${b.img}"></div>`;
+                }).join('');
+
                 document.getElementById('banner-root-area').style.display = 'block';
                 if(totalSlidesCount > 1) { clearInterval(slideInterval); slideInterval = setInterval(moveToNextSlide, 8000); }
             }
