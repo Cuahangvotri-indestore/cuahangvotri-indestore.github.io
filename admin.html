@@ -58,6 +58,12 @@
         .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; color: var(--text-color); vertical-align: middle; }
         .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); }
         
+        /* DRAG AND DROP STYLING */
+        .draggable-row { cursor: grab; transition: background 0.2s; }
+        .draggable-row:active { cursor: grabbing; }
+        .draggable-row.dragging { opacity: 0.4; background: #e6f6f3; }
+        .drag-handle { color: #888; cursor: grab; margin-right: 6px; }
+
         .badge-status-admin { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; }
         .status-hien { background: #e3effd; color: #0052cc; }
         .status-an { background: #ffebe6; color: #de350b; }
@@ -78,11 +84,12 @@
         }
         .admin-modal-header { padding: 15px 20px; background: #f8faf9; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .admin-modal-header h3 { margin: 0; font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); font-size: 16px; }
-        .admin-modal-body { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .admin-modal-body { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
         .admin-modal-footer { padding: 15px 20px; background: #f8faf9; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
 
         .form-group { display: flex; flex-direction: column; gap: 4px; }
         .form-group label { font-size: 13px; font-weight: 700; color: var(--emerald-dark); }
+        .form-note { font-size: 11px; color: #666; font-style: italic; }
         .form-control { width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit; font-size: 14px; box-sizing: border-box; outline: none; }
         .form-control:focus { border-color: var(--emerald-soft); }
 
@@ -119,14 +126,17 @@
             <!-- TAB 1: SẢN PHẨM -->
             <div class="panel-content active" id="productsTab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách sản phẩm</h2>
+                    <div>
+                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách sản phẩm</h2>
+                        <span style="font-size: 12px; color: #666;">💡 Mẹo: Bạn có thể **kéo thả trực tiếp từng dòng** hoặc dùng nút mũi tên để đổi thứ tự hiển thị sản phẩm ngoài trang chủ.</span>
+                    </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="openProductModal('add')"><i class="fa-solid fa-plus"></i> Thêm sản phẩm mới</button>
                 </div>
                 <div class="table-responsive">
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th style="width: 80px;">Thứ tự</th>
+                                <th style="width: 100px;">Thứ tự / Kéo</th>
                                 <th>Mã SP</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Danh mục</th>
@@ -161,16 +171,22 @@
             </div>
             <div class="admin-modal-body">
                 <input type="hidden" id="editRowIndex" value="">
+                
                 <div class="form-group">
                     <label>Mã sản phẩm (Code)</label>
+                    <span class="form-note">Mã định danh duy nhất (Ví dụ: PROD_01). Không chứa khoảng trắng.</span>
                     <input type="text" id="inputCode" class="form-control" placeholder="Ví dụ: PROD_01">
                 </div>
+
                 <div class="form-group">
                     <label>Tên sản phẩm</label>
+                    <span class="form-note">Tên hiển thị trực tiếp trên thẻ sản phẩm ở trang chủ và trang danh mục.</span>
                     <input type="text" id="inputName" class="form-control" placeholder="Nhập tên sản phẩm...">
                 </div>
+
                 <div class="form-group">
                     <label>Danh mục</label>
+                    <span class="form-note">Phân loại sản phẩm vào đúng tab danh mục trên thanh menu.</span>
                     <select id="inputCategory" class="form-control">
                         <option value="Đồ len">Đồ len</option>
                         <option value="In ấn">In ấn</option>
@@ -178,39 +194,58 @@
                         <option value="In 3D">In 3D</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label>Đường dẫn Ảnh chính (Image URL)</label>
-                    <input type="text" id="inputImg" class="form-control" placeholder="images/... hoặc link Google Drive">
+                    <span class="form-note">Nhập thư mục ảnh local (VD: images/len1.png) hoặc link Google Drive công khai.</span>
+                    <input type="text" id="inputImg" class="form-control" placeholder="images/... hoặc link ảnh">
                 </div>
+
                 <div class="form-group">
-                    <label>Ảnh chi tiết (cách nhau bằng dấu phẩy)</label>
+                    <label>Ảnh chi tiết (Dùng cho Slider popup)</label>
+                    <span class="form-note">Các link ảnh phụ cách nhau bằng dấu phẩy (VD: link1, link2, link3).</span>
                     <input type="text" id="inputDetailImgs" class="form-control" placeholder="url1, url2, url3...">
                 </div>
+
                 <div class="form-group">
                     <label>Mô tả sản phẩm</label>
-                    <textarea id="inputDesc" class="form-control" rows="3" placeholder="Nhập mô tả..."></textarea>
+                    <span class="form-note">Thông tin chi tiết hiển thị khi khách hàng bấm xem chi tiết sản phẩm.</span>
+                    <textarea id="inputDesc" class="form-control" rows="3" placeholder="Nhập mô tả sản phẩm..."></textarea>
                 </div>
+
                 <div class="form-group">
                     <label>Giá gốc (VNĐ)</label>
+                    <span class="form-note">Chỉ điền số nguyên (Ví dụ: 35000 tương ứng 35.000 đ).</span>
                     <input type="number" id="inputPrice" class="form-control" placeholder="Ví dụ: 50000">
                 </div>
+
                 <div class="form-group">
                     <label>Link mua Shopee</label>
+                    <span class="form-note">Đường dẫn trực tiếp đến sản phẩm trên sàn Shopee (để trống nếu hàng đặt thiết kế riêng).</span>
                     <input type="text" id="inputShopee" class="form-control" placeholder="https://shopee.vn/...">
                 </div>
+
                 <div class="form-group">
                     <label>Tình trạng / Tồn kho</label>
-                    <input type="text" id="inputStock" class="form-control" value="Có sẵn" placeholder="Có sẵn / Đặt trước...">
+                    <span class="form-note">Chọn trạng thái kho để hiển thị huy hiệu (Badge) trên góc trái ảnh sản phẩm.</span>
+                    <select id="inputStock" class="form-control">
+                        <option value="Có sẵn">Có sẵn</option>
+                        <option value="Đặt trước">Đặt trước</option>
+                    </select>
                 </div>
+
                 <div class="form-group">
                     <label>Trạng thái hiển thị</label>
+                    <span class="form-note">Chọn 'Hiện' để sản phẩm xuất hiện trên web, chọn 'Ẩn' để tạm giấu đi.</span>
                     <select id="inputStatus" class="form-control">
                         <option value="Hiện">Hiện</option>
                         <option value="Ẩn">Ẩn</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label>Bộ cấu hình giá (nếu có)</label>
+                    <label>Bộ cấu hình giá nâng cao (Tùy chọn)</label>
+                    <span class="form-note">Điền mã bảng giá phụ nếu sản phẩm có tính năng check giá tùy chọn (VD: GIA_THIEP, GIA_CARD, GIA_TEM_STICKER). Để trống nếu giá cố định.</span>
                     <input type="text" id="inputBoCauHinh" class="form-control" placeholder="GIA_THIEP / GIA_CARD / GIA_TEM_STICKER">
                 </div>
             </div>
@@ -228,6 +263,7 @@
     <script>
         const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0';
         let adminProductsList = [];
+        let draggedRowIndex = null;
 
         async function fetchSheetRows(sheetName) {
             try {
@@ -301,9 +337,10 @@
             adminProductsList.forEach((p, idx) => {
                 let isHien = String(p.status).trim().toLowerCase() === 'hiện';
                 rowsHTML += `
-                    <tr>
+                    <tr class="draggable-row" draggable="true" ondragstart="onDragStart(event, ${idx})" ondragover="onDragOver(event)" ondrop="onDrop(event, ${idx})" ondragend="onDragEnd(event)">
                         <td>
-                            <div style="display:flex; gap:4px;">
+                            <div style="display:flex; align-items:center; gap:4px;">
+                                <i class="fa-solid fa-grip-vertical drag-handle" title="Kéo để đổi thứ tự"></i>
                                 <button class="btn-sm" style="padding:4px 6px;" title="Chuyển lên" onclick="moveProductOrder(${idx}, -1)"><i class="fa-solid fa-arrow-up"></i></button>
                                 <button class="btn-sm" style="padding:4px 6px;" title="Chuyển xuống" onclick="moveProductOrder(${idx}, 1)"><i class="fa-solid fa-arrow-down"></i></button>
                             </div>
@@ -322,12 +359,32 @@
             document.getElementById('adminProductTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Không có sản phẩm nào.</td></tr>`;
         }
 
-        // ĐIỀU HƯỚNG VỊ TRÍ SẢN PHẨM (Lên / Xuống)
+        // HÀM XỬ LÝ KÉO THẢ (DRAG & DROP)
+        function onDragStart(e, index) {
+            draggedRowIndex = index;
+            e.target.classList.add('dragging');
+        }
+        function onDragOver(e) {
+            e.preventDefault();
+        }
+        function onDrop(e, targetIndex) {
+            e.preventDefault();
+            if (draggedRowIndex === null || draggedRowIndex === targetIndex) return;
+            
+            const movedItem = adminProductsList.splice(draggedRowIndex, 1)[0];
+            adminProductsList.splice(targetIndex, 0, movedItem);
+            renderAdminProductTable();
+        }
+        function onDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedRowIndex = null;
+        }
+
+        // ĐIỀU HƯỚNG VỊ TRÍ SẢN PHẨM BẰNG NÚT (Lên / Xuống)
         function moveProductOrder(index, direction) {
             const newIndex = index + direction;
             if (newIndex < 0 || newIndex >= adminProductsList.length) return;
             
-            // Đổi chỗ 2 phần tử trong mảng
             const temp = adminProductsList[index];
             adminProductsList[index] = adminProductsList[newIndex];
             adminProductsList[newIndex] = temp;
@@ -385,7 +442,7 @@
             const editIndex = document.getElementById('editRowIndex').value;
             const updatedProd = {
                 code: document.getElementById('inputCode').value.trim(),
-                name: document.getElementById('inputName').value.trim(),
+                name: document.getElementById('inputName'].value.trim(),
                 category: document.getElementById('inputCategory').value,
                 img: document.getElementById('inputImg').value.trim(),
                 detailImgs: document.getElementById('inputDetailImgs').value.trim(),
@@ -403,13 +460,11 @@
             }
 
             if (editIndex === "") {
-                // Thêm mới
                 adminProductsList.unshift(updatedProd);
-                alert('Đã thêm sản phẩm mới thành công! (Dữ liệu đang hiển thị tạm trên màn hình admin)');
+                alert('Tạo sản phẩm thành công! (Dữ liệu đã được lưu tạm vào bộ nhớ Admin)');
             } else {
-                // Cập nhật
                 adminProductsList[editIndex] = updatedProd;
-                alert('Đã cập nhật sản phẩm thành công!');
+                alert('Cập nhật sản phẩm thành công!');
             }
 
             renderAdminProductTable();
