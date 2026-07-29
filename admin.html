@@ -61,8 +61,8 @@
 
         /* CỐ ĐỊNH CHUẨN 3 CỘT ĐẦU VÀ GÁN CHIỀU RỘNG TRÁNH ĐÈ CHỮ */
         .admin-table th:nth-child(1), .admin-table td:nth-child(1) { position: sticky; left: 0; z-index: 3; width: 60px; min-width: 60px; text-align: center; }
-        .admin-table th:nth-child(2), .admin-table td:nth-child(2) { position: sticky; left: 60px; z-index: 3; width: 130px; min-width: 130px; }
-        .admin-table th:nth-child(3), .admin-table td:nth-child(3) { position: sticky; left: 190px; z-index: 3; width: 180px; min-width: 180px; box-shadow: 3px 0 6px rgba(0,0,0,0.04); }
+        .admin-table th:nth-child(2), .admin-table td:nth-child(2) { position: sticky; left: 60px; z-index: 3; width: 110px; min-width: 110px; }
+        .admin-table th:nth-child(3), .admin-table td:nth-child(3) { position: sticky; left: 170px; z-index: 3; width: 220px; min-width: 220px; box-shadow: 3px 0 6px rgba(0,0,0,0.04); }
         
         .admin-table th:nth-child(1), .admin-table th:nth-child(2), .admin-table th:nth-child(3) { background: #f8faf9; z-index: 4; }
 
@@ -130,8 +130,8 @@
         <div class="login-card" id="loginScreen">
             <h2>Đăng nhập Admin</h2>
             <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Nhập mật khẩu quản trị để tiếp tục</p>
-            <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Mật khẩu (mặc định: admin123)" onkeydown="if(event.key==='Enter') handleAdminLogin()">
-            <button class="admin-btn" style="width: 100%;" onclick="handleAdminLogin()">Truy cập Dashboard</button>
+            <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Mật khẩu (mặc định: admin123)">
+            <button class="admin-btn" id="loginButton" style="width: 100%;">Truy cập Dashboard</button>
         </div>
 
         <!-- BẢNG ĐIỀU KHIỂN CHÍNH -->
@@ -308,6 +308,21 @@
         let adminConfigList = [];
         let adminRequestsList = [];
 
+        // Gắn sự kiện đăng nhập an toàn khi DOM load xong
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginBtn = document.getElementById('loginButton');
+            const passwordInput = document.getElementById('adminPasswordInput');
+
+            if (loginBtn) {
+                loginBtn.addEventListener('click', handleAdminLogin);
+            }
+            if (passwordInput) {
+                passwordInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') handleAdminLogin();
+                });
+            }
+        });
+
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
             document.getElementById('toastMessage').innerText = message;
@@ -396,7 +411,6 @@
             renderConfigList();
         }
 
-        // TẢI DỮ LIỆU FORM REQUEST TỪ GOOGLE SHEETS (Hỗ trợ tên sheet 'Form_Requests' hoặc 'Yeu_Cau')
         async function loadRequestsData() {
             let requestRows = await fetchSheetRows('Form_Requests');
             if (requestRows.length === 0) {
@@ -589,7 +603,7 @@
             const editIndex = document.getElementById('editRowIndex').value;
             const updatedProd = {
                 code: document.getElementById('inputCode').value.trim(),
-                name: document.getElementById('inputName'].value.trim(),
+                name: document.getElementById('inputName').value.trim(),
                 category: document.getElementById('inputCategory').value,
                 img: document.getElementById('inputImg').value.trim(),
                 detailImgs: document.getElementById('inputDetailImgs').value.trim(),
