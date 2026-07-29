@@ -233,7 +233,7 @@
             <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             
             <div class="popup-single-col-content" id="popupSingleColContent">
-                <!-- Nội dung gọn gàng, khoảng cách tối ưu -->
+                <!-- Nội dung 1 cột dọc mượt mà -->
             </div>
         </div>
     </div>
@@ -430,7 +430,7 @@
                     </div>
 
                     <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
-                        <span class="popup-section-title"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
+                        <span class="popup-section-title" id="checkPriceSectionTitle"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
                         <div id="popupDynamicRadioSpace"></div>
                     </div>
 
@@ -450,6 +450,7 @@
 
                 const checkBlock = document.getElementById('popupCheckGiaBlock');
                 const radioSpace = document.getElementById('popupDynamicRadioSpace');
+                const checkTitleEl = document.getElementById('checkPriceSectionTitle');
                 
                 if(!hasConfig) {
                     if(checkBlock) checkBlock.style.display = 'none'; 
@@ -457,6 +458,14 @@
                     if(priceEl) priceEl.innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
                 } else {
                     if(checkBlock) checkBlock.style.display = 'block'; 
+                    
+                    // ĐỔI TIÊU ĐỀ THÀNH "CÁN MÀNG" NẾU LÀ GIA_TEM_STICKER
+                    if (prod.boCauHinh === 'GIA_TEM_STICKER') {
+                        if (checkTitleEl) checkTitleEl.innerHTML = `<i class="fa-solid fa-calculator"></i> Cán màng`;
+                    } else {
+                        if (checkTitleEl) checkTitleEl.innerHTML = `<i class="fa-solid fa-calculator"></i> Check giá tùy chọn`;
+                    }
+
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
                         buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", [...new Set(matrix.data.map(d => d.Loai_Thiep))], matrix.data[0].Loai_Thiep);
