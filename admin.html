@@ -71,6 +71,9 @@
         .btn-sm { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--emerald-dark); font-weight: 700; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .btn-sm:hover { background: var(--emerald-dark); color: #fff; }
 
+        .btn-copy { background: #e6f6f3; color: var(--emerald-dark); border-color: var(--emerald-soft); }
+        .btn-copy:hover { background: var(--emerald-dark); color: #fff; }
+
         /* POPUP MODAL */
         .admin-modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
@@ -128,7 +131,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách sản phẩm</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Mẹo: Bạn có thể **kéo thả trực tiếp từng dòng** hoặc dùng nút mũi tên để đổi thứ tự hiển thị sản phẩm ngoài trang chủ.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Bấm nút <b>"Sao chép dòng"</b> ở mỗi sản phẩm để copy dữ liệu dán thẳng vào Google Sheets.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="openProductModal('add')"><i class="fa-solid fa-plus"></i> Thêm sản phẩm mới</button>
                 </div>
@@ -146,7 +149,7 @@
                             </tr>
                         </thead>
                         <tbody id="adminProductTableBody">
-                            <tr><td colspan="7" style="text-align: center;">Đang đồng bộ dữ liệu từ Google Sheets...</td></tr>
+                            <tr><td colspan="7" style="text-align: center;">Đang đồng bộ dữ liệu...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -174,19 +177,16 @@
                 
                 <div class="form-group">
                     <label>Mã sản phẩm (Code)</label>
-                    <span class="form-note">Mã định danh duy nhất (Ví dụ: PROD_01). Không chứa khoảng trắng.</span>
                     <input type="text" id="inputCode" class="form-control" placeholder="Ví dụ: PROD_01">
                 </div>
 
                 <div class="form-group">
                     <label>Tên sản phẩm</label>
-                    <span class="form-note">Tên hiển thị trực tiếp trên thẻ sản phẩm ở trang chủ và trang danh mục.</span>
                     <input type="text" id="inputName" class="form-control" placeholder="Nhập tên sản phẩm...">
                 </div>
 
                 <div class="form-group">
                     <label>Danh mục</label>
-                    <span class="form-note">Phân loại sản phẩm vào đúng tab danh mục trên thanh menu.</span>
                     <select id="inputCategory" class="form-control">
                         <option value="Đồ len">Đồ len</option>
                         <option value="In ấn">In ấn</option>
@@ -197,37 +197,31 @@
 
                 <div class="form-group">
                     <label>Đường dẫn Ảnh chính (Image URL)</label>
-                    <span class="form-note">Nhập thư mục ảnh local (VD: images/len1.png) hoặc link Google Drive công khai.</span>
                     <input type="text" id="inputImg" class="form-control" placeholder="images/... hoặc link ảnh">
                 </div>
 
                 <div class="form-group">
                     <label>Ảnh chi tiết (Dùng cho Slider popup)</label>
-                    <span class="form-note">Các link ảnh phụ cách nhau bằng dấu phẩy (VD: link1, link2, link3).</span>
                     <input type="text" id="inputDetailImgs" class="form-control" placeholder="url1, url2, url3...">
                 </div>
 
                 <div class="form-group">
                     <label>Mô tả sản phẩm</label>
-                    <span class="form-note">Thông tin chi tiết hiển thị khi khách hàng bấm xem chi tiết sản phẩm.</span>
                     <textarea id="inputDesc" class="form-control" rows="3" placeholder="Nhập mô tả sản phẩm..."></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Giá gốc (VNĐ)</label>
-                    <span class="form-note">Chỉ điền số nguyên (Ví dụ: 35000 tương ứng 35.000 đ).</span>
                     <input type="number" id="inputPrice" class="form-control" placeholder="Ví dụ: 50000">
                 </div>
 
                 <div class="form-group">
                     <label>Link mua Shopee</label>
-                    <span class="form-note">Đường dẫn trực tiếp đến sản phẩm trên sàn Shopee (để trống nếu hàng đặt thiết kế riêng).</span>
                     <input type="text" id="inputShopee" class="form-control" placeholder="https://shopee.vn/...">
                 </div>
 
                 <div class="form-group">
                     <label>Tình trạng / Tồn kho</label>
-                    <span class="form-note">Chọn trạng thái kho để hiển thị huy hiệu (Badge) trên góc trái ảnh sản phẩm.</span>
                     <select id="inputStock" class="form-control">
                         <option value="Có sẵn">Có sẵn</option>
                         <option value="Đặt trước">Đặt trước</option>
@@ -236,7 +230,6 @@
 
                 <div class="form-group">
                     <label>Trạng thái hiển thị</label>
-                    <span class="form-note">Chọn 'Hiện' để sản phẩm xuất hiện trên web, chọn 'Ẩn' để tạm giấu đi.</span>
                     <select id="inputStatus" class="form-control">
                         <option value="Hiện">Hiện</option>
                         <option value="Ẩn">Ẩn</option>
@@ -245,19 +238,18 @@
 
                 <div class="form-group">
                     <label>Bộ cấu hình giá nâng cao (Tùy chọn)</label>
-                    <span class="form-note">Điền mã bảng giá phụ nếu sản phẩm có tính năng check giá tùy chọn (VD: GIA_THIEP, GIA_CARD, GIA_TEM_STICKER). Để trống nếu giá cố định.</span>
                     <input type="text" id="inputBoCauHinh" class="form-control" placeholder="GIA_THIEP / GIA_CARD / GIA_TEM_STICKER">
                 </div>
             </div>
             <div class="admin-modal-footer">
                 <button class="btn-sm" onclick="closeProductModal()">Hủy</button>
-                <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="saveProductData()">Lưu sản phẩm</button>
+                <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="saveProductData()">Lưu thay đổi</button>
             </div>
         </div>
     </div>
 
     <footer>
-        © 2026 CỬA HÀNG VÔ TRI Admin System. Powered by GitHub & Google Sheets.
+        © 2026 CỬA HÀNG VÔ TRI Admin System. Powered by LocalStorage.
     </footer>
 
     <script>
@@ -291,6 +283,16 @@
         }
 
         async function loadAdminData() {
+            const localSaved = localStorage.getItem('votri_admin_products');
+            if (localSaved) {
+                try {
+                    adminProductsList = JSON.parse(localSaved);
+                    renderAdminProductTable();
+                    loadConfigData();
+                    return;
+                } catch(e) {}
+            }
+
             const productRows = await fetchSheetRows('Danh_Sach_SanPham');
             adminProductsList = [];
             
@@ -313,8 +315,12 @@
                 }
             });
 
+            saveToLocalStorage();
             renderAdminProductTable();
+            loadConfigData();
+        }
 
+        async function loadConfigData() {
             const configRows = await fetchSheetRows('Cau_Hinh_Shop');
             let configHTML = '';
             configRows.forEach(row => {
@@ -330,6 +336,10 @@
                 }
             });
             document.getElementById('adminConfigSpace').innerHTML = configHTML;
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('votri_admin_products', JSON.stringify(adminProductsList));
         }
 
         function renderAdminProductTable() {
@@ -350,7 +360,8 @@
                         <td>${p.category}</td>
                         <td>${Number(p.price).toLocaleString('vi-VN')} đ</td>
                         <td><span class="badge-status-admin ${isHien ? 'status-hien' : 'status-an'}">${p.status}</span></td>
-                        <td style="text-align: right;">
+                        <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end;">
+                            <button class="btn-sm btn-copy" onclick="copyRowData(${idx})" title="Sao chép dữ liệu dòng này để dán vào Sheets"><i class="fa-regular fa-copy"></i> Copy</button>
                             <button class="btn-sm" onclick="openProductModal('edit', ${idx})"><i class="fa-solid fa-pen"></i> Sửa</button>
                         </td>
                     </tr>
@@ -359,19 +370,30 @@
             document.getElementById('adminProductTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Không có sản phẩm nào.</td></tr>`;
         }
 
+        // HÀM SAO CHÉP DỮ LIỆU ĐỂ DÁN VÀO SHEETS (Tab-separated cho Excel/Google Sheets)
+        function copyRowData(idx) {
+            const p = adminProductsList[idx];
+            // Format thành các cột tương ứng trong Google Sheets: Code, Name, Category, Img, DetailImgs, Desc, (trống), Price, Shopee, Stock, Status, BoCauHinh
+            const rowString = `${p.code}\t${p.name}\t${p.category}\t${p.img}\t${p.detailImgs}\t${p.desc}\t\t${p.price}\t${p.shopee}\t${p.stock}\t${p.status}\t${p.boCauHinh}`;
+            
+            navigator.clipboard.writeText(rowString).then(() => {
+                alert(`Đã sao chép dữ liệu của sản phẩm "${p.name}"!\nBạn chỉ cần vào Google Sheets, chọn dòng tương ứng và bấm Ctrl + V để dán.`);
+            }).catch(err => {
+                alert('Không thể sao chép tự động, vui lòng thử lại!');
+            });
+        }
+
         function onDragStart(e, index) {
             draggedRowIndex = index;
             e.target.classList.add('dragging');
         }
-        function onDragOver(e) {
-            e.preventDefault();
-        }
+        function onDragOver(e) { e.preventDefault(); }
         function onDrop(e, targetIndex) {
             e.preventDefault();
             if (draggedRowIndex === null || draggedRowIndex === targetIndex) return;
-            
             const movedItem = adminProductsList.splice(draggedRowIndex, 1)[0];
             adminProductsList.splice(targetIndex, 0, movedItem);
+            saveToLocalStorage();
             renderAdminProductTable();
         }
         function onDragEnd(e) {
@@ -382,11 +404,10 @@
         function moveProductOrder(index, direction) {
             const newIndex = index + direction;
             if (newIndex < 0 || newIndex >= adminProductsList.length) return;
-            
             const temp = adminProductsList[index];
             adminProductsList[index] = adminProductsList[newIndex];
             adminProductsList[newIndex] = temp;
-            
+            saveToLocalStorage();
             renderAdminProductTable();
         }
 
@@ -458,12 +479,13 @@
 
             if (editIndex === "") {
                 adminProductsList.unshift(updatedProd);
-                alert('Tạo sản phẩm thành công! (Dữ liệu đã được lưu tạm vào bộ nhớ Admin)');
+                alert('Tạo sản phẩm mới thành công! Sản phẩm đã nằm ở dòng đầu tiên của danh sách.');
             } else {
                 adminProductsList[editIndex] = updatedProd;
                 alert('Cập nhật sản phẩm thành công!');
             }
 
+            saveToLocalStorage();
             renderAdminProductTable();
             closeProductModal();
         }
