@@ -54,15 +54,15 @@
         .panel-content.active { display: block; }
 
         .table-responsive { width: 100%; overflow-x: auto; }
-        .admin-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; color: var(--text-color); vertical-align: middle; }
+        .admin-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+        .admin-table th, .admin-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; }
         .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); }
         
         .badge-status-admin { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; }
         .status-hien { background: #e3effd; color: #0052cc; }
         .status-an { background: #ffebe6; color: #de350b; }
 
-        .btn-sm { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--emerald-dark); font-weight: 700; cursor: pointer; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-sm { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--emerald-dark); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .btn-sm:hover { background: var(--emerald-dark); color: #fff; }
         .btn-copy { background: #e6f6f3; color: var(--emerald-dark); border-color: var(--emerald-soft); }
         .btn-copy:hover { background: var(--emerald-dark); color: #fff; }
@@ -146,17 +146,23 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
+                                <th style="width: 50px;">STT</th>
                                 <th>Mã SP</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Danh mục</th>
+                                <th>Ảnh chính</th>
+                                <th>Ảnh chi tiết</th>
+                                <th>Mô tả</th>
                                 <th>Giá gốc</th>
+                                <th>Shopee</th>
                                 <th>Tồn kho</th>
                                 <th>Trạng thái</th>
-                                <th style="text-align: right;">Thao tác</th>
+                                <th>Cấu hình giá</th>
+                                <th style="text-align: right; position: sticky; right: 0; background: #f8faf9;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="adminProductTableBody">
-                            <tr><td colspan="7" style="text-align: center;">Đang đồng bộ dữ liệu...</td></tr>
+                            <tr><td colspan="13" style="text-align: center;">Đang đồng bộ dữ liệu...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -361,20 +367,26 @@
                 let isHien = String(p.status).trim().toLowerCase() === 'hiện';
                 rowsHTML += `
                     <tr>
+                        <td style="text-align: center; font-weight: 700; color: var(--emerald-dark);">${idx + 1}</td>
                         <td><b>${p.code}</b></td>
                         <td>${p.name}</td>
                         <td>${p.category}</td>
+                        <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;" title="${p.img}">${p.img}</td>
+                        <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;" title="${p.detailImgs}">${p.detailImgs}</td>
+                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${p.desc}">${p.desc}</td>
                         <td>${Number(p.price).toLocaleString('vi-VN')} đ</td>
+                        <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;" title="${p.shopee}">${p.shopee}</td>
                         <td>${p.stock}</td>
                         <td><span class="badge-status-admin ${isHien ? 'status-hien' : 'status-an'}">${p.status}</span></td>
-                        <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end;">
+                        <td>${p.boCauHinh}</td>
+                        <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; background: #fff;">
                             <button class="btn-sm btn-copy" onclick="copyRowData(${idx})" title="Sao chép dữ liệu để dán vào Sheets"><i class="fa-regular fa-copy"></i> Copy</button>
                             <button class="btn-sm" onclick="openProductModal('edit', ${idx})"><i class="fa-solid fa-pen"></i> Sửa</button>
                         </td>
                     </tr>
                 `;
             });
-            document.getElementById('adminProductTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Không có sản phẩm nào.</td></tr>`;
+            document.getElementById('adminProductTableBody').innerHTML = rowsHTML || `<tr><td colspan="13" style="text-align:center;">Không có sản phẩm nào.</td></tr>`;
         }
 
         function parseQuickPaste(inputEl) {
