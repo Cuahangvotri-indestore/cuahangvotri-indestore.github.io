@@ -82,7 +82,7 @@
         }
         .admin-modal-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
         .admin-modal-container {
-            background: #ffffff; width: 100%; max-width: 600px; border-radius: 12px; border: 1px solid var(--border-color);
+            background: #ffffff; width: 100%; max-width: 650px; border-radius: 12px; border: 1px solid var(--border-color);
             box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; flex-direction: column; max-height: 90vh; overflow: hidden;
         }
         .admin-modal-header { padding: 15px 20px; background: #f8faf9; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
@@ -95,6 +95,8 @@
         .form-note { font-size: 11px; color: #666; font-style: italic; }
         .form-control { width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit; font-size: 14px; box-sizing: border-box; outline: none; }
         .form-control:focus { border-color: var(--emerald-soft); }
+
+        .quick-paste-box { background: #f0f7f5; border: 2px dashed var(--emerald-soft); padding: 12px; border-radius: 8px; margin-bottom: 5px; }
 
         footer { background: #ffffff; border-top: 1px solid var(--border-color); padding: 15px 20px; text-align: center; margin-top: auto; font-size: 12px; font-family: 'Comfortaa', sans-serif; font-weight: 700; color: var(--emerald-dark); }
     </style>
@@ -131,7 +133,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách sản phẩm</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Bấm nút <b>"Sao chép dòng"</b> ở mỗi sản phẩm để copy dữ liệu dán thẳng vào Google Sheets.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Bấm nút <b>"Copy"</b> ở mỗi dòng để sao chép dữ liệu dán vào Google Sheets, hoặc dùng Popup để thêm nhanh.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="openProductModal('add')"><i class="fa-solid fa-plus"></i> Thêm sản phẩm mới</button>
                 </div>
@@ -175,6 +177,15 @@
             <div class="admin-modal-body">
                 <input type="hidden" id="editRowIndex" value="">
                 
+                <!-- Ô DÁN NHANH TỪ GOOGLE SHEETS -->
+                <div class="quick-paste-box">
+                    <label style="font-size: 13px; font-weight: 700; color: var(--emerald-dark); display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Dán dữ liệu nhanh từ Google Sheets:
+                    </label>
+                    <span class="form-note">Copy 1 dòng từ Google Sheets rồi dán (Ctrl+V) vào ô dưới đây để tự động điền form:</span>
+                    <input type="text" id="quickPasteInput" class="form-control" placeholder="Click vào đây và bấm Ctrl+V để điền tự động..." oninput="parseQuickPaste(this)">
+                </div>
+
                 <div class="form-group">
                     <label>Mã sản phẩm (Code)</label>
                     <input type="text" id="inputCode" class="form-control" placeholder="Ví dụ: PROD_01">
@@ -249,7 +260,7 @@
     </div>
 
     <footer>
-        © 2026 CỬA HÀNG VÔ TRI Admin System. Powered by LocalStorage.
+        © 2026 CỬA HÀNG VÔ TRI Admin System. Powered by LocalStorage & QuickPaste.
     </footer>
 
     <script>
@@ -370,16 +381,39 @@
             document.getElementById('adminProductTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Không có sản phẩm nào.</td></tr>`;
         }
 
-        // HÀM SAO CHÉP DỮ LIỆU ĐỂ DÁN VÀO SHEETS (Tab-separated cho Excel/Google Sheets)
+        // TÍNH NĂNG TỰ ĐỘNG PHÂN TÍCH KHI DÁN (QUICK PASTE)
+        function parseQuickPaste(inputEl) {
+            const val = inputEl.value.trim();
+            if (!val) return;
+            
+            // Tách các cột theo tab (khi copy từ Google Sheets hoặc Excel)
+            const cols = val.split('\t');
+            if (cols.length >= 2) {
+                if (cols[0]) document.getElementById('inputCode').value = cols[0].trim();
+                if (cols[1]) document.getElementById('inputName').value = cols[1].trim();
+                if (cols[2]) document.getElementById('inputCategory').value = cols[2].trim();
+                if (cols[3]) document.getElementById('inputImg').value = cols[3].trim();
+                if (cols[4]) document.getElementById('inputDetailImgs').value = cols[4].trim();
+                if (cols[5]) document.getElementById('inputDesc').value = cols[5].trim();
+                if (cols[7]) document.getElementById('inputPrice').value = cols[7].trim();
+                if (cols[8]) document.getElementById('inputShopee').value = cols[8].trim();
+                if (cols[9]) document.getElementById('inputStock').value = cols[9].trim();
+                if (cols[10]) document.getElementById('inputStatus').value = cols[10].trim();
+                if (cols[11]) document.getElementById('inputBoCauHinh').value = cols[11].trim();
+                
+                // Xóa nội dung ô input sau khi phân tích xong để đỡ vướng
+                inputEl.value = "";
+                alert('Đã tự động điền thông tin từ dữ liệu bạn vừa dán!');
+            }
+        }
+
         function copyRowData(idx) {
             const p = adminProductsList[idx];
-            // Format thành các cột tương ứng trong Google Sheets: Code, Name, Category, Img, DetailImgs, Desc, (trống), Price, Shopee, Stock, Status, BoCauHinh
             const rowString = `${p.code}\t${p.name}\t${p.category}\t${p.img}\t${p.detailImgs}\t${p.desc}\t\t${p.price}\t${p.shopee}\t${p.stock}\t${p.status}\t${p.boCauHinh}`;
-            
             navigator.clipboard.writeText(rowString).then(() => {
                 alert(`Đã sao chép dữ liệu của sản phẩm "${p.name}"!\nBạn chỉ cần vào Google Sheets, chọn dòng tương ứng và bấm Ctrl + V để dán.`);
             }).catch(err => {
-                alert('Không thể sao chép tự động, vui lòng thử lại!');
+                alert('Không thể sao chép tự động!');
             });
         }
 
@@ -414,6 +448,7 @@
         function openProductModal(mode, index = null) {
             const overlay = document.getElementById('productModalOverlay');
             const titleEl = document.getElementById('modalTitleText');
+            document.getElementById('quickPasteInput').value = ""; // Clear box dán nhanh
             
             if (mode === 'add') {
                 titleEl.innerText = "Thêm sản phẩm mới";
