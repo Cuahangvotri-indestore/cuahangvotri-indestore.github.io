@@ -459,19 +459,18 @@
                 } else {
                     if(checkBlock) checkBlock.style.display = 'block'; 
                     
+                    // LUÔN LUÔN HIỂN THỊ TIÊU ĐỀ LÀ "Check giá tùy chọn" CHUẨN XÁC
+                    if (checkTitleEl) checkTitleEl.innerHTML = `<i class="fa-solid fa-calculator"></i> Check giá tùy chọn`;
+
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
-                        if (checkTitleEl) checkTitleEl.innerHTML = `<i class="fa-solid fa-calculator"></i> Check giá tùy chọn`;
                         buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", [...new Set(matrix.data.map(d => d.Loai_Thiep))], matrix.data[0].Loai_Thiep);
                         buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(matrix.data.map(d => d.Kieu_In))], matrix.data[0].Kieu_In);
                         buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
                     } else if(prod.boCauHinh === 'GIA_TEM_STICKER') {
-                        // SỬA TIÊU ĐỀ THÀNH "CÁN MÀNG" CHO GIA_TEM_STICKER
-                        if (checkTitleEl) checkTitleEl.innerHTML = `<i class="fa-solid fa-calculator"></i> Cán màng`;
                         const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
                         buildPopupRadioRow(radioSpace, "Single_Option", "Cán màng:", cleanH, cleanH[0]);
                     } else {
-                        if (checkTitleEl) checkTitleEl.innerHTML = `<i class="fa-solid fa-calculator"></i> Check giá tùy chọn`;
                         const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
                         if(cleanH.some(h => h.includes('_Mat_'))) {
                             buildPopupRadioRow(radioSpace, "Card_Mat", "Số mặt in:", ["In_1_Mat", "In_2_Mat"], "In_1_Mat");
