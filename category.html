@@ -63,8 +63,7 @@
             box-shadow: 0 10px 25px rgba(56, 122, 111, 0.3), inset 0 2px 6px rgba(255, 255, 255, 0.2); transform: translateY(-3px) scale(1.02);
         }
         
-        .filter-section { max-width: 1300px; margin: 30px auto 0; padding: 0 24px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .category-heading { font-family: 'Comfortaa', sans-serif; font-size: 26px; font-weight: 700; color: var(--emerald-dark); margin: 0; }
+        .filter-section { max-width: 1300px; margin: 30px auto 0; padding: 0 24px; box-sizing: border-box; display: flex; justify-content: flex-end; width: 100%; }
 
         .custom-dropdown { position: relative; display: inline-block; min-width: 230px; z-index: 10; }
         .dropdown-trigger {
@@ -85,8 +84,16 @@
         .dropdown-item.selected { background: rgba(31, 78, 69, 0.1); color: var(--emerald-dark); }
         
         .main-content { max-width: 1300px; width: 100%; margin: 20px auto 60px; padding: 0 24px; box-sizing: border-box; flex: 1; position: relative; z-index: 5; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; } 
-        
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr)); gap: 35px; animation: fadeInGrid 0.4s ease; } 
+        @keyframes fadeInGrid { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .empty-notice-box {
+            text-align: center; padding: 60px 20px; font-family: 'Comfortaa', sans-serif;
+            font-size: 18px; font-weight: 700; color: var(--emerald-dark);
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value));
+            border-radius: 32px; border: 1.5px solid var(--liquid-border); box-shadow: var(--liquid-shadow);
+        }
+
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
             transition: box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
@@ -208,7 +215,7 @@
             </div>
             <div class="right-nav-box">
                 <nav>
-                    <!-- CỐ ĐỊNH TĨNH CÁC DANH MỤC TRÊN MENU ĐỂ KHÔNG BỊ GIẬT NHẦY -->
+                    <!-- CỐ ĐỊNH TĨNH ĐÚNG 5 NÚT MENU THEO YÊU CẦU -->
                     <ul class="menu-categories" id="categoryMenuNav">
                         <li class="menu-item" data-cat="home" onclick="window.location.href='index.html'">Home</li>
                         <li class="menu-item" data-cat="Đồ len" onclick="window.location.href='category.html?cat=Đồ len'">Đồ len</li>
@@ -222,7 +229,6 @@
     </header>
 
     <div class="filter-section">
-        <h1 class="category-heading" id="categoryTitleText">Danh mục sản phẩm</h1>
         <div class="custom-dropdown" id="customSortDropdown">
             <div class="dropdown-trigger" onclick="toggleDropdown()"><span id="dropdownCurrentText">Sắp xếp: Mới nhất</span><span class="dropdown-arrow"></span></div>
             <ul class="dropdown-menu">
@@ -346,7 +352,7 @@
                             sheetIndex: idx, 
                             code: cleanCode, 
                             name: pName, 
-                            category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v) : 'KHÁC',
+                            category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'KHÁC',
                             img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
                             detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
                             desc: (row.c[5] && row.c[5].v) ? sanitizeText(row.c[5].v) : '', 
@@ -365,25 +371,24 @@
             }
         }
 
-        // Tự động tô sáng đúng nút menu đang active ngay lập tức mà không cần chờ render động
         function setActiveMenuState() {
-            const currentCat = getCurrentCategoryFromURL();
+            const currentCat = getCurrentCategoryFromURL().toLowerCase();
             const menuItems = document.querySelectorAll('#categoryMenuNav .menu-item');
             
             menuItems.forEach(item => {
                 item.classList.remove('active');
-                const itemCat = item.getAttribute('data-cat');
+                const itemCat = (item.getAttribute('data-cat') || '').toLowerCase();
                 if (!currentCat && itemCat === 'home') {
                     item.classList.add('active');
-                } else if (currentCat && itemCat && itemCat.toLowerCase() === currentCat.toLowerCase()) {
+                } else if (currentCat && itemCat === currentCat) {
                     item.classList.add('active');
                 }
             });
         }
 
+        // Lọc danh mục chuẩn xác và hiển thị thông báo nếu chưa có sản phẩm
         function renderCategoryProducts() {
             const currentCat = getCurrentCategoryFromURL();
-            document.getElementById('categoryTitleText').innerText = currentCat ? `Danh mục: ${currentCat}` : "Tất cả sản phẩm";
 
             let displayList = globalStoreData.products.filter(p => {
                 if (!currentCat) return true;
@@ -394,7 +399,14 @@
             else if (currentSortValue === 'price-desc') displayList.sort((a, b) => b.basePrice - a.basePrice);
             else displayList.sort((a, b) => a.sheetIndex - b.sheetIndex);
 
-            document.getElementById('product-list-view').innerHTML = displayList.map(p => {
+            const gridContainer = document.getElementById('product-list-view');
+
+            if (displayList.length === 0) {
+                gridContainer.innerHTML = `<div class="empty-notice-box">Shop đang chưa có sản phẩm nào ạ!</div>`;
+                return;
+            }
+
+            gridContainer.innerHTML = displayList.map(p => {
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                 return `
                     <div class="product-card" onclick="openProductDetailPopupByIndex(${p.sheetIndex})">
