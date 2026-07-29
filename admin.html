@@ -272,7 +272,7 @@
             } catch (e) { return []; }
         }
 
-        async function handleAdminLogin() {
+        function handleAdminLogin() {
             const pass = document.getElementById('adminPasswordInput').value;
             if(pass === 'admin123' || pass === 'votriskip') {
                 document.getElementById('loginScreen').style.display = 'none';
@@ -359,7 +359,6 @@
             document.getElementById('adminProductTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Không có sản phẩm nào.</td></tr>`;
         }
 
-        // HÀM XỬ LÝ KÉO THẢ (DRAG & DROP)
         function onDragStart(e, index) {
             draggedRowIndex = index;
             e.target.classList.add('dragging');
@@ -380,7 +379,6 @@
             draggedRowIndex = null;
         }
 
-        // ĐIỀU HƯỚNG VỊ TRÍ SẢN PHẨM BẰNG NÚT (Lên / Xuống)
         function moveProductOrder(index, direction) {
             const newIndex = index + direction;
             if (newIndex < 0 || newIndex >= adminProductsList.length) return;
@@ -392,7 +390,6 @@
             renderAdminProductTable();
         }
 
-        // QUẢN LÝ POPUP MODAL THÊM / SỬA
         function openProductModal(mode, index = null) {
             const overlay = document.getElementById('productModalOverlay');
             const titleEl = document.getElementById('modalTitleText');
@@ -442,7 +439,7 @@
             const editIndex = document.getElementById('editRowIndex').value;
             const updatedProd = {
                 code: document.getElementById('inputCode').value.trim(),
-                name: document.getElementById('inputName'].value.trim(),
+                name: document.getElementById('inputName').value.trim(),
                 category: document.getElementById('inputCategory').value,
                 img: document.getElementById('inputImg').value.trim(),
                 detailImgs: document.getElementById('inputDetailImgs').value.trim(),
