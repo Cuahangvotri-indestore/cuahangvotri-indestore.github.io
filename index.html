@@ -289,6 +289,28 @@
             }
         };
 
+        // 📊 HÀM TRACKING NHẬT KÝ TRUY CẬP VỀ GOOGLE SHEETS
+        function ghiNhatKyTruyCap(hanhDong, chiTiet) {
+            var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
+            var data = {
+                time: new Date().toLocaleString("vi-VN"),
+                device: navigator.userAgent.includes("Mobile") ? "Mobile" : "Desktop",
+                action: hanhDong,
+                detail: chiTiet
+            };
+            fetch(webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            }).catch(err => console.log("Lỗi ghi nhật ký:", err));
+        }
+
+        // Tự động tracking khi vào trang chủ
+        window.addEventListener("DOMContentLoaded", function() {
+            ghiNhatKyTruyCap("Truy_Cap_Trang", "Trang Chủ");
+        });
+
         function sanitizeText(str) {
             if (!str) return '';
             return String(str).replace(/["']/g, '').replace(/<[^>]*>?/gm, '');
@@ -442,12 +464,15 @@
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
                 
+                // Tracking khi khách bấm vào xem chi tiết sản phẩm
+                ghiNhatKyTruyCap("Click_SanPham", prod.name);
+
                 popupActiveProduct = prod; 
                 popupActiveImgIndex = 0;
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
-                const formLink = globalStoreData.config['Link_Form'] || "#"; // Lấy link Google Form từ sheet Cau_Hinh_Shop
+                const formLink = globalStoreData.config['Link_Form'] || "#";
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 const hasConfig = (prod.boCauHinh && sheetsPhuDataMatrix[prod.boCauHinh]);
 
