@@ -329,12 +329,9 @@
             }).catch(err => console.log("Lỗi ghi nhật ký:", err));
         }
 
-        // 🛡️ CHỐNG ĐÚP 100% CHO TRANG CHỦ (LƯU TRẠNG THÁI THEO SESSION)
+        // 📊 GHI NHẬN MỖI KHI F5 RELOAD HOẶC BẤM VỀ TRANG CHỦ
         window.addEventListener("DOMContentLoaded", function() {
-            if (!sessionStorage.getItem('visited_home_unique')) {
-                sessionStorage.setItem('visited_home_unique', 'true');
-                ghiNhatKyTruyCap("Truy_Cap_Trang", "Trang Chủ");
-            }
+            ghiNhatKyTruyCap("Truy_Cap_Trang", "Trang Chủ");
         });
 
         function sanitizeText(str) {
