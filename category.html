@@ -211,15 +211,15 @@
     <header>
         <div class="nav-container">
             <div class="logo-box">
-                <div class="logo-circle" id="shop-logo-box" onclick="window.location.href='index.html'"></div>
+                <div class="logo-circle" id="shop-logo-box" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')"></div>
             </div>
             <div class="right-nav-box">
                 <nav>
                     <ul class="menu-categories" id="categoryMenuNav">
-                        <li class="menu-item" onclick="window.location.href='index.html'">Home</li>
-                        <li class="menu-item" onclick="window.location.href='category.html?cat=Đồ len'">Đồ len</li>
-                        <li class="menu-item" onclick="window.location.href='category.html?cat=In ấn'">In ấn</li>
-                        <li class="menu-item" onclick="window.location.href='category.html?cat=Giấy'">Giấy</li>
+                        <li class="menu-item" data-cat="home" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')">Home</li>
+                        <li class="menu-item" data-cat="Đồ len" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: Đồ len', 'category.html?cat=Đồ len')">Đồ len</li>
+                        <li class="menu-item" data-cat="In ấn" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: In ấn', 'category.html?cat=In ấn')">In ấn</li>
+                        <li class="menu-item" data-cat="Giấy" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: Giấy', 'category.html?cat=Giấy')">Giấy</li>
                     </ul>
                 </nav>
             </div>
@@ -305,7 +305,7 @@
             return getVisitorId() + " (" + deviceName + ")";
         }
 
-        function ghiNhatKyTruyCap(hanhDong, chiTiet) {
+        function ghiNhatKyTruyCap(hanhDong, chiTiet, callback) {
             var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
             var data = {
                 time: new Date().toLocaleString("vi-VN"),
@@ -318,7 +318,19 @@
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
-            }).catch(err => console.log("Lỗi ghi nhật ký:", err));
+            }).then(() => {
+                if (callback) callback();
+            }).catch(err => {
+                console.log("Lỗi ghi nhật ký:", err);
+                if (callback) callback();
+            });
+        }
+
+        function trackAndNavigate(action, detail, url) {
+            ghiNhatKyTruyCap(action, detail, function() {
+                window.location.href = url;
+            });
+            setTimeout(function() { window.location.href = url; }, 400);
         }
 
         function getCurrentCategoryFromURL() {
@@ -326,10 +338,10 @@
             return urlParams.get('cat') ? decodeURIComponent(urlParams.get('cat')).trim() : 'Chung';
         }
 
-        // 🛡️ CHỐNG ĐÚP 100% CHO TRANG DANH MỤC (DÙNG ĐỊNH DANH SESSION RIÊNG CHO TỪNG TÊN DANH MỤC)
+        // 🛡️ CHỐNG ĐÚP 100% VÀ ĐẾM ĐÚNG EVENT KHI VÀO TRANG DANH MỤC
         window.addEventListener("DOMContentLoaded", function() {
             const currentCat = getCurrentCategoryFromURL();
-            const sessionKey = 'tracked_cat_unique_' + currentCat;
+            const sessionKey = 'tracked_cat_event_' + currentCat;
             if (!sessionStorage.getItem(sessionKey)) {
                 sessionStorage.setItem(sessionKey, 'true');
                 ghiNhatKyTruyCap("Truy_Cap_Trang", "Danh mục: " + currentCat);
