@@ -331,9 +331,12 @@
             }).catch(err => console.log("Lỗi ghi nhật ký:", err));
         }
 
-        // Tự động tracking khi vào trang chủ
+        // 🛡️ CHẶN TÍNH LƯỢT TRUY CẬP ẢO KHI RELOAD TRANG TRONG CÙNG MỘT PHIÊN
         window.addEventListener("DOMContentLoaded", function() {
-            ghiNhatKyTruyCap("Truy_Cap_Trang", "Trang Chủ");
+            if (!sessionStorage.getItem('visited_home_session')) {
+                sessionStorage.setItem('visited_home_session', 'true');
+                ghiNhatKyTruyCap("Truy_Cap_Trang", "Trang Chủ");
+            }
         });
 
         function sanitizeText(str) {
