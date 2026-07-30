@@ -60,6 +60,7 @@
         .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); position: sticky; top: 0; z-index: 2; }
 
         .badge-moi { background: #ea501f; color: #fff; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
+        .badge-soluong { background: #e3effd; color: #0052cc; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; display: inline-block; }
 
         .btn-sm { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--emerald-dark); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .btn-sm:hover { background: var(--emerald-dark); color: #fff; }
@@ -182,7 +183,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách Form Request từ khách hàng</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ tự động từ sheet <b>Form Responses</b>. Nhãn "Mới" hiển thị nếu request gửi trong vòng 24 giờ.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ từ sheet <b>Form Responses</b>. Tổng số lượng là tổng 3 cột số lượng trong form.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
@@ -194,11 +195,12 @@
                                 <th style="width: 170px;">Thời gian</th>
                                 <th>Thông tin khách hàng (Cột B)</th>
                                 <th>Tên dịch vụ (Cột C)</th>
-                                <th style="width: 120px; text-align: right;">Thao tác</th>
+                                <th style="width: 130px; text-align: center;">Tổng số lượng đặt</th>
+                                <th style="width: 150px; text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="adminRequestsTableBody">
-                            <tr><td colspan="5" style="text-align: center;">Đang đồng bộ dữ liệu Form Request từ Google Sheets...</td></tr>
+                            <tr><td colspan="6" style="text-align: center;">Đang đồng bộ dữ liệu Form Request từ Google Sheets...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -399,7 +401,7 @@
             renderConfigList();
         }
 
-        // ĐỒNG BỘ FORM RESPONSES: CỘT B (INFO KHÁCH), CỘT C (TÊN DỊCH VỤ), KIỂM TRA < 24H ĐỂ HIỂN THỊ NHÃN MỚI
+        // ĐỒNG BỘ FORM RESPONSES: CỘT B (INFO), CỘT C (DỊCH VỤ), SUM 3 CỘT SỐ LƯỢNG (CỘT E, F, G TƯƠNG ƯNG INDEX 4, 5, 6)
         async function loadRequestsData() {
             const requestRows = await fetchSheetRows('Form Responses');
             adminRequestsList = [];
@@ -440,14 +442,18 @@
                         }
                     }
 
-                    // Check nếu thời gian < 24 giờ thì gán nhãn "Mới"
                     if (sortTimestamp > 0 && (now - sortTimestamp <= twentyFourHours)) {
                         isNew = true;
                     }
 
-                    // Cột B (index 1): Thông tin khách hàng, Cột C (index 2): Tên dịch vụ
                     let customerInfo = row.c[1] && row.c[1].v ? String(row.c[1].v).trim() : '';
                     let serviceName = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : 'Không có tên dịch vụ';
+
+                    // Tự động sum 3 cột số lượng (index 4, 5, 6 tương ứng cột E, F, G trong sheet)
+                    let qty1 = row.c[4] && row.c[4].v ? parseFloat(row.c[4].v) || 0 : 0;
+                    let qty2 = row.c[5] && row.c[5].v ? parseFloat(row.c[5].v) || 0 : 0;
+                    let qty3 = row.c[6] && row.c[6].v ? parseFloat(row.c[6].v) || 0 : 0;
+                    let totalQuantity = qty1 + qty2 + qty3;
 
                     if (customerInfo.toLowerCase() === 'tên khách hàng' || String(rawTime).toLowerCase() === 'timestamp') return;
 
@@ -456,6 +462,7 @@
                         timestamp: sortTimestamp,
                         customer: customerInfo,
                         service: serviceName,
+                        totalQty: totalQuantity,
                         isNew: isNew
                     });
                 }
@@ -475,25 +482,28 @@
                 rowsHTML += `
                     <tr>
                         <td style="text-align: center; font-weight: 700; color: var(--emerald-dark);">${idx + 1}</td>
-                        <td>${req.timeStr} ${badgeHTML}</td>
+                        <td>${req.timeStr}</td>
                         <td><b>${req.customer}</b></td>
-                        <td style="max-width: 350px; overflow: hidden; text-overflow: ellipsis;" title="${req.service}">${req.service}</td>
-                        <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; background: #fff;">
+                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;" title="${req.service}">${req.service}</td>
+                        <td style="text-align: center;"><span class="badge-soluong">${req.totalQty > 0 ? req.totalQty : 0}</span></td>
+                        <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; align-items: center; background: #fff;">
+                            ${badgeHTML}
                             <button class="btn-sm btn-copy" onclick="copyRequestData(${idx})" title="Sao chép thông tin dòng này"><i class="fa-regular fa-copy"></i> Copy</button>
                         </td>
                     </tr>
                 `;
             });
-            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="5" style="text-align:center;">Chưa có phản hồi nào từ Google Form (Sheet Form Responses đang trống).</td></tr>`;
+            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="6" style="text-align:center;">Chưa có phản hồi nào từ Google Form (Sheet Form Responses đang trống).</td></tr>`;
         }
 
-        // NÚT COPY CHỈ COPY CÁC CỘT CÓ CHỨA THÔNG TIN THỰC TẾ
+        // NÚT COPY GOM ĐÚNG CÁC CỘT CÓ CHỨA THÔNG TIN
         function copyRequestData(idx) {
             const req = adminRequestsList[idx];
             let partsToCopy = [];
             if (req.timeStr) partsToCopy.push(req.timeStr);
             if (req.customer) partsToCopy.push(req.customer);
             if (req.service) partsToCopy.push(req.service);
+            if (req.totalQty >= 0) partsToCopy.push(`SL: ${req.totalQty}`);
 
             const rowString = partsToCopy.join('\t');
             navigator.clipboard.writeText(rowString).then(() => {
