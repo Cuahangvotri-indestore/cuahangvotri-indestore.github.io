@@ -183,7 +183,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách Form Request từ khách hàng</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ từ sheet <b>Form Responses</b>. Tổng số lượng là tổng 3 cột số lượng trong form.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Tổng số lượng tự động tính tổng từ các cột <b>N, T, Y</b> trong Google Sheets.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
@@ -195,7 +195,7 @@
                                 <th style="width: 170px;">Thời gian</th>
                                 <th>Thông tin khách hàng (Cột B)</th>
                                 <th>Tên dịch vụ (Cột C)</th>
-                                <th style="width: 130px; text-align: center;">Tổng số lượng đặt</th>
+                                <th style="width: 140px; text-align: center;">Tổng số lượng (N+T+Y)</th>
                                 <th style="width: 150px; text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
@@ -401,7 +401,7 @@
             renderConfigList();
         }
 
-        // ĐỒNG BỘ FORM RESPONSES: CỘT B (INFO), CỘT C (DỊCH VỤ), SUM 3 CỘT SỐ LƯỢNG (CỘT E, F, G TƯƠNG ƯNG INDEX 4, 5, 6)
+        // HÀM MAPPING VÀ SUM 3 CỘT N, T, Y (Index tương ứng trong Sheets)
         async function loadRequestsData() {
             const requestRows = await fetchSheetRows('Form Responses');
             adminRequestsList = [];
@@ -449,11 +449,11 @@
                     let customerInfo = row.c[1] && row.c[1].v ? String(row.c[1].v).trim() : '';
                     let serviceName = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : 'Không có tên dịch vụ';
 
-                    // Tự động sum 3 cột số lượng (index 4, 5, 6 tương ứng cột E, F, G trong sheet)
-                    let qty1 = row.c[4] && row.c[4].v ? parseFloat(row.c[4].v) || 0 : 0;
-                    let qty2 = row.c[5] && row.c[5].v ? parseFloat(row.c[5].v) || 0 : 0;
-                    let qty3 = row.c[6] && row.c[6].v ? parseFloat(row.c[6].v) || 0 : 0;
-                    let totalQuantity = qty1 + qty2 + qty3;
+                    // Tính tổng 3 cột N (index 13), T (index 19), Y (index 24)
+                    let valN = row.c[13] && row.c[13].v ? parseFloat(row.c[13].v) || 0 : 0;
+                    let valT = row.c[19] && row.c[19].v ? parseFloat(row.c[19].v) || 0 : 0;
+                    let valY = row.c[24] && row.c[24].v ? parseFloat(row.c[24].v) || 0 : 0;
+                    let totalQuantity = valN + valT + valY;
 
                     if (customerInfo.toLowerCase() === 'tên khách hàng' || String(rawTime).toLowerCase() === 'timestamp') return;
 
@@ -485,7 +485,7 @@
                         <td>${req.timeStr}</td>
                         <td><b>${req.customer}</b></td>
                         <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;" title="${req.service}">${req.service}</td>
-                        <td style="text-align: center;"><span class="badge-soluong">${req.totalQty > 0 ? req.totalQty : 0}</span></td>
+                        <td style="text-align: center;"><span class="badge-soluong">${req.totalQty}</span></td>
                         <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; align-items: center; background: #fff;">
                             ${badgeHTML}
                             <button class="btn-sm btn-copy" onclick="copyRequestData(${idx})" title="Sao chép thông tin dòng này"><i class="fa-regular fa-copy"></i> Copy</button>
@@ -496,14 +496,13 @@
             document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="6" style="text-align:center;">Chưa có phản hồi nào từ Google Form (Sheet Form Responses đang trống).</td></tr>`;
         }
 
-        // NÚT COPY GOM ĐÚNG CÁC CỘT CÓ CHỨA THÔNG TIN
         function copyRequestData(idx) {
             const req = adminRequestsList[idx];
             let partsToCopy = [];
             if (req.timeStr) partsToCopy.push(req.timeStr);
             if (req.customer) partsToCopy.push(req.customer);
             if (req.service) partsToCopy.push(req.service);
-            if (req.totalQty >= 0) partsToCopy.push(`SL: ${req.totalQty}`);
+            partsToCopy.push(`SL: ${req.totalQty}`);
 
             const rowString = partsToCopy.join('\t');
             navigator.clipboard.writeText(rowString).then(() => {
@@ -650,7 +649,7 @@
                 name: document.getElementById('inputName').value.trim(),
                 category: document.getElementById('inputCategory').value,
                 img: document.getElementById('inputImg').value.trim(),
-                detailImgs: document.getElementById('inputDetailImgs').value.trim(),
+                    detailImgs: document.getElementById('inputDetailImgs').value.trim(),
                 desc: document.getElementById('inputDesc').value.trim(),
                 price: parseFloat(document.getElementById('inputPrice').value) || 0,
                 shopee: document.getElementById('inputShopee').value.trim(),
