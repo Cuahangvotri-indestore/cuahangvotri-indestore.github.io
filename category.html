@@ -211,15 +211,15 @@
     <header>
         <div class="nav-container">
             <div class="logo-box">
-                <div class="logo-circle" id="shop-logo-box" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')"></div>
+                <div class="logo-circle" id="shop-logo-box" onclick="window.location.href='index.html'"></div>
             </div>
             <div class="right-nav-box">
                 <nav>
                     <ul class="menu-categories" id="categoryMenuNav">
-                        <li class="menu-item" data-cat="home" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')">Home</li>
-                        <li class="menu-item" data-cat="Đồ len" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: Đồ len', 'category.html?cat=Đồ len')">Đồ len</li>
-                        <li class="menu-item" data-cat="In ấn" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: In ấn', 'category.html?cat=In ấn')">In ấn</li>
-                        <li class="menu-item" data-cat="Giấy" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: Giấy', 'category.html?cat=Giấy')">Giấy</li>
+                        <li class="menu-item" onclick="window.location.href='index.html'">Home</li>
+                        <li class="menu-item" onclick="window.location.href='category.html?cat=Đồ len'">Đồ len</li>
+                        <li class="menu-item" onclick="window.location.href='category.html?cat=In ấn'">In ấn</li>
+                        <li class="menu-item" onclick="window.location.href='category.html?cat=Giấy'">Giấy</li>
                     </ul>
                 </nav>
             </div>
@@ -307,7 +307,7 @@
         }
 
         // 📊 HÀM GỬI TRACKING LÊN GOOGLE SHEETS
-        function ghiNhatKyTruyCap(hanhDong, chiTiet, callback) {
+        function ghiNhatKyTruyCap(hanhDong, chiTiet) {
             var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
             var data = {
                 time: new Date().toLocaleString("vi-VN"),
@@ -320,26 +320,22 @@
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
-            }).then(() => {
-                if (callback) callback();
-            }).catch(err => {
-                console.log("Lỗi ghi nhật ký:", err);
-                if (callback) callback();
-            });
+            }).catch(err => console.log("Lỗi ghi nhật ký:", err));
         }
 
-        // Hàm click chuyển trang mượt mà có ghi log
-        function trackAndNavigate(action, detail, url) {
-            ghiNhatKyTruyCap(action, detail, function() {
-                window.location.href = url;
-            });
-            setTimeout(function() { window.location.href = url; }, 400);
+        function getCurrentCategoryFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('cat') ? decodeURIComponent(urlParams.get('cat')).trim() : 'Chung';
         }
 
-        // 🛡️ CHỈ GHI NHẬN 1 LẦN DUY NHẤT KHI VÀO TRANG DANH MỤC (ĐÃ FIX LỖI ĐÚP EVENT)
+        // 🛡️ CHỈ GHI NHẬN TRUY CẬP TRANG DANH MỤC ĐÚNG 1 LẦN DUY NHẤT (CHỐNG ĐÚP 100%)
         window.addEventListener("DOMContentLoaded", function() {
-            const currentCat = getCurrentCategoryFromURL() || "Chung";
-            ghiNhatKyTruyCap("Truy_Cap_Trang", "Danh mục: " + currentCat);
+            const currentCat = getCurrentCategoryFromURL();
+            const sessionKey = 'tracked_cat_' + currentCat;
+            if (!sessionStorage.getItem(sessionKey)) {
+                sessionStorage.setItem(sessionKey, 'true');
+                ghiNhatKyTruyCap("Truy_Cap_Trang", "Danh mục: " + currentCat);
+            }
             initCategoryPage();
         });
 
@@ -375,11 +371,6 @@
                 const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}`);
                 const text = await response.text(); return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
             } catch (e) { return []; }
-        }
-
-        function getCurrentCategoryFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('cat') ? decodeURIComponent(urlParams.get('cat')).trim() : '';
         }
 
         async function initCategoryPage() {
@@ -438,9 +429,9 @@
             menuItems.forEach(item => {
                 item.classList.remove('active');
                 const itemCat = (item.getAttribute('data-cat') || '').toLowerCase();
-                if (!currentCat && itemCat === 'home') {
+                if (currentCat === 'chung' && itemCat === 'home') {
                     item.classList.add('active');
-                } else if (currentCat && itemCat === currentCat) {
+                } else if (itemCat === currentCat) {
                     item.classList.add('active');
                 }
             });
@@ -450,7 +441,7 @@
             const currentCat = getCurrentCategoryFromURL();
 
             let displayList = globalStoreData.products.filter(p => {
-                if (!currentCat) return true;
+                if (currentCat === 'chung') return true;
                 return p.category.toLowerCase() === currentCat.toLowerCase();
             });
 
@@ -492,7 +483,6 @@
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
                 
-                // Tracking khi khách click xem chi tiết sản phẩm ở trang danh mục
                 ghiNhatKyTruyCap("Click_SanPham", prod.name);
 
                 popupActiveProduct = prod; 
@@ -512,7 +502,7 @@
                 const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
                 let mainButtonHTML = "";
                 if (hasShopeeLink) {
-                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
+                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
                 }
 
                 scrollableBody.innerHTML = `
@@ -541,8 +531,8 @@
                         ${mainButtonHTML}
                         ${(isPreorder || hasConfig) ? `
                         <div class="btn-action-sub-grid">
-                            <a class="btn-action-sub" href="${formLink}" target="_blank" onclick="ghiNhatKyTruyCap('Xin_Info', '${prod.name}')"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
-                            <a class="btn-action-sub" href="${shopZalo}" target="_blank" onclick="ghiNhatKyTruyCap('Tu_Van_Zalo', '${prod.name}')"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                            <a class="btn-action-sub" href="${formLink}" target="_blank"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
+                            <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
                         </div>` : ''}
                     </div>
                 `;
