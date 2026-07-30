@@ -444,7 +444,7 @@
             evt.currentTarget.classList.add('active');
         }
 
-        // ================= HÀM XỬ LÝ NGÀY THÁNG VÀ THỐNG KÊ CHI TIẾT TỪ Nhat_Ky_Truy_Cap =================
+        // ================= HÀM XỬ LÝ NGÀY THÁNG VÀ THỐNG KÊ LOG CHUẨN XÁC =================
         function parseLogDate(timeStr) {
             if (!timeStr) return null;
             let str = String(timeStr).trim();
@@ -454,7 +454,7 @@
                     return new Date(parts[0], parts[1], parts[2]);
                 }
             } else {
-                // Định dạng: 19:27:56 29/6/2026
+                // Định dạng: 19:27:56 30/7/2026 hoặc tương tự
                 let parts = str.split(' ');
                 for (let p of parts) {
                     if (p.includes('/')) {
@@ -475,6 +475,7 @@
             const logRows = await fetchSheetRows(SHOP_SPREADSHEET_ID, LOG_SHEET_NAME);
             adminStatsList = [];
 
+            // Lấy thời gian hiện tại (Hôm nay: 30/7/2026)
             let today = new Date();
             let currentDay = today.getDate();
             let currentMonth = today.getMonth();
@@ -486,13 +487,15 @@
             let todayInteractions = 0, monthInteractions = 0;
 
             logRows.forEach((row) => {
-                if (row && row.c && row.c[0]) {
+                // Kiểm tra dòng dữ liệu tồn tại ở cột 0 hoặc cột 2
+                if (row && row.c && (row.c[0] || row.c[2])) {
                     let timeVal = row.c[0] && row.c[0].v ? String(row.c[0].v) : '';
                     let deviceVal = row.c[1] && row.c[1].v ? String(row.c[1].v) : 'Khách vãng lai';
                     let actionVal = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : '';
                     let detailVal = row.c[3] && row.c[3].v ? String(row.c[3].v) : '';
 
-                    if (actionVal.toLowerCase() === 'hanh_dong' || actionVal.toLowerCase() === 'hành động' || actionVal.toLowerCase() === 'thời gian' || timeVal.toLowerCase() === 'thời gian') return;
+                    // Bỏ qua dòng tiêu đề
+                    if (actionVal.toLowerCase() === 'hanh_dong' || actionVal.toLowerCase() === 'hành động' || actionVal.toLowerCase() === 'th thời gian' || timeVal.toLowerCase() === 'thời gian' || timeVal.toLowerCase() === '5') return;
 
                     adminStatsList.push({
                         time: timeVal,
@@ -514,6 +517,7 @@
                         }
                     }
 
+                    // Trích xuất ID khách (Ví dụ: "Khách_2650" từ chuỗi thiết bị)
                     let userId = deviceVal.split(' ')[0] || deviceVal;
 
                     if (actionVal === 'Truy_Cap_Trang') {
@@ -531,6 +535,7 @@
 
             adminStatsList.reverse();
 
+            // Hiển thị số liệu lên giao diện
             document.getElementById('todayViews').innerText = todayViews;
             document.getElementById('todayUsers').innerText = todayUsersSet.size;
             document.getElementById('todayProducts').innerText = todayProducts;
