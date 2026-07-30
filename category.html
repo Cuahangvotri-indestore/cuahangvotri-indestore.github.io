@@ -217,9 +217,9 @@
                 <nav>
                     <ul class="menu-categories" id="categoryMenuNav">
                         <li class="menu-item" data-cat="home" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')">Home</li>
-                        <li class="menu-item" data-cat="Đồ len" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục Đồ len', 'category.html?cat=Đồ len')">Đồ len</li>
-                        <li class="menu-item" data-cat="In ấn" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục In ấn', 'category.html?cat=In ấn')">In ấn</li>
-                        <li class="menu-item" data-cat="Giấy" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục Giấy', 'category.html?cat=Giấy')">Giấy</li>
+                        <li class="menu-item" data-cat="Đồ len" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: Đồ len', 'category.html?cat=Đồ len')">Đồ len</li>
+                        <li class="menu-item" data-cat="In ấn" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: In ấn', 'category.html?cat=In ấn')">In ấn</li>
+                        <li class="menu-item" data-cat="Giấy" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: Giấy', 'category.html?cat=Giấy')">Giấy</li>
                     </ul>
                 </nav>
             </div>
@@ -336,10 +336,11 @@
             setTimeout(function() { window.location.href = url; }, 400);
         }
 
-        // Tự động tracking khi vào trang danh mục
+        // 🛡️ CHỈ GHI NHẬN 1 LẦN DUY NHẤT KHI VÀO TRANG DANH MỤC (ĐÃ FIX LỖI ĐÚP EVENT)
         window.addEventListener("DOMContentLoaded", function() {
-            const currentCat = getCurrentCategoryFromURL() || "Danh Mục Chung";
+            const currentCat = getCurrentCategoryFromURL() || "Chung";
             ghiNhatKyTruyCap("Truy_Cap_Trang", "Danh mục: " + currentCat);
+            initCategoryPage();
         });
 
         function sanitizeText(str) {
@@ -677,8 +678,6 @@
                     .replace(/In 2 Mat/g, 'In 2 mặt')
                     .replace(/Giay/g, 'Giấy'); 
         }
-        
-        window.onload = initCategoryPage;
     </script>
 </body>
 </html>
