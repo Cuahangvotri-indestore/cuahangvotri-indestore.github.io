@@ -211,15 +211,15 @@
     <header>
         <div class="nav-container">
             <div class="logo-box">
-                <div class="logo-circle" id="shop-logo-box" onclick="window.location.href='index.html'"></div>
+                <div class="logo-circle" id="shop-logo-box" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')"></div>
             </div>
             <div class="right-nav-box">
                 <nav>
                     <ul class="menu-categories" id="categoryMenuNav">
-                        <li class="menu-item" data-cat="home" onclick="window.location.href='index.html'">Home</li>
-                        <li class="menu-item" data-cat="Đồ len" onclick="window.location.href='category.html?cat=Đồ len'">Đồ len</li>
-                        <li class="menu-item" data-cat="In ấn" onclick="window.location.href='category.html?cat=In ấn'">In ấn</li>
-                        <li class="menu-item" data-cat="Giấy" onclick="window.location.href='category.html?cat=Giấy'">Giấy</li>
+                        <li class="menu-item" data-cat="home" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')">Home</li>
+                        <li class="menu-item" data-cat="Đồ len" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục Đồ len', 'category.html?cat=Đồ len')">Đồ len</li>
+                        <li class="menu-item" data-cat="In ấn" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục In ấn', 'category.html?cat=In ấn')">In ấn</li>
+                        <li class="menu-item" data-cat="Giấy" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục Giấy', 'category.html?cat=Giấy')">Giấy</li>
                     </ul>
                 </nav>
             </div>
@@ -280,6 +280,67 @@
                 ]
             }
         };
+
+        // 🆔 HỆ THỐNG ĐỊNH DANH KHÁCH HÀNG & THIẾT BỊ
+        function getVisitorId() {
+            let vid = localStorage.getItem('shop_visitor_id');
+            if (!vid) {
+                vid = 'Khách_' + Math.floor(Math.random() * 9000 + 1000);
+                localStorage.setItem('shop_visitor_id', vid);
+            }
+            return vid;
+        }
+
+        function getDetailedDevice() {
+            const ua = navigator.userAgent;
+            let deviceName = "Desktop";
+            if (/iphone|ipad|ipod/i.test(ua)) {
+                deviceName = "iPhone / iOS";
+            } else if (/android/i.test(ua)) {
+                deviceName = "Android Phone";
+            } else if (/macintosh|mac os/i.test(ua)) {
+                deviceName = "Mac / Safari";
+            } else if (/windows/i.test(ua)) {
+                deviceName = "Windows PC";
+            }
+            return getVisitorId() + " (" + deviceName + ")";
+        }
+
+        // 📊 HÀM GỬI TRACKING LÊN GOOGLE SHEETS
+        function ghiNhatKyTruyCap(hanhDong, chiTiet, callback) {
+            var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
+            var data = {
+                time: new Date().toLocaleString("vi-VN"),
+                device: getDetailedDevice(),
+                action: hanhDong,
+                detail: chiTiet
+            };
+            fetch(webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            }).then(() => {
+                if (callback) callback();
+            }).catch(err => {
+                console.log("Lỗi ghi nhật ký:", err);
+                if (callback) callback();
+            });
+        }
+
+        // Hàm click chuyển trang mượt mà có ghi log
+        function trackAndNavigate(action, detail, url) {
+            ghiNhatKyTruyCap(action, detail, function() {
+                window.location.href = url;
+            });
+            setTimeout(function() { window.location.href = url; }, 400);
+        }
+
+        // Tự động tracking khi vào trang danh mục
+        window.addEventListener("DOMContentLoaded", function() {
+            const currentCat = getCurrentCategoryFromURL() || "Danh Mục Chung";
+            ghiNhatKyTruyCap("Truy_Cap_Trang", "Danh mục: " + currentCat);
+        });
 
         function sanitizeText(str) {
             if (!str) return '';
@@ -430,12 +491,15 @@
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
                 
+                // Tracking khi khách click xem chi tiết sản phẩm ở trang danh mục
+                ghiNhatKyTruyCap("Click_SanPham", prod.name);
+
                 popupActiveProduct = prod; 
                 popupActiveImgIndex = 0;
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
-                const formLink = globalStoreData.config['Link_Form'] || "#"; // Lấy link Google Form từ sheet Cau_Hinh_Shop
+                const formLink = globalStoreData.config['Link_Form'] || "#"; 
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 const hasConfig = (prod.boCauHinh && sheetsPhuDataMatrix[prod.boCauHinh]);
 
@@ -447,7 +511,7 @@
                 const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
                 let mainButtonHTML = "";
                 if (hasShopeeLink) {
-                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
+                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
                 }
 
                 scrollableBody.innerHTML = `
@@ -476,8 +540,8 @@
                         ${mainButtonHTML}
                         ${(isPreorder || hasConfig) ? `
                         <div class="btn-action-sub-grid">
-                            <a class="btn-action-sub" href="${formLink}" target="_blank"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
-                            <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                            <a class="btn-action-sub" href="${formLink}" target="_blank" onclick="ghiNhatKyTruyCap('Xin_Info', '${prod.name}')"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
+                            <a class="btn-action-sub" href="${shopZalo}" target="_blank" onclick="ghiNhatKyTruyCap('Tu_Van_Zalo', '${prod.name}')"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
                         </div>` : ''}
                     </div>
                 `;
