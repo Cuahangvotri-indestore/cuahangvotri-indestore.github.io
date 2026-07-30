@@ -191,7 +191,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách Form Request từ khách hàng</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ tự động từ sheet <b>Form_Requests</b> trên Google Sheets.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ tự động từ sheet <b>Form Responses</b> trên Google Sheets.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
@@ -202,14 +202,13 @@
                                 <th>STT</th>
                                 <th>Thời gian</th>
                                 <th>Tên khách hàng</th>
-                                <th>Số điện thoại / Zalo</th>
+                                <th>Thông tin liên hệ / SĐT</th>
                                 <th>Nội dung yêu cầu / Ghi chú</th>
-                                <th>Trạng thái xử lý</th>
                                 <th style="text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="adminRequestsTableBody">
-                            <tr><td colspan="7" style="text-align: center;">Đang đồng bộ dữ liệu Form Request từ Google Sheets...</td></tr>
+                            <tr><td colspan="6" style="text-align: center;">Đang đồng bộ dữ liệu Form Request từ Google Sheets...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -333,7 +332,7 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}`);
+                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${encodeURIComponent(sheetName)}`);
                 const text = await response.text(); return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
             } catch (e) { return []; }
         }
@@ -410,8 +409,9 @@
             renderConfigList();
         }
 
+        // TRỎ CHUẨN XÁC VÀO SHEET 'Form Responses' CỦA GOOGLE FORM
         async function loadRequestsData() {
-            const requestRows = await fetchSheetRows('Form_Requests');
+            const requestRows = await fetchSheetRows('Form Responses');
             adminRequestsList = [];
             
             requestRows.forEach((row, idx) => {
@@ -420,16 +420,14 @@
                     let customerName = row.c[1] && row.c[1].v ? row.c[1].v : 'Khách hàng';
                     let phone = row.c[2] && row.c[2].v ? row.c[2].v : '';
                     let content = row.c[3] && row.c[3].v ? row.c[3].v : 'Không có nội dung';
-                    let status = row.c[4] && row.c[4].v ? row.c[4].v : 'Mới tiếp nhận';
 
-                    if (String(customerName).toLowerCase() === 'tên khách hàng' || String(timestamp).toLowerCase() === 'thời gian') return;
+                    if (String(customerName).toLowerCase() === 'tên khách hàng' || String(timestamp).toLowerCase() === 'timestamp') return;
 
                     adminRequestsList.push({
                         time: timestamp,
                         name: customerName,
                         phone: phone,
-                        content: content,
-                        status: status
+                        content: content
                     });
                 }
             });
@@ -446,20 +444,19 @@
                         <td>${req.time}</td>
                         <td><b>${req.name}</b></td>
                         <td>${req.phone}</td>
-                        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;" title="${req.content}">${req.content}</td>
-                        <td><span class="badge-status-admin status-hien">${req.status}</span></td>
+                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;" title="${req.content}">${req.content}</td>
                         <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; background: #fff;">
                             <button class="btn-sm btn-copy" onclick="copyRequestData(${idx})" title="Sao chép nội dung request"><i class="fa-regular fa-copy"></i> Copy</button>
                         </td>
                     </tr>
                 `;
             });
-            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="7" style="text-align:center;">Chưa có form request nào từ khách hàng (Sheet Form_Requests đang trống).</td></tr>`;
+            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="6" style="text-align:center;">Chưa có phản hồi nào từ Google Form (Sheet Form Responses đang trống).</td></tr>`;
         }
 
         function copyRequestData(idx) {
             const req = adminRequestsList[idx];
-            const rowString = `${req.time}\t${req.name}\t${req.phone}\t${req.content}\t${req.status}`;
+            const rowString = `${req.time}\t${req.name}\t${req.phone}\t${req.content}`;
             navigator.clipboard.writeText(rowString).then(() => {
                 showToast(`Đã copy request của khách hàng "${req.name}"!`);
             }).catch(err => {
