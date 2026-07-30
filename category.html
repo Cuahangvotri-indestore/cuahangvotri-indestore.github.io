@@ -215,7 +215,6 @@
             </div>
             <div class="right-nav-box">
                 <nav>
-                    <!-- MENU 4 DANH MỤC GỌN GÀNG (ĐÃ ẨN IN 3D) -->
                     <ul class="menu-categories" id="categoryMenuNav">
                         <li class="menu-item" data-cat="home" onclick="window.location.href='index.html'">Home</li>
                         <li class="menu-item" data-cat="Đồ len" onclick="window.location.href='category.html?cat=Đồ len'">Đồ len</li>
@@ -436,6 +435,7 @@
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
+                const formLink = globalStoreData.config['Link_Form'] || "#"; // Lấy link Google Form từ sheet Cau_Hinh_Shop
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 const hasConfig = (prod.boCauHinh && sheetsPhuDataMatrix[prod.boCauHinh]);
 
@@ -476,7 +476,7 @@
                         ${mainButtonHTML}
                         ${(isPreorder || hasConfig) ? `
                         <div class="btn-action-sub-grid">
-                            <button class="btn-action-sub" onclick="alert('Tính năng gửi thông tin yêu cầu thiết kế sẽ ra mắt ở Sprint sau nha PO!')"><i class="fa-solid fa-file-pen"></i> Xin tí info</button>
+                            <a class="btn-action-sub" href="${formLink}" target="_blank"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
                             <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
                         </div>` : ''}
                     </div>
