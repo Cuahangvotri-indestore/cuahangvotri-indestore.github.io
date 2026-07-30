@@ -444,7 +444,7 @@
             evt.currentTarget.classList.add('active');
         }
 
-        // ================= HÀM XỬ LÝ NGÀY THÁNG VÀ THỐNG KÊ CHI TIẾT =================
+        // ================= HÀM XỬ LÝ NGÀY THÁNG VÀ THỐNG KÊ CHI TIẾT TỪ Nhat_Ky_Truy_Cap =================
         function parseLogDate(timeStr) {
             if (!timeStr) return null;
             let str = String(timeStr).trim();
@@ -454,7 +454,7 @@
                     return new Date(parts[0], parts[1], parts[2]);
                 }
             } else {
-                // Định dạng: 19:27:56 29/6/2026 hoặc tương tự
+                // Định dạng: 19:27:56 29/6/2026
                 let parts = str.split(' ');
                 for (let p of parts) {
                     if (p.includes('/')) {
@@ -486,13 +486,13 @@
             let todayInteractions = 0, monthInteractions = 0;
 
             logRows.forEach((row) => {
-                if (row && row.c && row.c[2]) {
+                if (row && row.c && row.c[0]) {
                     let timeVal = row.c[0] && row.c[0].v ? String(row.c[0].v) : '';
                     let deviceVal = row.c[1] && row.c[1].v ? String(row.c[1].v) : 'Khách vãng lai';
                     let actionVal = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : '';
                     let detailVal = row.c[3] && row.c[3].v ? String(row.c[3].v) : '';
 
-                    if (actionVal.toLowerCase() === 'hanh_dong' || actionVal.toLowerCase() === 'hành động' || actionVal.toLowerCase() === 'thời gian') return;
+                    if (actionVal.toLowerCase() === 'hanh_dong' || actionVal.toLowerCase() === 'hành động' || actionVal.toLowerCase() === 'thời gian' || timeVal.toLowerCase() === 'thời gian') return;
 
                     adminStatsList.push({
                         time: timeVal,
@@ -514,7 +514,6 @@
                         }
                     }
 
-                    // Trích xuất IP / ID khách hàng từ chuỗi thiết bị (Ví dụ: "Khách_2650 (Windows PC)" -> lấy "Khách_2650")
                     let userId = deviceVal.split(' ')[0] || deviceVal;
 
                     if (actionVal === 'Truy_Cap_Trang') {
@@ -532,7 +531,6 @@
 
             adminStatsList.reverse();
 
-            // Cập nhật lên các thẻ thống kê
             document.getElementById('todayViews').innerText = todayViews;
             document.getElementById('todayUsers').innerText = todayUsersSet.size;
             document.getElementById('todayProducts').innerText = todayProducts;
