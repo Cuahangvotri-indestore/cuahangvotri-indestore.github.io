@@ -281,7 +281,6 @@
             }
         };
 
-        // 🆔 HỆ THỐNG ĐỊNH DANH KHÁCH HÀNG & THIẾT BỊ
         function getVisitorId() {
             let vid = localStorage.getItem('shop_visitor_id');
             if (!vid) {
@@ -306,7 +305,6 @@
             return getVisitorId() + " (" + deviceName + ")";
         }
 
-        // 📊 HÀM GỬI TRACKING LÊN GOOGLE SHEETS
         function ghiNhatKyTruyCap(hanhDong, chiTiet) {
             var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
             var data = {
@@ -328,10 +326,10 @@
             return urlParams.get('cat') ? decodeURIComponent(urlParams.get('cat')).trim() : 'Chung';
         }
 
-        // 🛡️ CHỈ GHI NHẬN TRUY CẬP TRANG DANH MỤC ĐÚNG 1 LẦN DUY NHẤT (CHỐNG ĐÚP 100%)
+        // 🛡️ CHỐNG ĐÚP 100% CHO TRANG DANH MỤC (DÙNG ĐỊNH DANH SESSION RIÊNG CHO TỪNG TÊN DANH MỤC)
         window.addEventListener("DOMContentLoaded", function() {
             const currentCat = getCurrentCategoryFromURL();
-            const sessionKey = 'tracked_cat_' + currentCat;
+            const sessionKey = 'tracked_cat_unique_' + currentCat;
             if (!sessionStorage.getItem(sessionKey)) {
                 sessionStorage.setItem(sessionKey, 'true');
                 ghiNhatKyTruyCap("Truy_Cap_Trang", "Danh mục: " + currentCat);
