@@ -53,12 +53,13 @@
         .panel-content { display: none; background: #ffffff; border-radius: 12px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .panel-content.active { display: block; }
 
-        /* STATS GRID CARDS */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .stat-card { background: #f8faf9; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
-        .stat-card-title { font-size: 13px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card-value { font-family: 'Comfortaa', sans-serif; font-size: 28px; font-weight: 700; color: var(--emerald-dark); }
-        .stat-card-desc { font-size: 12px; color: var(--emerald-soft); font-weight: 600; }
+        /* STATS SECTION */
+        .stats-section-title { font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); font-size: 15px; margin: 20px 0 10px 0; display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #e6f6f3; padding-bottom: 6px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .stat-card { background: #f8faf9; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .stat-card-title { font-size: 12px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card-value { font-family: 'Comfortaa', sans-serif; font-size: 24px; font-weight: 700; color: var(--emerald-dark); }
+        .stat-card-desc { font-size: 11px; color: var(--emerald-soft); font-weight: 600; }
 
         /* TABLE STICKY & FIX UI OVERLAP */
         .table-responsive { width: 100%; overflow-x: auto; position: relative; }
@@ -148,27 +149,58 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Thống kê hoạt động cửa hàng</h2>
-                        <span style="font-size: 12px; color: #666;">📊 Dữ liệu được tổng hợp trực tiếp từ tab Nhat_Ky_Truy_Cap trên Google Sheets.</span>
+                        <span style="font-size: 12px; color: #666;">📊 Số liệu tự động phân tích theo ngày hôm nay và tháng này từ tab <b>Nhat_Ky_Truy_Cap</b>.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadStatsData()"><i class="fa-solid fa-rotate"></i> Làm mới thống kê</button>
                 </div>
 
-                <!-- CARDS TỔNG QUAN -->
+                <!-- THỐNG KÊ HÔM NAY -->
+                <div class="stats-section-title"><i class="fa-solid fa-calendar-day"></i> Hôm nay</div>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <span class="stat-card-title"><i class="fa-solid fa-users"></i> Tổng lượt truy cập</span>
-                        <span class="stat-card-value" id="statTotalViews">0</span>
+                        <span class="stat-card-title">Lượt truy cập (Views)</span>
+                        <span class="stat-card-value" id="todayViews">0</span>
                         <span class="stat-card-desc">Lượt vào trang & danh mục</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-card-title"><i class="fa-solid fa-eye"></i> Lượt xem sản phẩm</span>
-                        <span class="stat-card-value" id="statTotalProductClicks">0</span>
-                        <span class="stat-card-desc">Khách click xem chi tiết SP</span>
+                        <span class="stat-card-title">Số người truy cập (Users)</span>
+                        <span class="stat-card-value" id="todayUsers">0</span>
+                        <span class="stat-card-desc">Số thiết bị / ID khách độc lập</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-card-title"><i class="fa-solid fa-bag-shopping"></i> Tương tác mua hàng</span>
-                        <span class="stat-card-value" id="statTotalInteractions">0</span>
-                        <span class="stat-card-desc">Click Shopee / Zalo / Form</span>
+                        <span class="stat-card-title">Sản phẩm được click xem</span>
+                        <span class="stat-card-value" id="todayProducts">0</span>
+                        <span class="stat-card-desc">Lượt click xem chi tiết SP</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-card-title">Tương tác mua hàng</span>
+                        <span class="stat-card-value" id="todayInteractions">0</span>
+                        <span class="stat-card-desc">Shopee / Zalo / Form</span>
+                    </div>
+                </div>
+
+                <!-- THỐNG KÊ THÁNG NÀY -->
+                <div class="stats-section-title"><i class="fa-solid fa-calendar-days"></i> Tháng này</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-card-title">Lượt truy cập (Views)</span>
+                        <span class="stat-card-value" id="monthViews">0</span>
+                        <span class="stat-card-desc">Lượt vào trang & danh mục</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-card-title">Số người truy cập (Users)</span>
+                        <span class="stat-card-value" id="monthUsers">0</span>
+                        <span class="stat-card-desc">Số thiết bị / ID khách độc lập</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-card-title">Sản phẩm được click xem</span>
+                        <span class="stat-card-value" id="monthProducts">0</span>
+                        <span class="stat-card-desc">Lượt click xem chi tiết SP</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-card-title">Tương tác mua hàng</span>
+                        <span class="stat-card-value" id="monthInteractions">0</span>
+                        <span class="stat-card-desc">Shopee / Zalo / Form</span>
                     </div>
                 </div>
 
@@ -355,8 +387,6 @@
     <script>
         const SHOP_SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0';
         const FORM_SPREADSHEET_ID = '1tPjpvYeEV3M-GB8wX7dD7E89m6JtfqO_CoV3_puwIbw';
-        
-        // ĐÃ CẬP NHẬT ĐÚNG TÊN TAB LOG TRÊN GOOGLE SHEETS CỦA PO
         const LOG_SHEET_NAME = 'Nhat_Ky_Truy_Cap'; 
 
         let adminProductsList = [];
@@ -414,17 +444,48 @@
             evt.currentTarget.classList.add('active');
         }
 
-        // ================= HÀM TẢI DỮ LIỆU THỐNG KÊ TỪ Nhat_Ky_Truy_Cap =================
+        // ================= HÀM XỬ LÝ NGÀY THÁNG VÀ THỐNG KÊ CHI TIẾT =================
+        function parseLogDate(timeStr) {
+            if (!timeStr) return null;
+            let str = String(timeStr).trim();
+            if (str.startsWith('Date(')) {
+                let parts = str.replace('Date(', '').replace(')', '').split(',').map(Number);
+                if (parts.length >= 3) {
+                    return new Date(parts[0], parts[1], parts[2]);
+                }
+            } else {
+                // Định dạng: 19:27:56 29/6/2026 hoặc tương tự
+                let parts = str.split(' ');
+                for (let p of parts) {
+                    if (p.includes('/')) {
+                        let dateParts = p.split('/');
+                        if (dateParts.length === 3) {
+                            let day = parseInt(dateParts[0]);
+                            let month = parseInt(dateParts[1]) - 1;
+                            let year = parseInt(dateParts[2]);
+                            return new Date(year, month, day);
+                        }
+                    }
+                }
+            }
+            return new Date(str);
+        }
+
         async function loadStatsData() {
             const logRows = await fetchSheetRows(SHOP_SPREADSHEET_ID, LOG_SHEET_NAME);
             adminStatsList = [];
 
-            let totalViews = 0;
-            let totalProductClicks = 0;
-            let totalInteractions = 0;
+            let today = new Date();
+            let currentDay = today.getDate();
+            let currentMonth = today.getMonth();
+            let currentYear = today.getFullYear();
 
-            logRows.forEach((row, idx) => {
-                // Cột 0: Thời gian, Cột 1: Thiết bị, Cột 2: Hành động, Cột 3: Chi tiết
+            let todayViews = 0, monthViews = 0;
+            let todayUsersSet = new Set(), monthUsersSet = new Set();
+            let todayProducts = 0, monthProducts = 0;
+            let todayInteractions = 0, monthInteractions = 0;
+
+            logRows.forEach((row) => {
                 if (row && row.c && row.c[2]) {
                     let timeVal = row.c[0] && row.c[0].v ? String(row.c[0].v) : '';
                     let deviceVal = row.c[1] && row.c[1].v ? String(row.c[1].v) : 'Khách vãng lai';
@@ -440,21 +501,47 @@
                         detail: detailVal
                     });
 
+                    let logDate = parseLogDate(timeVal);
+                    let isToday = false;
+                    let isThisMonth = false;
+
+                    if (logDate && !isNaN(logDate.getTime())) {
+                        if (logDate.getDate() === currentDay && logDate.getMonth() === currentMonth && logDate.getFullYear() === currentYear) {
+                            isToday = true;
+                        }
+                        if (logDate.getMonth() === currentMonth && logDate.getFullYear() === currentYear) {
+                            isThisMonth = true;
+                        }
+                    }
+
+                    // Trích xuất IP / ID khách hàng từ chuỗi thiết bị (Ví dụ: "Khách_2650 (Windows PC)" -> lấy "Khách_2650")
+                    let userId = deviceVal.split(' ')[0] || deviceVal;
+
                     if (actionVal === 'Truy_Cap_Trang') {
-                        totalViews++;
+                        if (isThisMonth) { monthViews++; monthUsersSet.add(userId); }
+                        if (isToday) { todayViews++; todayUsersSet.add(userId); }
                     } else if (actionVal === 'Click_SanPham') {
-                        totalProductClicks++;
+                        if (isThisMonth) monthProducts++;
+                        if (isToday) todayProducts++;
                     } else if (actionVal.includes('Shopee') || actionVal.includes('Zalo') || actionVal.includes('Info') || actionVal.includes('Tu_Van')) {
-                        totalInteractions++;
+                        if (isThisMonth) monthInteractions++;
+                        if (isToday) todayInteractions++;
                     }
                 }
             });
 
             adminStatsList.reverse();
 
-            document.getElementById('statTotalViews').innerText = totalViews;
-            document.getElementById('statTotalProductClicks').innerText = totalProductClicks;
-            document.getElementById('statTotalInteractions').innerText = totalInteractions;
+            // Cập nhật lên các thẻ thống kê
+            document.getElementById('todayViews').innerText = todayViews;
+            document.getElementById('todayUsers').innerText = todayUsersSet.size;
+            document.getElementById('todayProducts').innerText = todayProducts;
+            document.getElementById('todayInteractions').innerText = todayInteractions;
+
+            document.getElementById('monthViews').innerText = monthViews;
+            document.getElementById('monthUsers').innerText = monthUsersSet.size;
+            document.getElementById('monthProducts').innerText = monthProducts;
+            document.getElementById('monthInteractions').innerText = monthInteractions;
 
             renderStatsTable();
         }
@@ -509,7 +596,7 @@
             const configRows = await fetchSheetRows(SHOP_SPREADSHEET_ID, 'Cau_Hinh_Shop');
             adminConfigList = [];
             
-            configRows.forEach((row, idx) => {
+            configRows.forEach((row) => {
                 if(row && row.c && row.c[0] && row.c[1]) {
                     let key = String(row.c[0].v).trim();
                     let val = String(row.c[1].v).trim();
