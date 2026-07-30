@@ -59,13 +59,6 @@
         .admin-table th, .admin-table td { padding: 12px 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; background: #ffffff; }
         .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); position: sticky; top: 0; z-index: 2; }
 
-        /* CỐ ĐỊNH CHUẨN 3 CỘT ĐẦU VÀ GÁN CHIỀU RỘNG TRÁNH ĐÈ CHỮ */
-        .admin-table th:nth-child(1), .admin-table td:nth-child(1) { position: sticky; left: 0; z-index: 3; width: 60px; min-width: 60px; text-align: center; }
-        .admin-table th:nth-child(2), .admin-table td:nth-child(2) { position: sticky; left: 60px; z-index: 3; width: 110px; min-width: 110px; }
-        .admin-table th:nth-child(3), .admin-table td:nth-child(3) { position: sticky; left: 170px; z-index: 3; width: 220px; min-width: 220px; box-shadow: 3px 0 6px rgba(0,0,0,0.04); }
-        
-        .admin-table th:nth-child(1), .admin-table th:nth-child(2), .admin-table th:nth-child(3) { background: #f8faf9; z-index: 4; }
-
         .badge-status-admin { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; }
         .status-hien { background: #e3effd; color: #0052cc; }
         .status-an { background: #ffebe6; color: #de350b; }
@@ -191,7 +184,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách Form Request từ khách hàng</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ tự động từ sheet <b>Form Responses</b> trên Google Sheets.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Đồng bộ tự động từ sheet <b>Form Responses</b> trên Google Sheets. Sắp xếp mới nhất đến cũ nhất.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
@@ -199,16 +192,15 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>STT</th>
-                                <th>Thời gian</th>
-                                <th>Tên khách hàng</th>
-                                <th>Thông tin liên hệ / SĐT</th>
-                                <th>Nội dung yêu cầu / Ghi chú</th>
-                                <th style="text-align: right;">Thao tác</th>
+                                <th style="width: 60px; text-align: center;">STT</th>
+                                <th style="width: 180px;">Thời gian</th>
+                                <th style="width: 200px;">Thông tin khách hàng</th>
+                                <th>Tên dịch vụ</th>
+                                <th style="width: 100px; text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="adminRequestsTableBody">
-                            <tr><td colspan="6" style="text-align: center;">Đang đồng bộ dữ liệu Form Request từ Google Sheets...</td></tr>
+                            <tr><td colspan="5" style="text-align: center;">Đang đồng bộ dữ liệu Form Request từ Google Sheets...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -409,28 +401,64 @@
             renderConfigList();
         }
 
-        // TRỎ CHUẨN XÁC VÀO SHEET 'Form Responses' CỦA GOOGLE FORM
+        // HÀM PARSE THỜI GIAN GVIZ DATE THÀNH GIỜ - NGÀY/THÁNG/NĂM VÀ SẮP XẾP MỚI NHẤT -> CŨ NHẤT
         async function loadRequestsData() {
             const requestRows = await fetchSheetRows('Form Responses');
             adminRequestsList = [];
             
             requestRows.forEach((row, idx) => {
-                if(row && row.c && row.c[0] && row.c[0].v) {
-                    let timestamp = row.c[0].v;
-                    let customerName = row.c[1] && row.c[1].v ? row.c[1].v : 'Khách hàng';
-                    let phone = row.c[2] && row.c[2].v ? row.c[2].v : '';
-                    let content = row.c[3] && row.c[3].v ? row.c[3].v : 'Không có nội dung';
+                if(row && row.c && row.c[0]) {
+                    let rawTime = row.c[0].v;
+                    let formattedTime = 'N/A';
+                    let sortTimestamp = 0;
 
-                    if (String(customerName).toLowerCase() === 'tên khách hàng' || String(timestamp).toLowerCase() === 'timestamp') return;
+                    // Xử lý chuỗi Date dạng Date(2026,6,30,15,7,14) từ Google Sheets Gviz API
+                    if (rawTime) {
+                        let rawStr = String(rawTime);
+                        if (rawStr.startsWith('Date(')) {
+                            let parts = rawStr.replace('Date(', '').replace(')', '').split(',').map(Number);
+                            if (parts.length >= 6) {
+                                let year = parts[0];
+                                let month = parts[1] + 1; // Tháng trong JS bắt đầu từ 0
+                                let day = parts[2];
+                                let hour = parts[3];
+                                let minute = parts[4];
+                                let second = parts[5];
+
+                                // Định dạng hiển thị: Giờ - Ngày/Tháng/Năm (Ví dụ: 15:07 - 30/07/2026)
+                                let hh = String(hour).padStart(2, '0');
+                                let min = String(minute).padStart(2, '0');
+                                let dd = String(day).padStart(2, '0');
+                                let mm = String(month).padStart(2, '0');
+                                formattedTime = `${hh}:${min} - ${dd}/${mm}/${year}`;
+
+                                // Tạo timestamp để sắp xếp chính xác
+                                sortTimestamp = new Date(year, parts[1], day, hour, minute, second).getTime();
+                            }
+                        } else {
+                            formattedTime = rawStr;
+                            sortTimestamp = new Date(rawStr).getTime() || idx;
+                        }
+                    }
+
+                    let customerName = row.c[1] && row.c[1].v ? row.c[1].v : 'Khách hàng';
+                    let phoneOrContact = row.c[2] && row.c[2].v ? row.c[2].v : '';
+                    let serviceName = row.c[3] && row.c[3].v ? row.c[3].v : (row.c[4] && row.c[4].v ? row.c[4].v : 'Không có tên dịch vụ');
+
+                    if (String(customerName).toLowerCase() === 'tên khách hàng' || String(rawTime).toLowerCase() === 'timestamp') return;
 
                     adminRequestsList.push({
-                        time: timestamp,
+                        timeStr: formattedTime,
+                        timestamp: sortTimestamp,
                         name: customerName,
-                        phone: phone,
-                        content: content
+                        contact: phoneOrContact,
+                        service: serviceName
                     });
                 }
             });
+
+            // Sắp xếp thứ tự thời gian từ mới nhất đến cũ nhất (giảm dần theo timestamp)
+            adminRequestsList.sort((a, b) => b.timestamp - a.timestamp);
 
             renderRequestsTable();
         }
@@ -438,25 +466,27 @@
         function renderRequestsTable() {
             let rowsHTML = '';
             adminRequestsList.forEach((req, idx) => {
+                // Gộp thông tin khách hàng và số điện thoại gọn gàng
+                let customerDisplay = `<b>${req.name}</b>${req.contact ? ' (' + req.contact + ')' : ''}`;
+                
                 rowsHTML += `
                     <tr>
                         <td style="text-align: center; font-weight: 700; color: var(--emerald-dark);">${idx + 1}</td>
-                        <td>${req.time}</td>
-                        <td><b>${req.name}</b></td>
-                        <td>${req.phone}</td>
-                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;" title="${req.content}">${req.content}</td>
+                        <td>${req.timeStr}</td>
+                        <td>${customerDisplay}</td>
+                        <td style="max-width: 350px; overflow: hidden; text-overflow: ellipsis;" title="${req.service}">${req.service}</td>
                         <td style="text-align: right; display: flex; gap: 6px; justify-content: flex-end; background: #fff;">
-                            <button class="btn-sm btn-copy" onclick="copyRequestData(${idx})" title="Sao chép nội dung request"><i class="fa-regular fa-copy"></i> Copy</button>
+                            <button class="btn-sm btn-copy" onclick="copyRequestData(${idx})" title="Sao chép thông tin request"><i class="fa-regular fa-copy"></i> Copy</button>
                         </td>
                     </tr>
                 `;
             });
-            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="6" style="text-align:center;">Chưa có phản hồi nào từ Google Form (Sheet Form Responses đang trống).</td></tr>`;
+            document.getElementById('adminRequestsTableBody').innerHTML = rowsHTML || `<tr><td colspan="5" style="text-align:center;">Chưa có phản hồi nào từ Google Form (Sheet Form Responses đang trống).</td></tr>`;
         }
 
         function copyRequestData(idx) {
             const req = adminRequestsList[idx];
-            const rowString = `${req.time}\t${req.name}\t${req.phone}\t${req.content}`;
+            const rowString = `${req.timeStr}\t${req.name}\t${req.contact}\t${req.service}`;
             navigator.clipboard.writeText(rowString).then(() => {
                 showToast(`Đã copy request của khách hàng "${req.name}"!`);
             }).catch(err => {
