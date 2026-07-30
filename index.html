@@ -289,12 +289,37 @@
             }
         };
 
-        // 📊 HÀM TRACKING NHẬT KÝ TRUY CẬP VỀ GOOGLE SHEETS
+        // 🆔 HỆ THỐNG ĐỊNH DANH KHÁCH HÀNG & THIẾT BỊ
+        function getVisitorId() {
+            let vid = localStorage.getItem('shop_visitor_id');
+            if (!vid) {
+                vid = 'Khách_' + Math.floor(Math.random() * 9000 + 1000);
+                localStorage.setItem('shop_visitor_id', vid);
+            }
+            return vid;
+        }
+
+        function getDetailedDevice() {
+            const ua = navigator.userAgent;
+            let deviceName = "Desktop";
+            if (/iphone|ipad|ipod/i.test(ua)) {
+                deviceName = "iPhone / iOS";
+            } else if (/android/i.test(ua)) {
+                deviceName = "Android Phone";
+            } else if (/macintosh|mac os/i.test(ua)) {
+                deviceName = "Mac / Safari";
+            } else if (/windows/i.test(ua)) {
+                deviceName = "Windows PC";
+            }
+            return getVisitorId() + " (" + deviceName + ")";
+        }
+
+        // 📊 HÀM GỬI TRACKING LÊN GOOGLE SHEETS
         function ghiNhatKyTruyCap(hanhDong, chiTiet) {
             var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
             var data = {
                 time: new Date().toLocaleString("vi-VN"),
-                device: navigator.userAgent.includes("Mobile") ? "Mobile" : "Desktop",
+                device: getDetailedDevice(),
                 action: hanhDong,
                 detail: chiTiet
             };
@@ -464,7 +489,7 @@
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
                 
-                // Tracking khi khách bấm vào xem chi tiết sản phẩm
+                // Tracking khi khách click xem chi tiết sản phẩm
                 ghiNhatKyTruyCap("Click_SanPham", prod.name);
 
                 popupActiveProduct = prod; 
