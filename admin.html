@@ -122,7 +122,7 @@
         <div class="login-card" id="loginScreen">
             <h2>Đăng nhập Admin</h2>
             <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Nhập mật khẩu quản trị để tiếp tục</p>
-            <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Mật khẩu (mặc định: admin123)">
+            <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Nhập mật khẩu...">
             <button class="admin-btn" id="loginButton" style="width: 100%;">Truy cập Dashboard</button>
         </div>
 
@@ -331,13 +331,14 @@
 
         function handleAdminLogin() {
             const pass = document.getElementById('adminPasswordInput').value;
-            if(pass === 'admin123' || pass === 'votriskip') {
+            // SET CỨNG MẬT KHẨU MỚI: halley09@cuahangvotri
+            if(pass === 'halley09@cuahangvotri') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardContainer').style.display = 'flex';
                 loadAdminData();
                 loadRequestsData();
             } else {
-                alert('Mật khẩu không chính xác! (Mật khẩu mặc định: admin123)');
+                alert('Mật khẩu không chính xác!');
             }
         }
 
@@ -401,7 +402,6 @@
             renderConfigList();
         }
 
-        // HÀM MAPPING VÀ SUM 3 CỘT N, T, Y (Index tương ứng trong Sheets)
         async function loadRequestsData() {
             const requestRows = await fetchSheetRows('Form Responses');
             adminRequestsList = [];
@@ -649,7 +649,7 @@
                 name: document.getElementById('inputName').value.trim(),
                 category: document.getElementById('inputCategory').value,
                 img: document.getElementById('inputImg').value.trim(),
-                    detailImgs: document.getElementById('inputDetailImgs').value.trim(),
+                detailImgs: document.getElementById('inputDetailImgs').value.trim(),
                 desc: document.getElementById('inputDesc').value.trim(),
                 price: parseFloat(document.getElementById('inputPrice').value) || 0,
                 shopee: document.getElementById('inputShopee').value.trim(),
