@@ -53,14 +53,6 @@
         .panel-content { display: none; background: #ffffff; border-radius: 12px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .panel-content.active { display: block; }
 
-        /* STATS SECTION */
-        .stats-section-title { font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); font-size: 15px; margin: 20px 0 10px 0; display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #e6f6f3; padding-bottom: 6px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px; }
-        .stat-card { background: #f8faf9; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
-        .stat-card-title { font-size: 12px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card-value { font-family: 'Comfortaa', sans-serif; font-size: 24px; font-weight: 700; color: var(--emerald-dark); }
-        .stat-card-desc { font-size: 11px; color: var(--emerald-soft); font-weight: 600; }
-
         /* TABLE STICKY & FIX UI OVERLAP */
         .table-responsive { width: 100%; overflow-x: auto; position: relative; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
@@ -69,7 +61,6 @@
 
         .badge-moi { background: #ea501f; color: #fff; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
         .badge-soluong { background: #e3effd; color: #0052cc; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; display: inline-block; }
-        .badge-action { background: rgba(56,122,111,0.1); color: var(--emerald-dark); padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; display: inline-block; }
 
         .btn-sm { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--emerald-dark); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .btn-sm:hover { background: var(--emerald-dark); color: #fff; }
@@ -138,95 +129,13 @@
         <!-- BẢNG ĐIỀU KHIỂN CHÍNH -->
         <div class="dashboard-container" id="dashboardContainer">
             <div class="dashboard-tabs">
-                <button class="tab-btn active" onclick="switchTab(event, 'statsTab')"><i class="fa-solid fa-chart-pie"></i> Thống kê & Log</button>
-                <button class="tab-btn" onclick="switchTab(event, 'productsTab')"><i class="fa-solid fa-boxes-stacked"></i> Quản lý Sản phẩm</button>
+                <button class="tab-btn active" onclick="switchTab(event, 'productsTab')"><i class="fa-solid fa-boxes-stacked"></i> Quản lý Sản phẩm</button>
                 <button class="tab-btn" onclick="switchTab(event, 'configTab')"><i class="fa-solid fa-sliders"></i> Cấu hình Shop & Banner</button>
                 <button class="tab-btn" onclick="switchTab(event, 'requestsTab')"><i class="fa-solid fa-file-lines"></i> Quản lý Form Request</button>
             </div>
 
-            <!-- TAB 0: THỐNG KÊ & LOG TRUY CẬP -->
-            <div class="panel-content active" id="statsTab">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <div>
-                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Thống kê hoạt động cửa hàng</h2>
-                        <span style="font-size: 12px; color: #666;">📊 Số liệu tự động phân tích theo ngày hôm nay và tháng này từ tab <b>Nhat_Ky_Truy_Cap</b>.</span>
-                    </div>
-                    <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadStatsData()"><i class="fa-solid fa-rotate"></i> Làm mới thống kê</button>
-                </div>
-
-                <!-- THỐNG KÊ HÔM NAY -->
-                <div class="stats-section-title"><i class="fa-solid fa-calendar-day"></i> Hôm nay</div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-card-title">Lượt truy cập (Views)</span>
-                        <span class="stat-card-value" id="todayViews">0</span>
-                        <span class="stat-card-desc">Lượt vào trang & danh mục</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-card-title">Số người truy cập (Users)</span>
-                        <span class="stat-card-value" id="todayUsers">0</span>
-                        <span class="stat-card-desc">Số thiết bị / ID khách độc lập</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-card-title">Sản phẩm được click xem</span>
-                        <span class="stat-card-value" id="todayProducts">0</span>
-                        <span class="stat-card-desc">Lượt click xem chi tiết SP</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-card-title">Tương tác mua hàng</span>
-                        <span class="stat-card-value" id="todayInteractions">0</span>
-                        <span class="stat-card-desc">Shopee / Zalo / Form</span>
-                    </div>
-                </div>
-
-                <!-- THỐNG KÊ THÁNG NÀY -->
-                <div class="stats-section-title"><i class="fa-solid fa-calendar-days"></i> Tháng này</div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-card-title">Lượt truy cập (Views)</span>
-                        <span class="stat-card-value" id="monthViews">0</span>
-                        <span class="stat-card-desc">Lượt vào trang & danh mục</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-card-title">Số người truy cập (Users)</span>
-                        <span class="stat-card-value" id="monthUsers">0</span>
-                        <span class="stat-card-desc">Số thiết bị / ID khách độc lập</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-card-title">Sản phẩm được click xem</span>
-                        <span class="stat-card-value" id="monthProducts">0</span>
-                        <span class="stat-card-desc">Lượt click xem chi tiết SP</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-card-title">Tương tác mua hàng</span>
-                        <span class="stat-card-value" id="monthInteractions">0</span>
-                        <span class="stat-card-desc">Shopee / Zalo / Form</span>
-                    </div>
-                </div>
-
-                <div style="margin-top: 25px;">
-                    <h3 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); font-size: 15px; margin-bottom: 12px;">Nhật ký hành động chi tiết (Real-time Log)</h3>
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 60px; text-align: center;">STT</th>
-                                    <th style="width: 170px;">Thời gian</th>
-                                    <th style="width: 220px;">Thiết bị / ID khách</th>
-                                    <th style="width: 160px;">Hành động</th>
-                                    <th>Chi tiết sản phẩm / Trang</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminStatsTableBody">
-                                <tr><td colspan="5" style="text-align: center;">Đang đồng bộ dữ liệu nhật ký...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
             <!-- TAB 1: SẢN PHẨM -->
-            <div class="panel-content" id="productsTab">
+            <div class="panel-content active" id="productsTab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách sản phẩm từ Google Sheets</h2>
@@ -387,12 +296,10 @@
     <script>
         const SHOP_SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0';
         const FORM_SPREADSHEET_ID = '1tPjpvYeEV3M-GB8wX7dD7E89m6JtfqO_CoV3_puwIbw';
-        const LOG_SHEET_NAME = 'Nhat_Ky_Truy_Cap'; 
 
         let adminProductsList = [];
         let adminConfigList = [];
         let adminRequestsList = [];
-        let adminStatsList = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             const loginBtn = document.getElementById('loginButton');
@@ -429,7 +336,6 @@
             if(pass === 'halley09@cuahangvotri') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardContainer').style.display = 'flex';
-                loadStatsData();
                 loadAdminData();
                 loadRequestsData();
             } else {
@@ -442,127 +348,6 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             evt.currentTarget.classList.add('active');
-        }
-
-        // ================= HÀM XỬ LÝ NGÀY THÁNG VÀ THỐNG KÊ LOG CHUẨN XÁC =================
-        function parseLogDate(timeStr) {
-            if (!timeStr) return null;
-            let str = String(timeStr).trim();
-            if (str.startsWith('Date(')) {
-                let parts = str.replace('Date(', '').replace(')', '').split(',').map(Number);
-                if (parts.length >= 3) {
-                    return new Date(parts[0], parts[1], parts[2]);
-                }
-            } else {
-                // Định dạng: 19:27:56 30/7/2026 hoặc tương tự
-                let parts = str.split(' ');
-                for (let p of parts) {
-                    if (p.includes('/')) {
-                        let dateParts = p.split('/');
-                        if (dateParts.length === 3) {
-                            let day = parseInt(dateParts[0]);
-                            let month = parseInt(dateParts[1]) - 1;
-                            let year = parseInt(dateParts[2]);
-                            return new Date(year, month, day);
-                        }
-                    }
-                }
-            }
-            return new Date(str);
-        }
-
-        async function loadStatsData() {
-            const logRows = await fetchSheetRows(SHOP_SPREADSHEET_ID, LOG_SHEET_NAME);
-            adminStatsList = [];
-
-            // Lấy thời gian hiện tại (Hôm nay: 30/7/2026)
-            let today = new Date();
-            let currentDay = today.getDate();
-            let currentMonth = today.getMonth();
-            let currentYear = today.getFullYear();
-
-            let todayViews = 0, monthViews = 0;
-            let todayUsersSet = new Set(), monthUsersSet = new Set();
-            let todayProducts = 0, monthProducts = 0;
-            let todayInteractions = 0, monthInteractions = 0;
-
-            logRows.forEach((row) => {
-                // Kiểm tra dòng dữ liệu tồn tại ở cột 0 hoặc cột 2
-                if (row && row.c && (row.c[0] || row.c[2])) {
-                    let timeVal = row.c[0] && row.c[0].v ? String(row.c[0].v) : '';
-                    let deviceVal = row.c[1] && row.c[1].v ? String(row.c[1].v) : 'Khách vãng lai';
-                    let actionVal = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : '';
-                    let detailVal = row.c[3] && row.c[3].v ? String(row.c[3].v) : '';
-
-                    // Bỏ qua dòng tiêu đề
-                    if (actionVal.toLowerCase() === 'hanh_dong' || actionVal.toLowerCase() === 'hành động' || actionVal.toLowerCase() === 'th thời gian' || timeVal.toLowerCase() === 'thời gian' || timeVal.toLowerCase() === '5') return;
-
-                    adminStatsList.push({
-                        time: timeVal,
-                        device: deviceVal,
-                        action: actionVal,
-                        detail: detailVal
-                    });
-
-                    let logDate = parseLogDate(timeVal);
-                    let isToday = false;
-                    let isThisMonth = false;
-
-                    if (logDate && !isNaN(logDate.getTime())) {
-                        if (logDate.getDate() === currentDay && logDate.getMonth() === currentMonth && logDate.getFullYear() === currentYear) {
-                            isToday = true;
-                        }
-                        if (logDate.getMonth() === currentMonth && logDate.getFullYear() === currentYear) {
-                            isThisMonth = true;
-                        }
-                    }
-
-                    // Trích xuất ID khách (Ví dụ: "Khách_2650" từ chuỗi thiết bị)
-                    let userId = deviceVal.split(' ')[0] || deviceVal;
-
-                    if (actionVal === 'Truy_Cap_Trang') {
-                        if (isThisMonth) { monthViews++; monthUsersSet.add(userId); }
-                        if (isToday) { todayViews++; todayUsersSet.add(userId); }
-                    } else if (actionVal === 'Click_SanPham') {
-                        if (isThisMonth) monthProducts++;
-                        if (isToday) todayProducts++;
-                    } else if (actionVal.includes('Shopee') || actionVal.includes('Zalo') || actionVal.includes('Info') || actionVal.includes('Tu_Van')) {
-                        if (isThisMonth) monthInteractions++;
-                        if (isToday) todayInteractions++;
-                    }
-                }
-            });
-
-            adminStatsList.reverse();
-
-            // Hiển thị số liệu lên giao diện
-            document.getElementById('todayViews').innerText = todayViews;
-            document.getElementById('todayUsers').innerText = todayUsersSet.size;
-            document.getElementById('todayProducts').innerText = todayProducts;
-            document.getElementById('todayInteractions').innerText = todayInteractions;
-
-            document.getElementById('monthViews').innerText = monthViews;
-            document.getElementById('monthUsers').innerText = monthUsersSet.size;
-            document.getElementById('monthProducts').innerText = monthProducts;
-            document.getElementById('monthInteractions').innerText = monthInteractions;
-
-            renderStatsTable();
-        }
-
-        function renderStatsTable() {
-            let rowsHTML = '';
-            adminStatsList.forEach((log, idx) => {
-                rowsHTML += `
-                    <tr>
-                        <td style="text-align: center; font-weight: 700; color: var(--emerald-dark);">${idx + 1}</td>
-                        <td>${log.time}</td>
-                        <td>${log.device}</td>
-                        <td><span class="badge-action">${log.action}</span></td>
-                        <td><b>${log.detail}</b></td>
-                    </tr>
-                `;
-            });
-            document.getElementById('adminStatsTableBody').innerHTML = rowsHTML || `<tr><td colspan="5" style="text-align:center;">Chưa có dữ liệu nhật ký truy cập.</td></tr>`;
         }
 
         async function loadAdminData() {
