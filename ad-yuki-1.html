@@ -53,14 +53,19 @@
         .panel-content { display: none; background: #ffffff; border-radius: 12px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .panel-content.active { display: block; }
 
+        /* STATS GRID & TABLES */
+        .stats-grid-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media(max-width: 900px) { .stats-grid-dual { grid-template-columns: 1fr; } }
+
         /* TABLE STICKY & FIX UI OVERLAP */
-        .table-responsive { width: 100%; overflow-x: auto; position: relative; }
+        .table-responsive { width: 100%; overflow-x: auto; position: relative; max-height: 480px; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
         .admin-table th, .admin-table td { padding: 12px 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; background: #ffffff; }
         .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); position: sticky; top: 0; z-index: 2; }
 
         .badge-moi { background: #ea501f; color: #fff; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
         .badge-soluong { background: #e3effd; color: #0052cc; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; display: inline-block; }
+        .badge-xem { background: #e6f6f3; color: var(--emerald-dark); padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; display: inline-block; }
 
         .btn-sm { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--emerald-dark); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .btn-sm:hover { background: var(--emerald-dark); color: #fff; }
@@ -132,6 +137,7 @@
                 <button class="tab-btn active" onclick="switchTab(event, 'productsTab')"><i class="fa-solid fa-boxes-stacked"></i> Quản lý Sản phẩm</button>
                 <button class="tab-btn" onclick="switchTab(event, 'configTab')"><i class="fa-solid fa-sliders"></i> Cấu hình Shop & Banner</button>
                 <button class="tab-btn" onclick="switchTab(event, 'requestsTab')"><i class="fa-solid fa-file-lines"></i> Quản lý Form Request</button>
+                <button class="tab-btn" onclick="switchTab(event, 'statsTab')"><i class="fa-solid fa-chart-pie"></i> Thống kê</button>
             </div>
 
             <!-- TAB 1: SẢN PHẨM -->
@@ -203,6 +209,56 @@
                             <tr><td colspan="6" style="text-align: center;">Đang đồng bộ dữ liệu Form Request từ Google Sheets...</td></tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- TAB 4: THỐNG KÊ (ĐỌC TRỰC TIẾP TỪ TAB Thong_Ke) -->
+            <div class="panel-content" id="statsTab">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Dữ liệu Thống Kê từ Google Sheets</h2>
+                        <span style="font-size: 12px; color: #666;">📊 Đồng bộ trực tiếp từ tab <b>Thong_Ke</b> của file theo dõi.</span>
+                    </div>
+                    <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadStatsSheetData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
+                </div>
+
+                <div class="stats-grid-dual">
+                    <!-- BẢNG 1: THỐNG KÊ THEO NGÀY (Cột I, J, K từ sheet Thong_Ke) -->
+                    <div>
+                        <h3 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); font-size: 15px; margin-bottom: 10px;"><i class="fa-solid fa-calendar-days"></i> Thống Kê Theo Ngày (Truy cập)</h3>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày</th>
+                                        <th>Hành động</th>
+                                        <th style="text-align: center;">Số lượng</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="statsDateTableBody">
+                                    <tr><td colspan="3" style="text-align: center;">Đang tải dữ liệu từ tab Thong_Ke...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- BẢNG 2: THỐNG KÊ SẢN PHẨM (Cột F, G, H từ sheet Thong_Ke) -->
+                    <div>
+                        <h3 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); font-size: 15px; margin-bottom: 10px;"><i class="fa-solid fa-eye"></i> Thống Kê Sản Phẩm / Trang</h3>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm / Trang</th>
+                                        <th style="text-align: center;">Lượt xem</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="statsProductTableBody">
+                                    <tr><td colspan="2" style="text-align: center;">Đang tải dữ liệu từ tab Thong_Ke...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -338,6 +394,7 @@
                 document.getElementById('dashboardContainer').style.display = 'flex';
                 loadAdminData();
                 loadRequestsData();
+                loadStatsSheetData();
             } else {
                 alert('Mật khẩu không chính xác!');
             }
@@ -348,6 +405,50 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             evt.currentTarget.classList.add('active');
+        }
+
+        // ================= ĐỌC DỮ LIỆU TỪ TAB Thong_Ke TRÊN GOOGLE SHEETS =================
+        async function loadStatsSheetData() {
+            const statRows = await fetchSheetRows(SHOP_SPREADSHEET_ID, 'Thong_Ke');
+            
+            let prodRowsHTML = '';
+            let dateRowsHTML = '';
+
+            statRows.forEach((row, idx) => {
+                // Bỏ qua dòng tiêu đề đầu tiên
+                if (idx === 0) return;
+
+                // Đọc Thống Kê Sản Phẩm từ Cột F, G, H (index 5, 6, 7)
+                let prodName = row.c[5] && row.c[5].v !== undefined ? String(row.c[5].v).trim() : '';
+                let prodCount = row.c[7] && row.c[7].v !== undefined ? row.c[7].v : '';
+                
+                if (prodName && prodName.toLowerCase() !== 'sản phẩm' && prodName.toLowerCase() !== 'tieu_chi') {
+                    prodRowsHTML += `
+                        <tr>
+                            <td><b>${prodName}</b></td>
+                            <td style="text-align: center;"><span class="badge-xem">${prodCount}</span></td>
+                        </tr>
+                    `;
+                }
+
+                // Đọc Thống Kê Theo Ngày từ Cột I, J, K (index 8, 9, 10)
+                let dateVal = row.c[8] && row.c[8].v !== undefined ? String(row.c[8].v).trim() : '';
+                let dateAction = row.c[9] && row.c[9].v !== undefined ? String(row.c[9].v).trim() : '';
+                let dateCount = row.c[10] && row.c[10].v !== undefined ? row.c[10].v : '';
+
+                if (dateVal && dateVal.toLowerCase() !== 'ngày' && dateVal.toLowerCase() !== 'tieu_chi') {
+                    dateRowsHTML += `
+                        <tr>
+                            <td><b>${dateVal}</b></td>
+                            <td>${dateAction}</td>
+                            <td style="text-align: center;"><span class="badge-soluong">${dateCount}</span></td>
+                        </tr>
+                    `;
+                }
+            });
+
+            document.getElementById('statsProductTableBody').innerHTML = prodRowsHTML || `<tr><td colspan="2" style="text-align:center;">Chưa có dữ liệu thống kê sản phẩm.</td></tr>`;
+            document.getElementById('statsDateTableBody').innerHTML = dateRowsHTML || `<tr><td colspan="3" style="text-align:center;">Chưa có dữ liệu thống kê theo ngày.</td></tr>`;
         }
 
         async function loadAdminData() {
@@ -450,7 +551,6 @@
                     let customerInfo = row.c[1] && row.c[1].v ? String(row.c[1].v).trim() : '';
                     let serviceName = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : 'Không có tên dịch vụ';
 
-                    // TÍNH TỔNG SỐ LƯỢNG CHÍNH XÁC TỪ CỘT N (INDEX 13), T (INDEX 19) VÀ X (INDEX 23)
                     let indicesToSum = [13, 19, 23];
                     let totalQuantity = 0;
                     
