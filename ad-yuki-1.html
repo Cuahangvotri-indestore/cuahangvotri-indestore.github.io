@@ -53,19 +53,22 @@
         .panel-content { display: none; background: #ffffff; border-radius: 12px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .panel-content.active { display: block; }
 
-        /* STATS GRID & TABLES */
-        .stats-grid-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media(max-width: 900px) { .stats-grid-dual { grid-template-columns: 1fr; } }
+        /* STATS GRID & MULTI TABLES */
+        .stats-grid-multi { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px; }
+        @media(max-width: 900px) { .stats-grid-multi { grid-template-columns: 1fr; } }
+        
+        .stat-box { background: #f8faf9; border: 1px solid var(--border-color); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .stat-box-title { font-family: 'Comfortaa', sans-serif; font-size: 14px; font-weight: 700; color: var(--emerald-dark); display: flex; align-items: center; gap: 6px; }
 
         /* TABLE STICKY & FIX UI OVERLAP */
-        .table-responsive { width: 100%; overflow-x: auto; position: relative; max-height: 480px; }
+        .table-responsive { width: 100%; overflow-x: auto; position: relative; max-height: 400px; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
-        .admin-table th, .admin-table td { padding: 12px 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; background: #ffffff; }
-        .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #f8faf9; color: var(--emerald-dark); position: sticky; top: 0; z-index: 2; }
+        .admin-table th, .admin-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; background: #ffffff; }
+        .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #edf2f0; color: var(--emerald-dark); position: sticky; top: 0; z-index: 2; }
 
         .badge-moi { background: #ea501f; color: #fff; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
-        .badge-soluong { background: #e3effd; color: #0052cc; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; display: inline-block; }
-        .badge-xem { background: #e6f6f3; color: var(--emerald-dark); padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; display: inline-block; }
+        .badge-soluong { background: #e3effd; color: #0052cc; padding: 3px 8px; border-radius: 10px; font-weight: 700; font-size: 12px; display: inline-block; }
+        .badge-xem { background: #e6f6f3; color: var(--emerald-dark); padding: 3px 8px; border-radius: 10px; font-weight: 700; font-size: 12px; display: inline-block; }
 
         .btn-sm { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--emerald-dark); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .btn-sm:hover { background: var(--emerald-dark); color: #fff; }
@@ -212,50 +215,68 @@
                 </div>
             </div>
 
-            <!-- TAB 4: THỐNG KÊ (ĐỌC TRỰC TIẾP TỪ TAB Thong_Ke) -->
+            <!-- TAB 4: THỐNG KÊ (ĐỌC CHUẨN XÁC TỪNG CỤM BẢNG TRÊN TAB Thong_Ke) -->
             <div class="panel-content" id="statsTab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <div>
-                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Dữ liệu Thống Kê từ Google Sheets</h2>
-                        <span style="font-size: 12px; color: #666;">📊 Đồng bộ trực tiếp từ tab <b>Thong_Ke</b> của file theo dõi.</span>
+                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Bảng Thống Kê Tổng Hợp</h2>
+                        <span style="font-size: 12px; color: #666;">📊 Đồng bộ trực tiếp theo đúng cấu trúc các bảng từ tab <b>Thong_Ke</b>.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadStatsSheetData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
 
-                <div class="stats-grid-dual">
-                    <!-- BẢNG 1: THỐNG KÊ THEO NGÀY (Cột I, J, K từ sheet Thong_Ke) -->
-                    <div>
-                        <h3 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); font-size: 15px; margin-bottom: 10px;"><i class="fa-solid fa-calendar-days"></i> Thống Kê Theo Ngày (Truy cập)</h3>
+                <div class="stats-grid-multi">
+                    <!-- BẢNG 1: THỐNG KÊ HÀNH ĐỘNG (Cột A - B) -->
+                    <div class="stat-box">
+                        <div class="stat-box-title"><i class="fa-solid fa-bolt"></i> Thống Kê Hành Động</div>
                         <div class="table-responsive">
                             <table class="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Ngày</th>
-                                        <th>Hành động</th>
-                                        <th style="text-align: center;">Số lượng</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="statsDateTableBody">
-                                    <tr><td colspan="3" style="text-align: center;">Đang tải dữ liệu từ tab Thong_Ke...</td></tr>
-                                </tbody>
+                                <thead><tr><th>Hành động</th><th style="text-align: center;">Số lượng</th></tr></thead>
+                                <tbody id="statsActionTableBody"><tr><td colspan="2" style="text-align:center;">Đang tải...</td></tr></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- BẢNG 2: THỐNG KÊ SẢN PHẨM (Cột F, G, H từ sheet Thong_Ke) -->
-                    <div>
-                        <h3 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); font-size: 15px; margin-bottom: 10px;"><i class="fa-solid fa-eye"></i> Thống Kê Sản Phẩm / Trang</h3>
+                    <!-- BẢNG 2: THỐNG KÊ THIẾT BỊ (Cột D - E) -->
+                    <div class="stat-box">
+                        <div class="stat-box-title"><i class="fa-solid fa-mobile-screen-button"></i> Thống Kê Thiết Bị</div>
                         <div class="table-responsive">
                             <table class="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Sản phẩm / Trang</th>
-                                        <th style="text-align: center;">Lượt xem</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="statsProductTableBody">
-                                    <tr><td colspan="2" style="text-align: center;">Đang tải dữ liệu từ tab Thong_Ke...</td></tr>
-                                </tbody>
+                                <thead><tr><th>Thiết bị</th><th style="text-align: center;">Số lượng</th></tr></thead>
+                                <tbody id="statsDeviceTableBody"><tr><td colspan="2" style="text-align:center;">Đang tải...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- BẢNG 3: THỐNG KÊ SẢN PHẨM (Cột G - H) -->
+                    <div class="stat-box">
+                        <div class="stat-box-title"><i class="fa-solid fa-eye"></i> Thống Kê Sản Phẩm</div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead><tr><th>Sản phẩm / Trang</th><th style="text-align: center;">Lượt Xem</th></tr></thead>
+                                <tbody id="statsProductTableBody"><tr><td colspan="2" style="text-align:center;">Đang tải...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- BẢNG 4: THỐNG KÊ THEO NGÀY (Cột J - K - L) -->
+                    <div class="stat-box">
+                        <div class="stat-box-title"><i class="fa-solid fa-calendar-days"></i> Thống Kê Theo Ngày</div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead><tr><th>Ngày</th><th>Hành động</th><th style="text-align: center;">Số lượng</th></tr></thead>
+                                <tbody id="statsDateTableBody"><tr><td colspan="3" style="text-align:center;">Đang tải...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- BẢNG 5: THỐNG KÊ NGƯỜI DÙNG (Cột N - O - P - Q) -->
+                    <div class="stat-box" style="grid-column: 1 / -1;">
+                        <div class="stat-box-title"><i class="fa-solid fa-users"></i> Thống Kê Người Dùng</div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead><tr><th>Ngày</th><th>Thiết bị</th><th>Hành động</th><th style="text-align: center;">Số lượng</th></tr></thead>
+                                <tbody id="statsUserTableBody"><tr><td colspan="4" style="text-align:center;">Đang tải...</td></tr></tbody>
                             </table>
                         </div>
                     </div>
@@ -407,48 +428,64 @@
             evt.currentTarget.classList.add('active');
         }
 
-        // ================= ĐỌC DỮ LIỆU TỪ TAB Thong_Ke TRÊN GOOGLE SHEETS =================
+        // ================= ĐỌC CHUẨN XÁC TỪNG CỤM BẢNG TRÊN TAB Thong_Ke =================
         async function loadStatsSheetData() {
             const statRows = await fetchSheetRows(SHOP_SPREADSHEET_ID, 'Thong_Ke');
             
-            let prodRowsHTML = '';
-            let dateRowsHTML = '';
+            let actionHTML = '';
+            let deviceHTML = '';
+            let prodHTML = '';
+            let dateHTML = '';
+            let userHTML = '';
 
             statRows.forEach((row, idx) => {
-                // Bỏ qua dòng tiêu đề đầu tiên
-                if (idx === 0) return;
+                // Bỏ qua dòng tiêu đề (dòng 0, 1, 2, 3 trong sheet tương ứng index 0 đến 3)
+                if (idx < 4) return;
 
-                // Đọc Thống Kê Sản Phẩm từ Cột F, G, H (index 5, 6, 7)
-                let prodName = row.c[5] && row.c[5].v !== undefined ? String(row.c[5].v).trim() : '';
-                let prodCount = row.c[7] && row.c[7].v !== undefined ? row.c[7].v : '';
-                
-                if (prodName && prodName.toLowerCase() !== 'sản phẩm' && prodName.toLowerCase() !== 'tieu_chi') {
-                    prodRowsHTML += `
-                        <tr>
-                            <td><b>${prodName}</b></td>
-                            <td style="text-align: center;"><span class="badge-xem">${prodCount}</span></td>
-                        </tr>
-                    `;
+                // 1. Thống Kê Hành Động (Cột A: index 0, Cột B: index 1)
+                let actName = row.c[0] && row.c[0].v !== undefined ? String(row.c[0].v).trim() : '';
+                let actVal = row.c[1] && row.c[1].v !== undefined ? row.c[1].v : '';
+                if (actName && actName.toLowerCase() !== 'hành động') {
+                    actionHTML += `<tr><td><b>${actName}</b></td><td style="text-align: center;"><span class="badge-soluong">${actVal}</span></td></tr>`;
                 }
 
-                // Đọc Thống Kê Theo Ngày từ Cột I, J, K (index 8, 9, 10)
-                let dateVal = row.c[8] && row.c[8].v !== undefined ? String(row.c[8].v).trim() : '';
-                let dateAction = row.c[9] && row.c[9].v !== undefined ? String(row.c[9].v).trim() : '';
-                let dateCount = row.c[10] && row.c[10].v !== undefined ? row.c[10].v : '';
+                // 2. Thống Kê Thiết Bị (Cột D: index 3, Cột E: index 4)
+                let devName = row.c[3] && row.c[3].v !== undefined ? String(row.c[3].v).trim() : '';
+                let devVal = row.c[4] && row.c[4].v !== undefined ? row.c[4].v : '';
+                if (devName && devName.toLowerCase() !== 'thiết bị') {
+                    deviceHTML += `<tr><td><b>${devName}</b></td><td style="text-align: center;"><span class="badge-soluong">${devVal}</span></td></tr>`;
+                }
 
-                if (dateVal && dateVal.toLowerCase() !== 'ngày' && dateVal.toLowerCase() !== 'tieu_chi') {
-                    dateRowsHTML += `
-                        <tr>
-                            <td><b>${dateVal}</b></td>
-                            <td>${dateAction}</td>
-                            <td style="text-align: center;"><span class="badge-soluong">${dateCount}</span></td>
-                        </tr>
-                    `;
+                // 3. Thống Kê Sản Phẩm (Cột G: index 6, Cột H: index 7)
+                let prodName = row.c[6] && row.c[6].v !== undefined ? String(row.c[6].v).trim() : '';
+                let prodVal = row.c[7] && row.c[7].v !== undefined ? row.c[7].v : '';
+                if (prodName && prodName.toLowerCase() !== 'sản phẩm') {
+                    prodHTML += `<tr><td><b>${prodName}</b></td><td style="text-align: center;"><span class="badge-xem">${prodVal}</span></td></tr>`;
+                }
+
+                // 4. Thống Kê Theo Ngày (Cột J: index 9, Cột K: index 10, Cột L: index 11)
+                let dayDate = row.c[9] && row.c[9].v !== undefined ? String(row.c[9].v).trim() : '';
+                let dayAct = row.c[10] && row.c[10].v !== undefined ? String(row.c[10].v).trim() : '';
+                let dayVal = row.c[11] && row.c[11].v !== undefined ? row.c[11].v : '';
+                if (dayDate && dayDate.toLowerCase() !== 'ngày') {
+                    dateHTML += `<tr><td>${dayDate}</td><td>${dayAct}</td><td style="text-align: center;"><span class="badge-soluong">${dayVal}</span></td></tr>`;
+                }
+
+                // 5. Thống Kê Người Dùng (Cột N: index 13, Cột O: index 14, Cột P: index 15, Cột Q: index 16)
+                let uDate = row.c[13] && row.c[13].v !== undefined ? String(row.c[13].v).trim() : '';
+                let uDev = row.c[14] && row.c[14].v !== undefined ? String(row.c[14].v).trim() : '';
+                let uAct = row.c[15] && row.c[15].v !== undefined ? String(row.c[15].v).trim() : '';
+                let uVal = row.c[16] && row.c[16].v !== undefined ? row.c[16].v : '';
+                if (uDate && uDate.toLowerCase() !== 'ngày') {
+                    userHTML += `<tr><td>${uDate}</td><td>${uDev}</td><td>${uAct}</td><td style="text-align: center;"><span class="badge-soluong">${uVal}</span></td></tr>`;
                 }
             });
 
-            document.getElementById('statsProductTableBody').innerHTML = prodRowsHTML || `<tr><td colspan="2" style="text-align:center;">Chưa có dữ liệu thống kê sản phẩm.</td></tr>`;
-            document.getElementById('statsDateTableBody').innerHTML = dateRowsHTML || `<tr><td colspan="3" style="text-align:center;">Chưa có dữ liệu thống kê theo ngày.</td></tr>`;
+            document.getElementById('statsActionTableBody').innerHTML = actionHTML || `<tr><td colspan="2" style="text-align:center;">Trống.</td></tr>`;
+            document.getElementById('statsDeviceTableBody').innerHTML = deviceHTML || `<tr><td colspan="2" style="text-align:center;">Trống.</td></tr>`;
+            document.getElementById('statsProductTableBody').innerHTML = prodHTML || `<tr><td colspan="2" style="text-align:center;">Trống.</td></tr>`;
+            document.getElementById('statsDateTableBody').innerHTML = dateHTML || `<tr><td colspan="3" style="text-align:center;">Trống.</td></tr>`;
+            document.getElementById('statsUserTableBody').innerHTML = userHTML || `<tr><td colspan="4" style="text-align:center;">Trống.</td></tr>`;
         }
 
         async function loadAdminData() {
