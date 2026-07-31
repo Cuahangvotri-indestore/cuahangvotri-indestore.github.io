@@ -61,7 +61,7 @@
         .stat-box-title { font-family: 'Comfortaa', sans-serif; font-size: 14px; font-weight: 700; color: var(--emerald-dark); display: flex; align-items: center; gap: 6px; }
 
         /* TABLE STICKY & FIX UI OVERLAP */
-        .table-responsive { width: 100%; overflow-x: auto; position: relative; max-height: 400px; }
+        .table-responsive { width: 100%; overflow-x: auto; position: relative; max-height: 420px; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
         .admin-table th, .admin-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-color); vertical-align: middle; background: #ffffff; }
         .admin-table th { font-family: 'Comfortaa', sans-serif; font-weight: 700; background: #edf2f0; color: var(--emerald-dark); position: sticky; top: 0; z-index: 2; }
@@ -69,6 +69,7 @@
         .badge-moi { background: #ea501f; color: #fff; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
         .badge-soluong { background: #e3effd; color: #0052cc; padding: 3px 8px; border-radius: 10px; font-weight: 700; font-size: 12px; display: inline-block; }
         .badge-xem { background: #e6f6f3; color: var(--emerald-dark); padding: 3px 8px; border-radius: 10px; font-weight: 700; font-size: 12px; display: inline-block; }
+        .badge-tong { background: #fff3e0; color: #b25900; padding: 4px 10px; border-radius: 10px; font-weight: 700; font-size: 13px; display: inline-block; }
 
         .btn-sm { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: #ffffff; color: var(--emerald-dark); font-weight: 700; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; gap: 4px; }
         .btn-sm:hover { background: var(--emerald-dark); color: #fff; }
@@ -215,12 +216,12 @@
                 </div>
             </div>
 
-            <!-- TAB 4: THỐNG KÊ (ĐỌC CHUẨN XÁC TỪNG CỤM BẢNG TRÊN TAB Thong_Ke) -->
+            <!-- TAB 4: THỐNG KÊ (ĐỌC CHUẨN XÁC TỪNG BẢNG TỪ DÒNG 6 TRÊN TAB Thong_Ke) -->
             <div class="panel-content" id="statsTab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <div>
-                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Bảng Thống Kê Tổng Hợp</h2>
-                        <span style="font-size: 12px; color: #666;">📊 Đồng bộ trực tiếp theo đúng cấu trúc các bảng từ tab <b>Thong_Ke</b>.</span>
+                        <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Bảng Thống Kê Tổng Hợp (Đọc từ Tab Thong_Ke)</h2>
+                        <span style="font-size: 12px; color: #666;">📊 Dữ liệu được bóc tách chính xác bắt đầu từ dòng 6 trên Google Sheets.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadStatsSheetData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
@@ -261,7 +262,7 @@
 
                     <!-- BẢNG 4: THỐNG KÊ THEO NGÀY (Cột J - K - L) -->
                     <div class="stat-box">
-                        <div class="stat-box-title"><i class="fa-solid fa-calendar-days"></i> Thống Kê Theo Ngày</div>
+                        <div class="stat-box-title"><i class="fa-solid fa-calendar-days"></i> Thống Kê Theo Ngày & Tổng Lượt Truy Cập</div>
                         <div class="table-responsive">
                             <table class="admin-table">
                                 <thead><tr><th>Ngày</th><th>Hành động</th><th style="text-align: center;">Số lượng</th></tr></thead>
@@ -428,7 +429,7 @@
             evt.currentTarget.classList.add('active');
         }
 
-        // ================= ĐỌC CHUẨN XÁC TỪNG CỤM BẢNG TRÊN TAB Thong_Ke =================
+        // ================= ĐỌC DỮ LIỆU CHUẨN TỪ DÒNG 6 TRÊN TAB Thong_Ke =================
         async function loadStatsSheetData() {
             const statRows = await fetchSheetRows(SHOP_SPREADSHEET_ID, 'Thong_Ke');
             
@@ -438,36 +439,40 @@
             let dateHTML = '';
             let userHTML = '';
 
+            // Lưu trữ để tính tổng lượt truy cập theo ngày
+            let dailyTotalViews = {}; // { "29/6/2026": tổng_số }
+
             statRows.forEach((row, idx) => {
-                // Bỏ qua dòng tiêu đề (dòng 0, 1, 2, 3 trong sheet tương ứng index 0 đến 3)
-                if (idx < 4) return;
+                // Bắt đầu đọc dữ liệu chính xác từ dòng 6 (index 5 trong mảng vì index 0 là dòng 1)
+                if (idx < 5) return;
 
                 // 1. Thống Kê Hành Động (Cột A: index 0, Cột B: index 1)
                 let actName = row.c[0] && row.c[0].v !== undefined ? String(row.c[0].v).trim() : '';
                 let actVal = row.c[1] && row.c[1].v !== undefined ? row.c[1].v : '';
-                if (actName && actName.toLowerCase() !== 'hành động') {
+                if (actName) {
                     actionHTML += `<tr><td><b>${actName}</b></td><td style="text-align: center;"><span class="badge-soluong">${actVal}</span></td></tr>`;
                 }
 
                 // 2. Thống Kê Thiết Bị (Cột D: index 3, Cột E: index 4)
                 let devName = row.c[3] && row.c[3].v !== undefined ? String(row.c[3].v).trim() : '';
                 let devVal = row.c[4] && row.c[4].v !== undefined ? row.c[4].v : '';
-                if (devName && devName.toLowerCase() !== 'thiết bị') {
+                if (devName) {
                     deviceHTML += `<tr><td><b>${devName}</b></td><td style="text-align: center;"><span class="badge-soluong">${devVal}</span></td></tr>`;
                 }
 
                 // 3. Thống Kê Sản Phẩm (Cột G: index 6, Cột H: index 7)
                 let prodName = row.c[6] && row.c[6].v !== undefined ? String(row.c[6].v).trim() : '';
                 let prodVal = row.c[7] && row.c[7].v !== undefined ? row.c[7].v : '';
-                if (prodName && prodName.toLowerCase() !== 'sản phẩm') {
+                if (prodName) {
                     prodHTML += `<tr><td><b>${prodName}</b></td><td style="text-align: center;"><span class="badge-xem">${prodVal}</span></td></tr>`;
                 }
 
                 // 4. Thống Kê Theo Ngày (Cột J: index 9, Cột K: index 10, Cột L: index 11)
                 let dayDate = row.c[9] && row.c[9].v !== undefined ? String(row.c[9].v).trim() : '';
                 let dayAct = row.c[10] && row.c[10].v !== undefined ? String(row.c[10].v).trim() : '';
-                let dayVal = row.c[11] && row.c[11].v !== undefined ? row.c[11].v : '';
-                if (dayDate && dayDate.toLowerCase() !== 'ngày') {
+                let dayVal = row.c[11] && row.c[11].v !== undefined ? parseFloat(row.c[11].v) || 0 : 0;
+                
+                if (dayDate) {
                     dateHTML += `<tr><td>${dayDate}</td><td>${dayAct}</td><td style="text-align: center;"><span class="badge-soluong">${dayVal}</span></td></tr>`;
                 }
 
@@ -476,7 +481,7 @@
                 let uDev = row.c[14] && row.c[14].v !== undefined ? String(row.c[14].v).trim() : '';
                 let uAct = row.c[15] && row.c[15].v !== undefined ? String(row.c[15].v).trim() : '';
                 let uVal = row.c[16] && row.c[16].v !== undefined ? row.c[16].v : '';
-                if (uDate && uDate.toLowerCase() !== 'ngày') {
+                if (uDate) {
                     userHTML += `<tr><td>${uDate}</td><td>${uDev}</td><td>${uAct}</td><td style="text-align: center;"><span class="badge-soluong">${uVal}</span></td></tr>`;
                 }
             });
@@ -802,7 +807,7 @@
             };
 
             if (!updatedProd.name) {
-                alert('Vui lòng nhập tên sản phẩm!');
+                alert('Vuint lòng nhập tên sản phẩm!');
                 return;
             }
 
