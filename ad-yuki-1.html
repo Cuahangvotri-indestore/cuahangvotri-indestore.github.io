@@ -183,7 +183,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h2 style="font-family: 'Comfortaa', sans-serif; color: var(--emerald-dark); margin:0; font-size: 17px;">Danh sách Form Request từ khách hàng</h2>
-                        <span style="font-size: 12px; color: #666;">💡 Tổng số lượng tự động tính tổng từ các cột <b>N, T, Y</b> trong Google Sheets.</span>
+                        <span style="font-size: 12px; color: #666;">💡 Tổng số lượng tự động tính tổng chính xác từ các cột <b>N, T, X</b> trong Google Sheets.</span>
                     </div>
                     <button class="admin-btn" style="padding: 8px 16px; font-size: 13px;" onclick="loadRequestsData()"><i class="fa-solid fa-rotate"></i> Làm mới dữ liệu</button>
                 </div>
@@ -195,7 +195,7 @@
                                 <th style="width: 170px;">Thời gian</th>
                                 <th>Thông tin khách hàng (Cột B)</th>
                                 <th>Tên dịch vụ (Cột C)</th>
-                                <th style="width: 140px; text-align: center;">Tổng số lượng (N+T+Y)</th>
+                                <th style="width: 140px; text-align: center;">Tổng số lượng (N+T+X)</th>
                                 <th style="width: 150px; text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
@@ -450,10 +450,18 @@
                     let customerInfo = row.c[1] && row.c[1].v ? String(row.c[1].v).trim() : '';
                     let serviceName = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : 'Không có tên dịch vụ';
 
-                    let valN = row.c[13] && row.c[13].v ? parseFloat(row.c[13].v) || 0 : 0;
-                    let valT = row.c[19] && row.c[19].v ? parseFloat(row.c[19].v) || 0 : 0;
-                    let valY = row.c[24] && row.c[24].v ? parseFloat(row.c[24].v) || 0 : 0;
-                    let totalQuantity = valN + valT + valY;
+                    // TÍNH TỔNG SỐ LƯỢNG CHÍNH XÁC TỪ CỘT N (INDEX 13), T (INDEX 19) VÀ X (INDEX 23)
+                    let indicesToSum = [13, 19, 23];
+                    let totalQuantity = 0;
+                    
+                    indicesToSum.forEach(colIdx => {
+                        if (row.c[colIdx] && row.c[colIdx].v !== undefined) {
+                            let val = parseFloat(row.c[colIdx].v);
+                            if (!isNaN(val)) {
+                                totalQuantity += val;
+                            }
+                        }
+                    });
 
                     if (customerInfo.toLowerCase() === 'tên khách hàng' || String(rawTime).toLowerCase() === 'timestamp') return;
 
