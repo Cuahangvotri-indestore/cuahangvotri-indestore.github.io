@@ -338,10 +338,10 @@
             return urlParams.get('cat') ? decodeURIComponent(urlParams.get('cat')).trim() : 'Chung';
         }
 
-        // 🛡️ CHỐNG ĐÚP 100% VÀ ĐẾM ĐÚNG EVENT KHI VÀO TRANG DANH MỤC
+        // TẢI TRANG DANH MỤC: GHI NHẬN EVENT CHUẨN XÁC, CHỐNG ĐÚP 1 LẦN DUY NHẤT TRONG PHIÊN
         window.addEventListener("DOMContentLoaded", function() {
             const currentCat = getCurrentCategoryFromURL();
-            const sessionKey = 'tracked_cat_event_' + currentCat;
+            const sessionKey = 'tracked_category_view_' + currentCat;
             if (!sessionStorage.getItem(sessionKey)) {
                 sessionStorage.setItem(sessionKey, 'true');
                 ghiNhatKyTruyCap("Truy_Cap_Trang", "Danh mục: " + currentCat);
@@ -482,9 +482,9 @@
 
         function renderFooterSocials() {
             let htmlLinks = '';
-            if(globalStoreData.config['Link_FB']) htmlLinks += `<a href="${globalStoreData.config['Link_FB']}" target="_blank" class="footer-btn btn-fb">Facebook</a>`;
-            if(globalStoreData.config['Link_Zalo']) htmlLinks += `<a href="${globalStoreData.config['Link_Zalo']}" target="_blank" class="footer-btn btn-zl">Zalo</a>`;
-            if(globalStoreData.config['Link_Shopee_Chung']) htmlLinks += `<a href="${globalStoreData.config['Link_Shopee_Chung']}" target="_blank" class="footer-btn btn-sp">Shopee</a>`;
+            if(globalStoreData.config['Link_FB']) htmlLinks += `<a href="${globalStoreData.config['Link_FB']}" target="_blank" class="footer-btn btn-fb" onclick="ghiNhatKyTruyCap('Click_Social', 'Facebook')">Facebook</a>`;
+            if(globalStoreData.config['Link_Zalo']) htmlLinks += `<a href="${globalStoreData.config['Link_Zalo']}" target="_blank" class="footer-btn btn-zl" onclick="ghiNhatKyTruyCap('Tu_Van_Zalo', 'Footer Zalo')">Zalo</a>`;
+            if(globalStoreData.config['Link_Shopee_Chung']) htmlLinks += `<a href="${globalStoreData.config['Link_Shopee_Chung']}" target="_blank" class="footer-btn btn-sp" onclick="ghiNhatKyTruyCap('Click_Shopee', 'Shopee Chung')">Shopee</a>`;
             document.getElementById('footer-social-links').innerHTML = htmlLinks;
         }
 
@@ -512,7 +512,7 @@
                 const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
                 let mainButtonHTML = "";
                 if (hasShopeeLink) {
-                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
+                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
                 }
 
                 scrollableBody.innerHTML = `
@@ -541,8 +541,8 @@
                         ${mainButtonHTML}
                         ${(isPreorder || hasConfig) ? `
                         <div class="btn-action-sub-grid">
-                            <a class="btn-action-sub" href="${formLink}" target="_blank"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
-                            <a class="btn-action-sub" href="${shopZalo}" target="_blank"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                            <a class="btn-action-sub" href="${formLink}" target="_blank" onclick="ghiNhatKyTruyCap('Xin_Info', '${prod.name}')"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
+                            <a class="btn-action-sub" href="${shopZalo}" target="_blank" onclick="ghiNhatKyTruyCap('Tu_Van_Zalo', '${prod.name}')"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
                         </div>` : ''}
                     </div>
                 `;
