@@ -162,7 +162,10 @@
         .popup-dot.active { background: var(--emerald-dark); width: 14px; border-radius: 10px; }
         
         .popup-section-title { font-size: 12px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .popup-desc-box { background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 16px; padding: 10px 14px; font-size: 14px; color: #4f6a65; line-height: 1.5; }
+        .popup-desc-box { 
+            background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 16px; padding: 10px 14px; font-size: 14px; color: #4f6a65; line-height: 1.5; 
+            white-space: pre-line; /* Hỗ trợ xuống dòng chuẩn xác theo nội dung nhập từ Sheets */
+        }
         .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 12px 18px; border-radius: 16px; }
         .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 24px; font-weight: 700; color: var(--emerald-dark); }
         
@@ -341,7 +344,6 @@
             setTimeout(function() { window.location.href = url; }, 400);
         }
 
-        // TẢI TRANG CHỦ: GHI NHẬN 1 LẦN DUY NHẤT (CHỐNG ĐÚP)
         window.addEventListener("DOMContentLoaded", function() {
             const sessionKey = 'tracked_home_page_once';
             if (!sessionStorage.getItem(sessionKey)) {
@@ -352,6 +354,7 @@
 
         function sanitizeText(str) {
             if (!str) return '';
+            // Giữ lại định dạng xuống dòng từ Google Sheets
             return String(str).replace(/["']/g, '').replace(/<[^>]*>?/gm, '');
         }
 
@@ -417,7 +420,7 @@
                             category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'KHÁC',
                             img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
                             detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
-                            desc: (row.c[5] && row.c[5].v) ? sanitizeText(row.c[5].v) : '', 
+                            desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '', 
                             basePrice: pPrice, 
                             shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '', 
                             stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
@@ -433,7 +436,8 @@
 
         function setupBannerCarousel() {
             let banners = [];
-            for(let i=1; i<=3; i++) { 
+            // Quét linh hoạt từ Banner_1 đến Banner_5
+            for(let i=1; i<=5; i++) { 
                 let imgUrl = globalStoreData.config[`Banner_${i}`];
                 let mappingVal = globalStoreData.config[`Mapping_Banner_${i}`];
                 if(imgUrl) {
@@ -446,7 +450,7 @@
             totalSlidesCount = banners.length;
             if(totalSlidesCount > 0) {
                 document.getElementById('carousel-slider-track').innerHTML = banners.map((b, idx) => {
-                    let hasAction = b.mapping !== '';
+                    let hasAction = b.mapping !== '' && b.mapping !== '(Để trống)';
                     let actionAttr = '';
                     let cursorStyle = '';
 
@@ -465,11 +469,13 @@
                 if(totalSlidesCount > 1) { clearInterval(slideInterval); slideInterval = setInterval(moveToNextSlide, 8000); }
             }
         }
+
         function moveToNextSlide() {
             const slides = document.querySelectorAll('.banner-slide'); if(slides.length === 0) return;
             slides[currentSlideIndex].classList.remove('active'); currentSlideIndex = (currentSlideIndex + 1) % totalSlidesCount; slides[currentSlideIndex].classList.add('active');
             document.getElementById('carousel-slider-track').style.transform = `translateX(-${currentSlideIndex * 100}%)`;
         }
+
         function renderFooterSocials() {
             let htmlLinks = '';
             if(globalStoreData.config['Link_FB']) htmlLinks += `<a href="${globalStoreData.config['Link_FB']}" target="_blank" class="footer-btn btn-fb" onclick="ghiNhatKyTruyCap('Click_Social', 'Facebook')">Facebook</a>`;
