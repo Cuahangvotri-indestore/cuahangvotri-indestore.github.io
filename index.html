@@ -224,7 +224,7 @@
             <div class="right-nav-box">
                 <nav>
                     <ul class="menu-categories" id="categoryMenuNav">
-                        <!-- Menu được load động từ sheet Danh_Muc -->
+                        <!-- Menu động từ sheet Danh_Muc -->
                     </ul>
                 </nav>
             </div>
@@ -395,7 +395,8 @@
                         let status = row.c[1] && row.c[1].v ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
                         let order = row.c[2] && row.c[2].v ? parseInt(row.c[2].v) || 99 : 99;
 
-                        if (status !== 'ẩn') {
+                        // Kiểm tra kỹ nếu trạng thái chứa chữ "ẩn" thì loại bỏ luôn
+                        if (!status.includes('ẩn')) {
                             categoriesList.push({ name: catName, order: order });
                         }
                     }
