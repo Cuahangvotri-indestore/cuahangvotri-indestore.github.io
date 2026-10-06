@@ -610,9 +610,10 @@
                 const formLink = globalStoreData.config['Link_Form'] || "#";
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 
+                // Kiểm tra điều kiện có cấu hình: hoặc cột Bo_Cau_Hinh khớp, hoặc Ma_SP tồn tại trong GIA_THIEP
                 const matrixThiep = dynamicSheetsPhuMatrix["GIA_THIEP"];
                 const hasThiepConfig = matrixThiep && matrixThiep.data.some(d => d.Ma_SP.toLowerCase() === prod.code.toLowerCase());
-                const hasConfig = (prod.boCauHinh && dynamicSheetsPhuMatrix[prod.boCauHinh]) || hasThiepConfig;
+                const hasConfig = (prod.boCauHinh && dynamicSheetsPhuMatrix[prod.boCauHinh]) || hasThiepConfig || (prod.boCauHinh && prod.boCauHinh.toUpperCase() === 'GIA_THIEP');
 
                 const stickyTitleEl = document.getElementById('popupStickyTitle');
                 if(stickyTitleEl) stickyTitleEl.innerText = prod.name;
@@ -671,14 +672,16 @@
                 } else {
                     if(checkBlock) checkBlock.style.display = 'block'; 
                     
-                    if (hasThiepConfig || prod.boCauHinh === 'GIA_THIEP') {
+                    if (hasThiepConfig || (prod.boCauHinh && prod.boCauHinh.toUpperCase() === 'GIA_THIEP')) {
                         const matrix = dynamicSheetsPhuMatrix["GIA_THIEP"];
                         const filteredThiep = matrix.data.filter(d => d.Ma_SP.toLowerCase() === prod.code.toLowerCase());
                         
                         if (filteredThiep.length > 0) {
-                            // Tạo đầy đủ radio chọn kiểu in và chọn loại giấy dựa trên Ma_SP, hoàn toàn bỏ qua phần chọn loại thiệp
+                            // Tạo các radio button cho Kiểu in và Loại giấy dựa theo Ma_SP, hoàn toàn bỏ qua phần chọn loại thiệp
                             buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiep.map(d => d.Kieu_In))], filteredThiep[0].Kieu_In);
                             buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
+                        } else {
+                            radioSpace.innerHTML = `<div style="font-size:13px; color:#b25900;">Chưa cấu hình bảng giá thiệp cho mã sản phẩm này.</div>`;
                         }
                     } else {
                         const matrix = dynamicSheetsPhuMatrix[prod.boCauHinh];
@@ -724,7 +727,7 @@
             const matrixThiep = dynamicSheetsPhuMatrix["GIA_THIEP"];
             const hasThiepConfig = matrixThiep && matrixThiep.data.some(d => d.Ma_SP.toLowerCase() === popupActiveProduct.code.toLowerCase());
 
-            if (hasThiepConfig || popupActiveProduct.boCauHinh === 'GIA_THIEP') {
+            if (hasThiepConfig || (popupActiveProduct.boCauHinh && popupActiveProduct.boCauHinh.toUpperCase() === 'GIA_THIEP')) {
                 const matrix = dynamicSheetsPhuMatrix["GIA_THIEP"];
                 if (!matrix || !matrix.data) return;
 
