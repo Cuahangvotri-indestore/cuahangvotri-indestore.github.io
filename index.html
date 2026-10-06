@@ -270,33 +270,37 @@
 
         async function loadDynamicPriceMatrices() {
             try {
+                // Tải bảng giá Thệp với cột Ma_SP ở index 6 (cột G)
                 const thiepRows = await fetchSheetRows('GIA_THIEP');
                 let thiepData = [];
                 thiepRows.forEach(row => {
-                    if (row && row.c && row.c[0] && row.c[0].v) {
-                        let loaiThiep = row.c[0].v ? String(row.c[0].v).trim() : '';
-                        let macDinh = row.c[1] && row.c[1].v ? String(row.c[1].v).trim() : '';
-                        let kieuIn = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : '';
-                        let kichThuoc = row.c[3] && row.c[3].v ? String(row.c[3].v).trim() : '';
-                        let g180Val = row.c[4] && row.c[4].v ? row.c[4].v : 0;
-                        let g210Val = row.c[5] && row.c[5].v ? row.c[5].v : 0;
+                    if (row && row.c) {
+                        let loaiThiep = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : '';
+                        let macDinh = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim() : '';
+                        let kieuIn = (row.c[2] && row.c[2].v) ? String(row.c[2].v).trim() : '';
+                        let kichThuoc = (row.c[3] && row.c[3].v) ? String(row.c[3].v).trim() : '';
+                        let g180Val = (row.c[4] && row.c[4].v) !== undefined ? row.c[4].v : 0;
+                        let g210Val = (row.c[5] && row.c[5].v) !== undefined ? row.c[5].v : 0;
+                        let maSP = (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : '';
+
                         let g180 = (String(g180Val).toLowerCase().includes('chưa có')) ? "Chưa có" : (parseFloat(String(g180Val).replace(/[^0-9.-]+/g, "")) || 0);
                         let g210 = (String(g210Val).toLowerCase().includes('chưa có')) ? "Chưa có" : (parseFloat(String(g210Val).replace(/[^0-9.-]+/g, "")) || 0);
                         
-                        if (loaiThiep.toLowerCase() !== 'loai_thiep') {
+                        if (loaiThiep !== '' && loaiThiep.toLowerCase() !== 'loai_thiep') {
                             thiepData.push({
                                 Loai_Thiep: loaiThiep,
                                 Mac_Dinh: macDinh,
                                 Kieu_In: kieuIn,
                                 Kich_Thuoc: kichThuoc,
                                 Giay_Ford_180gsm: g180,
-                                Giay_Ford_210gsm: g210
+                                Giay_Ford_210gsm: g210,
+                                Ma_SP: maSP
                             });
                         }
                     }
                 });
                 dynamicSheetsPhuMatrix["GIA_THIEP"] = {
-                    headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Kich_Thuoc", "Giay_Ford_180gsm", "Giay_Ford_210gsm"],
+                    headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Kich_Thuoc", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"],
                     data: thiepData
                 };
 
@@ -671,9 +675,19 @@
                     const matrix = dynamicSheetsPhuMatrix[prod.boCauHinh];
                     if (matrix && matrix.data && matrix.data.length > 0) {
                         if(prod.boCauHinh === 'GIA_THIEP') {
-                            buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", [...new Set(matrix.data.map(d => d.Loai_Thiep))], matrix.data[0].Loai_Thiep);
-                            buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(matrix.data.map(d => d.Kieu_In))], matrix.data[0].Kieu_In);
-                            buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
+                            // Lọc các dòng thiệp theo đúng Ma_SP trùng với mã sản phẩm (ví dụ IN-001)
+                            const filteredThiep = matrix.data.filter(d => d.Ma_SP.toLowerCase() === prod.code.toLowerCase());
+                            
+                            if (filteredThiep.length > 0) {
+                                // Hiển thị tên loại thiệp cố định từ dữ liệu (không cần chọn loại thiệp nữa)
+                                let cardTypeName = filteredThiep[0].Loai_Thiep;
+                                radioSpace.innerHTML += `<div style="font-size:14px; font-weight:700; color:var(--emerald-dark); margin-bottom:10px;"><i class="fa-solid fa-tag"></i> Loại thiệp: ${cardTypeName}</div>`;
+                                
+                                buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiep.map(d => d.Kieu_In))], filteredThiep[0].Kieu_In);
+                                buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
+                            } else {
+                                radioSpace.innerHTML = `<div style="font-size:13px; color:#b25900;">Chưa cấu hình bảng giá cho mã sản phẩm này.</div>`;
+                            }
                         } else if(prod.boCauHinh === 'GIA_TEM_STICKER') {
                             const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
                             buildPopupRadioRow(radioSpace, "Single_Option", "Cán màng:", cleanH, cleanH[0]);
@@ -715,13 +729,14 @@
             if (!matrix || !matrix.data || matrix.data.length === 0) return;
 
             if(popupActiveProduct.boCauHinh === 'GIA_THIEP') {
-                let selectedThiep = document.querySelector(`input[name="Loai_Thiep"]:checked`)?.value;
+                let productCode = popupActiveProduct.code;
                 let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
 
-                let matched = matrix.data.find(d => d.Loai_Thiep === selectedThiep && d.Kieu_In === selectedKieuIn);
+                // Tìm dòng khớp chính xác mã sản phẩm (Ma_SP) và Kiểu in
+                let matched = matrix.data.find(d => d.Ma_SP.toLowerCase() === productCode.toLowerCase() && d.Kieu_In.trim() === selectedKieuIn?.trim());
                 
-                if (!matched || !matched[selectedGiay] || Number(matched[selectedGiay]) === 0) {
+                if (!matched || !matched[selectedGiay] || matched[selectedGiay] === "Chưa có" || Number(matched[selectedGiay]) === 0) {
                     priceVal = "Chưa có";
                 } else {
                     priceVal = matched[selectedGiay];
