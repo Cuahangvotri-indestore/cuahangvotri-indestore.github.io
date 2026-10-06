@@ -96,24 +96,17 @@
 
         .product-card { 
             background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(var(--blur-value)); border-radius: 32px; border: 1.5px solid var(--liquid-border);
-            transition: box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 405px; cursor: pointer;
+            transition: box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: var(--liquid-shadow); min-height: 345px; cursor: pointer;
             user-select: none; z-index: 10;
         }
         .product-card:hover { box-shadow: 0 25px 50px rgba(31, 78, 69, 0.12); border-color: rgba(56, 122, 111, 0.45); }
         
         .product-img-wrapper { width: 100%; height: 255px; background: rgba(255, 255, 255, 0.1); overflow: hidden; position: relative; }
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; }
-        .product-title { font-size: 17px; margin: 0 0 12px 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; min-height: 48px; display: flex; align-items: center; justify-content: center; }
-        .product-price { 
-            font-size: 18px; font-weight: 700; color: var(--emerald-soft); background: rgba(255, 255, 255, 0.5); 
-            padding: 8px 20px; border-radius: 25px; display: inline-block; margin-top: auto; border: 1px solid var(--liquid-border); font-family: 'Comfortaa', sans-serif;
-        }
-        .badge-status { position: absolute; top: 15px; left: 15px; padding: 6px 16px; font-size: 12px; font-weight: 700; border-radius: 35px; z-index: 2; border: 1px solid var(--liquid-border); }
-        .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
-        .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
+        .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .product-title { font-size: 17px; margin: 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; display: flex; align-items: center; justify-content: center; }
 
-        /* POPUP CHI TIẾT SẢN PHẨM */
+        /* POPUP CHI TIẾT SẢN PHẨM / REVIEW */
         .popup-overlay { 
             position: fixed; inset: 0; z-index: 200; background: rgba(31, 78, 69, 0.15); backdrop-filter: blur(12px); 
             display: flex; align-items: center; justify-content: center; padding: 20px; 
@@ -160,28 +153,11 @@
         .popup-section-title { font-size: 12px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; display: block; }
         .popup-desc-box { 
             background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 16px; padding: 10px 14px; font-size: 14px; color: #4f6a65; line-height: 1.5; 
-            white-space: pre-line; /* Hỗ trợ xuống dòng chuẩn xác theo nội dung nhập từ Sheets */
+            white-space: pre-line; 
         }
-        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 12px 18px; border-radius: 16px; }
-        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 24px; font-weight: 700; color: var(--emerald-dark); }
-        
-        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 20px; padding: 16px; }
-        .radio-group-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        .radio-group-wrapper:last-child { margin-bottom: 0; }
-        .radio-options-flex { display: flex; flex-wrap: wrap; gap: 6px; }
-        
-        .custom-radio-btn { 
-            display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255, 255, 255, 0.7); 
-            border: 1.5px solid var(--liquid-border); border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
-            transition: all 0.25s ease;
-        }
-        .custom-radio-btn:hover { background: rgba(31, 78, 69, 0.06); border-color: var(--emerald-dark); }
-        .custom-radio-btn input[type="radio"] { accent-color: var(--emerald-dark); width: 15px; height: 15px; cursor: pointer; }
 
         .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
         .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 13px; border-radius: 16px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(31, 78, 69, 0.12); }
-        .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 13px; padding: 11px; border-radius: 14px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
 
         footer { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-top: 1px solid var(--liquid-border); padding: 35px 24px; text-align: center; margin-top: auto; }
         .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
@@ -226,7 +202,7 @@
         </div>
     </header>
 
-    <div class="filter-section">
+    <div class="filter-section" id="filterSortArea">
         <div class="custom-dropdown" id="customSortDropdown">
             <div class="dropdown-trigger" onclick="toggleDropdown()"><span id="dropdownCurrentText">Sắp xếp: Mới nhất</span><span class="dropdown-arrow"></span></div>
             <ul class="dropdown-menu">
@@ -239,11 +215,11 @@
 
     <div class="main-content"><div class="product-grid" id="product-list-view"></div></div>
 
-    <!-- POPUP CHI TIẾT SẢN PHẨM -->
+    <!-- POPUP CHI TIẾT SẢN PHẨM HOẶC REVIEW -->
     <div class="popup-overlay" id="liquidProductPopup" onclick="closeProductPopupOutside(event)">
         <div class="popup-container">
             <div class="popup-sticky-header">
-                <h2 class="popup-title-text" id="popupStickyTitle">Tên sản phẩm</h2>
+                <h2 class="popup-title-text" id="popupStickyTitle">Tiêu đề</h2>
                 <button class="popup-close-btn" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
@@ -260,9 +236,9 @@
 
     <script>
         const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0'; 
-        let globalStoreData = { products: [], config: {} };
+        let globalStoreData = { products: [], reviews: [], config: {} };
         let currentSortValue = 'default';
-        let popupActiveProduct = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
+        let popupActiveItem = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
 
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": { headers: ["Mac_Dinh", "Khong_Man", "Co_Man"], data: [{ Mac_Dinh: "Khong_Man", Khong_Man: 26250, Co_Man: 31500 }] },
@@ -350,7 +326,7 @@
 
         function sanitizeText(str) {
             if (!str) return '';
-            return String(str).replace(/["']/g, '').replace(/<[^>]*>?/gm, '').replace(/\n/g, '<br>');
+            return String(str).replace(/["']/g, '').replace(/<[^>]*>?/gm, '');
         }
 
         function toggleDropdown() { document.getElementById('customSortDropdown').classList.toggle('open'); }
@@ -429,38 +405,70 @@
                 
                 renderFooterSocials();
                 
-                const productRows = await fetchSheetRows('Danh_Sach_SanPham');
-                globalStoreData.products = [];
-                
-                productRows.forEach((row, idx) => {
-                    if(row && row.c && row.c[1] && row.c[1].v) {
-                        let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
-                        if (statusVal === 'ẩn') return;
+                const currentCat = getCurrentCategoryFromURL();
+                const isReviewCat = currentCat.toLowerCase().includes('review');
 
-                        let pPrice = 0; 
-                        if(row.c[7] && row.c[7].v) {
-                            pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
+                if (isReviewCat) {
+                    const filterArea = document.getElementById('filterSortArea');
+                    if (filterArea) filterArea.style.display = 'none';
+
+                    const reviewRows = await fetchSheetRows('List_Review');
+                    globalStoreData.reviews = [];
+
+                    reviewRows.forEach((row, idx) => {
+                        if (row && row.c && row.c[1] && row.c[1].v) {
+                            // Kiểm tra trạng thái từ cột H (Trang_Thai_RV), nếu chứa chữ "ẩn" thì bỏ qua không hiện
+                            let statusRV = (row.c[7] && row.c[7].v) ? String(row.c[7].v).trim().toLowerCase() : 'hiện';
+                            if (statusRV.includes('ẩn')) return;
+
+                            globalStoreData.reviews.push({
+                                sheetIndex: idx,
+                                name: sanitizeText(row.c[1].v), // Ten_SP_RV (Cột B)
+                                category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'REVIEW LINK', // Danh_Muc (Cột C)
+                                img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), // Anh_RV (Cột D)
+                                detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', // Anh_RV_Chi_Tiet (Cột E)
+                                desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '', // Review chi tiết (Cột F)
+                                shopeeLink: (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : '' // Link_Shopee (Cột G)
+                            });
                         }
+                    });
+                } else {
+                    const productRows = await fetchSheetRows('Danh_Sach_SanPham');
+                    globalStoreData.products = [];
+                    
+                    productRows.forEach((row, idx) => {
+                        if(row && row.c && row.c[1] && row.c[1].v) {
+                            let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
+                            if (statusVal === 'ẩn') return;
+                            
+                            let pCat = (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'KHÁC';
+                            if (pCat.toLowerCase().includes('review')) return;
 
-                        let pName = sanitizeText(row.c[1].v);
-                        let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
-                        let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
+                            let pPrice = 0; 
+                            if(row.c[7] && row.c[7].v) {
+                                pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
+                            }
 
-                        globalStoreData.products.push({
-                            sheetIndex: idx, 
-                            code: cleanCode, 
-                            name: pName, 
-                            category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'KHÁC',
-                            img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
-                            detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
-                            desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '', 
-                            basePrice: pPrice, 
-                            shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '', 
-                            stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
-                            boCauHinh: (row.c[11] && row.c[11].v) ? String(row.c[11].v).trim() : ''
-                        });
-                    }
-                });
+                            let pName = sanitizeText(row.c[1].v);
+                            let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
+                            let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
+
+                            globalStoreData.products.push({
+                                sheetIndex: idx, 
+                                code: cleanCode, 
+                                name: pName, 
+                                category: pCat,
+                                img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
+                                detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
+                                desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '', 
+                                basePrice: pPrice, 
+                                shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '', 
+                                stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
+                                boCauHinh: (row.c[11] && row.c[11].v) ? String(row.c[11].v).trim() : ''
+                            });
+                        }
+                    });
+                }
 
                 setActiveMenuState();
                 renderCategoryProducts();
@@ -486,35 +494,54 @@
 
         function renderCategoryProducts() {
             const currentCat = getCurrentCategoryFromURL();
-
-            let displayList = globalStoreData.products.filter(p => {
-                if (currentCat === 'chung') return true;
-                return p.category.toLowerCase() === currentCat.toLowerCase();
-            });
-
-            if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
-            else if (currentSortValue === 'price-desc') displayList.sort((a, b) => b.basePrice - a.basePrice);
-            else displayList.sort((a, b) => a.sheetIndex - b.sheetIndex);
-
+            const isReviewCat = currentCat.toLowerCase().includes('review');
             const gridContainer = document.getElementById('product-list-view');
 
-            if (displayList.length === 0) {
-                gridContainer.innerHTML = `<div class="empty-notice-box">Shop đang chưa có sản phẩm nào ạ!</div>`;
-                return;
-            }
+            if (isReviewCat) {
+                let displayList = [...globalStoreData.reviews];
 
-            gridContainer.innerHTML = displayList.map(p => {
-                const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
-                return `
-                    <div class="product-card" onclick="openProductDetailPopupByIndex(${p.sheetIndex})">
-                        <span class="badge-status ${badgeClass}">${p.stock}</span>
-                        <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
-                        <div class="product-info">
-                            <h3 class="product-title">${p.name}</h3>
-                            <div class="product-price">${Number(p.basePrice).toLocaleString('vi-VN')} đ</div>
-                        </div>
-                    </div>`;
-            }).join('');
+                if (displayList.length === 0) {
+                    gridContainer.innerHTML = `<div class="empty-notice-box">Chưa có bài review nào ạ!</div>`;
+                    return;
+                }
+
+                gridContainer.innerHTML = displayList.map(r => {
+                    return `
+                        <div class="product-card" onclick="openReviewDetailPopupByIndex(${r.sheetIndex})">
+                            <div class="product-img-wrapper"><img class="product-img" src="${r.img || 'https://via.placeholder.com/400'}" alt="${r.name}"></div>
+                            <div class="product-info">
+                                <h3 class="product-title">${r.name}</h3>
+                            </div>
+                        </div>`;
+                }).join('');
+            } else {
+                let displayList = globalStoreData.products.filter(p => {
+                    if (currentCat === 'chung') return true;
+                    return p.category.toLowerCase() === currentCat.toLowerCase();
+                });
+
+                if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
+                else if (currentSortValue === 'price-desc') displayList.sort((a, b) => b.basePrice - a.basePrice);
+                else displayList.sort((a, b) => a.sheetIndex - b.sheetIndex);
+
+                if (displayList.length === 0) {
+                    gridContainer.innerHTML = `<div class="empty-notice-box">Shop đang chưa có sản phẩm nào ạ!</div>`;
+                    return;
+                }
+
+                gridContainer.innerHTML = displayList.map(p => {
+                    const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
+                    return `
+                        <div class="product-card" onclick="openProductDetailPopupByIndex(${p.sheetIndex})">
+                            <span class="badge-status ${badgeClass}">${p.stock}</span>
+                            <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
+                            <div class="product-info">
+                                <h3 class="product-title">${p.name}</h3>
+                                <div class="product-price">${Number(p.basePrice).toLocaleString('vi-VN')} đ</div>
+                            </div>
+                        </div>`;
+                }).join('');
+            }
         }
 
         function renderFooterSocials() {
@@ -525,6 +552,56 @@
             document.getElementById('footer-social-links').innerHTML = htmlLinks;
         }
 
+        function openReviewDetailPopupByIndex(sheetIndex) {
+            try {
+                const rev = globalStoreData.reviews.find(r => r.sheetIndex === sheetIndex);
+                if(!rev) return;
+                
+                ghiNhatKyTruyCap("Click_Review", rev.name);
+
+                popupActiveItem = rev; 
+                popupActiveImgIndex = 0;
+                popupImagesArray = (rev.detailImgs && rev.detailImgs.trim() !== "") ? rev.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (rev.img ? [rev.img] : ['https://via.placeholder.com/400']);
+
+                const stickyTitleEl = document.getElementById('popupStickyTitle');
+                if(stickyTitleEl) stickyTitleEl.innerText = rev.name;
+
+                const scrollableBody = document.getElementById('popupScrollableBodyContent');
+                
+                const hasShopeeLink = (rev.shopeeLink && rev.shopeeLink.trim() !== "");
+                let mainButtonHTML = "";
+                if (hasShopeeLink) {
+                    mainButtonHTML = `<a class="btn-action-main" href="${rev.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee_Review', '${rev.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
+                }
+
+                scrollableBody.innerHTML = `
+                    <div class="popup-image-container-wrapper">
+                        <div class="popup-image-viewport" id="popupImageViewportTrack"></div>
+                        <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="popup-dots-row" id="popupImgDotsSpace"></div>
+
+                    <div>
+                        <span class="popup-section-title">Nội dung review</span>
+                        <div class="popup-desc-box">${rev.desc || "Bài review chi tiết sản phẩm."}</div>
+                    </div>
+
+                    <div class="popup-actions-wrapper">
+                        ${mainButtonHTML}
+                    </div>
+                `;
+
+                buildPopupSliderDOM(); 
+                renderPopupSliderEffects(); 
+                startPopupAutoplay();
+
+                const popupEl = document.getElementById('liquidProductPopup');
+                if(popupEl) popupEl.classList.add('open');
+            } catch (err) {
+                console.error("Lỗi khi mở popup review:", err);
+            }
+        }
+
         function openProductDetailPopupByIndex(sheetIndex) {
             try {
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
@@ -532,7 +609,7 @@
                 
                 ghiNhatKyTruyCap("Click_SanPham", prod.name);
 
-                popupActiveProduct = prod; 
+                popupActiveItem = prod; 
                 popupActiveImgIndex = 0;
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
@@ -635,11 +712,11 @@
         }
 
         function calculatePopupDynamicPrice() {
-            if(!popupActiveProduct || !popupActiveProduct.boCauHinh) return;
-            const matrix = sheetsPhuDataMatrix[popupActiveProduct.boCauHinh]; 
-            let priceVal = popupActiveProduct.basePrice;
+            if(!popupActiveItem || !popupActiveItem.boCauHinh) return;
+            const matrix = sheetsPhuDataMatrix[popupActiveItem.boCauHinh]; 
+            let priceVal = popupActiveItem.basePrice;
 
-            if(popupActiveProduct.boCauHinh === 'GIA_THIEP') {
+            if(popupActiveItem.boCauHinh === 'GIA_THIEP') {
                 let selectedThiep = document.querySelector(`input[name="Loai_Thiep"]:checked`)?.value;
                 let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
@@ -700,7 +777,7 @@
             stopPopupAutoplay(); 
             const popupEl = document.getElementById('liquidProductPopup');
             if(popupEl) popupEl.classList.remove('open'); 
-            popupActiveProduct = null;
+            popupActiveItem = null;
             const track = document.getElementById('popupImageViewportTrack');
             if(track) track.innerHTML = '';
         }
