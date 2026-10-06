@@ -273,13 +273,13 @@
                 const thiepRows = await fetchSheetRows('GIA_THIEP');
                 let thiepData = [];
                 thiepRows.forEach(row => {
-                    if (row && row.c && row.c[0] && row.c[0].v !== undefined) {
-                        let loaiThiep = row.c[0] && row.c[0].v ? String(row.c[0].v).trim() : '';
-                        let macDinh = row.c[1] && row.c[1].v ? String(row.c[1].v).trim() : '';
-                        let kieuIn = row.c[2] && row.c[2].v ? String(row.c[2].v).trim() : '';
-                        let g180Val = (row.c[4] && row.c[4].v) !== undefined ? row.c[4].v : 0;
-                        let g210Val = (row.c[5] && row.c[5].v) !== undefined ? row.c[5].v : 0;
-                        let maSP = (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : '';
+                    if (row && row.c) {
+                        let loaiThiep = (row.c[0] && row.c[0].v !== undefined && row.c[0].v !== null) ? String(row.c[0].v).trim() : '';
+                        let macDinh = (row.c[1] && row.c[1].v !== undefined && row.c[1].v !== null) ? String(row.c[1].v).trim() : '';
+                        let kieuIn = (row.c[2] && row.c[2].v !== undefined && row.c[2].v !== null) ? String(row.c[2].v).trim() : '';
+                        let g180Val = (row.c[4] && row.c[4].v !== undefined && row.c[4].v !== null) ? row.c[4].v : 0;
+                        let g210Val = (row.c[5] && row.c[5].v !== undefined && row.c[5].v !== null) ? row.c[5].v : 0;
+                        let maSP = (row.c[6] && row.c[6].v !== undefined && row.c[6].v !== null) ? String(row.c[6].v).trim() : '';
 
                         let g180 = (String(g180Val).toLowerCase().includes('chưa có')) ? "Chưa có" : (parseFloat(String(g180Val).replace(/[^0-9.-]+/g, "")) || 0);
                         let g210 = (String(g210Val).toLowerCase().includes('chưa có')) ? "Chưa có" : (parseFloat(String(g210Val).replace(/[^0-9.-]+/g, "")) || 0);
@@ -305,7 +305,7 @@
                 if (cardRows && cardRows.length > 0) {
                     let cardRowObj = {};
                     cardRows.forEach(row => {
-                        if (row && row.c && row.c[0] && row.c[0].v !== undefined) {
+                        if (row && row.c && row.c[0] && row.c[0].v !== undefined && row.c[0].v !== null) {
                             let key = String(row.c[0].v).trim();
                             let val = row.c[1] && row.c[1].v ? parseFloat(String(row.c[1].v).replace(/[^0-9.-]+/g, "")) || 0 : 0;
                             cardRowObj[key] = val;
@@ -321,7 +321,7 @@
                 if (stickerRows && stickerRows.length > 0) {
                     let stickerRowObj = {};
                     stickerRows.forEach(row => {
-                        if (row && row.c && row.c[0] && row.c[0].v !== undefined) {
+                        if (row && row.c && row.c[0] && row.c[0].v !== undefined && row.c[0].v !== null) {
                             let key = String(row.c[0].v).trim();
                             let val = row.c[1] && row.c[1].v ? parseFloat(String(row.c[1].v).replace(/[^0-9.-]+/g, "")) || 0 : 0;
                             stickerRowObj[key] = val;
@@ -442,9 +442,9 @@
                 if (menuRows && menuRows.length > 0) {
                     menuRows.forEach(row => {
                         if (row && row.c) {
-                            let catName = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : '';
-                            let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
-                            let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
+                            let catName = (row.c[0] && row.c[0].v !== undefined && row.c[0].v !== null) ? String(row.c[0].v).trim() : '';
+                            let status = (row.c[1] && row.c[1].v !== undefined && row.c[1].v !== null) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
+                            let order = (row.c[2] && row.c[2].v !== undefined && row.c[2].v !== null) ? parseInt(row.c[2].v) || 99 : 99;
 
                             if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && !status.includes('ẩn')) {
                                 categoriesList.push({ name: catName, order: order });
@@ -470,14 +470,14 @@
 
         async function initSprint1HomePage() {
             try {
-                // Đảm bảo đợi tải xong bảng giá phụ trước khi khởi tạo sản phẩm
+                // Đảm bảo đợi tải xong bảng giá phụ trước khi vẽ sản phẩm
                 await Promise.all([
                     loadDynamicCategoryMenu(),
                     loadDynamicPriceMatrices()
                 ]);
 
                 const configRows = await fetchSheetRows('Cau_Hinh_Shop');
-                configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
+                configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[0].v !== undefined && row.c[1] && row.c[1].v !== undefined) globalStoreData.config[row.c[0].v] = row.c[1].v; });
                 if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
                 if(globalStoreData.config['Logo_Shop']) document.getElementById('shop-logo-box').innerHTML = `<img src="${parseDirectImageUrl(globalStoreData.config['Logo_Shop'])}" alt="Logo Shop">`;
                 if(globalStoreData.config['Tam_Nhin']) { document.getElementById('vision-text-content').innerText = `"${globalStoreData.config['Tam_Nhin']}"`; document.getElementById('vision-area').style.display = 'block'; }
@@ -487,30 +487,30 @@
                 globalStoreData.products = [];
                 
                 productRows.forEach((row, idx) => {
-                    if(row && row.c && row.c[1] && row.c[1].v) {
+                    if(row && row.c && row.c[1] && row.c[1].v !== undefined && row.c[1].v !== null) {
                         let titleProd = String(row.c[1].v).trim();
                         if (titleProd.toLowerCase() === 'ten_san_pham' || titleProd === '') return;
 
-                        let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
+                        let statusVal = (row.c[10] && row.c[10].v !== undefined && row.c[10].v !== null) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
                         if (statusVal === 'ẩn') return;
 
-                        let pCat = (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'KHÁC';
+                        let pCat = (row.c[2] && row.c[2].v !== undefined && row.c[2].v !== null) ? sanitizeText(row.c[2].v).trim() : 'KHÁC';
                         if (pCat.toLowerCase().includes('review')) return;
 
-                        let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
+                        let rawCode = (row.c[0] && row.c[0].v !== undefined && row.c[0].v !== null) ? String(row.c[0].v).trim() : 'PROD_' + idx;
                         let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
 
                         let pPrice = 0; 
-                        if(row.c[7] && row.c[7].v) {
+                        if(row.c[7] && row.c[7].v !== undefined && row.c[7].v !== null) {
                             pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
                         } else {
-                            // Nếu giá cơ bản ngoài danh sách trống nhưng thuộc GIA_THIEP, tự động lấy giá rẻ nhất của mã đó
+                            // Tự động tìm giá mặc định từ GIA_THIEP nếu basePrice ngoài danh sách trống
                             const matrixThiep = dynamicSheetsPhuMatrix["GIA_THIEP"];
                             if (matrixThiep && matrixThiep.data) {
-                                let matchItems = matrixThiep.data.filter(d => d.Ma_SP.toLowerCase() === cleanCode.toLowerCase());
-                                if (matchItems.length > 0) {
-                                    let prices = matchItems.map(d => typeof d.Giay_Ford_180gsm === 'number' ? d.Giay_Ford_180gsm : 0).filter(val => val > 0);
-                                    if (prices.length > 0) pPrice = Math.min(...prices);
+                                let defaultRow = matrixThiep.data.find(d => d.Ma_SP.toLowerCase() === cleanCode.toLowerCase() && d.Mac_Dinh !== '');
+                                if (!defaultRow) defaultRow = matrixThiep.data.find(d => d.Ma_SP.toLowerCase() === cleanCode.toLowerCase());
+                                if (defaultRow) {
+                                    pPrice = typeof defaultRow.Giay_Ford_180gsm === 'number' ? defaultRow.Giay_Ford_180gsm : 0;
                                 }
                             }
                         }
@@ -522,13 +522,13 @@
                             code: cleanCode, 
                             name: pName, 
                             category: pCat,
-                            img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
-                            detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
-                            desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '', 
+                            img: parseDirectImageUrl((row.c[3] && row.c[3].v !== undefined) ? row.c[3].v : ''), 
+                            detailImgs: (row.c[4] && row.c[4].v !== undefined) ? String(row.c[4].v).trim() : '', 
+                            desc: (row.c[5] && row.c[5].v !== undefined) ? String(row.c[5].v) : '', 
                             basePrice: pPrice, 
-                            shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '', 
-                            stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
-                            boCauHinh: (row.c[11] && row.c[11].v) ? String(row.c[11].v).trim() : ''
+                            shopeeLink: (row.c[8] && row.c[8].v !== undefined) ? String(row.c[8].v).trim() : '', 
+                            stock: (row.c[9] && row.c[9].v !== undefined) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
+                            boCauHinh: (row.c[11] && row.c[11].v !== undefined && row.c[11].v !== null) ? String(row.c[11].v).trim() : ''
                         });
                     }
                 });
@@ -689,7 +689,10 @@
                             const filteredThiep = matrix.data.filter(d => d.Ma_SP.toLowerCase() === prod.code.toLowerCase());
                             
                             if (filteredThiep.length > 0) {
-                                buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiep.map(d => d.Kieu_In))], filteredThiep[0].Kieu_In);
+                                // Tìm dòng được đánh dấu Mac_Dinh trong sheet GIA_THIEP để chọn làm mặc định ban đầu
+                                let defaultItem = filteredThiep.find(d => d.Mac_Dinh && d.Mac_Dinh !== '') || filteredThiep[0];
+
+                                buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiep.map(d => d.Kieu_In))], defaultItem.Kieu_In);
                                 buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
                             } else {
                                 radioSpace.innerHTML = `<div style="font-size:13px; color:#b25900;">Chưa cấu hình bảng giá thiệp cho mã sản phẩm này.</div>`;
