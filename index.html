@@ -277,7 +277,6 @@
                         let loaiThiep = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : '';
                         let macDinh = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim() : '';
                         let kieuIn = (row.c[2] && row.c[2].v) ? String(row.c[2].v).trim() : '';
-                        let kichThuoc = (row.c[3] && row.c[3].v) ? String(row.c[3].v).trim() : '';
                         let g180Val = (row.c[4] && row.c[4].v) !== undefined ? row.c[4].v : 0;
                         let g210Val = (row.c[5] && row.c[5].v) !== undefined ? row.c[5].v : 0;
                         let maSP = (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : '';
@@ -290,7 +289,6 @@
                                 Loai_Thiep: loaiThiep,
                                 Mac_Dinh: macDinh,
                                 Kieu_In: kieuIn,
-                                Kich_Thuoc: kichThuoc,
                                 Giay_Ford_180gsm: g180,
                                 Giay_Ford_210gsm: g210,
                                 Ma_SP: maSP
@@ -299,7 +297,7 @@
                     }
                 });
                 dynamicSheetsPhuMatrix["GIA_THIEP"] = {
-                    headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Kich_Thuoc", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"],
+                    headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"],
                     data: thiepData
                 };
 
@@ -611,7 +609,10 @@
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
                 const formLink = globalStoreData.config['Link_Form'] || "#";
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
-                const hasConfig = (prod.boCauHinh && dynamicSheetsPhuMatrix[prod.boCauHinh]);
+                
+                const matrixThiep = dynamicSheetsPhuMatrix["GIA_THIEP"];
+                const hasThiepConfig = matrixThiep && matrixThiep.data.some(d => d.Ma_SP.toLowerCase() === prod.code.toLowerCase());
+                const hasConfig = (prod.boCauHinh && dynamicSheetsPhuMatrix[prod.boCauHinh]) || hasThiepConfig;
 
                 const stickyTitleEl = document.getElementById('popupStickyTitle');
                 if(stickyTitleEl) stickyTitleEl.innerText = prod.name;
@@ -670,31 +671,29 @@
                 } else {
                     if(checkBlock) checkBlock.style.display = 'block'; 
                     
-                    const matrix = dynamicSheetsPhuMatrix[prod.boCauHinh];
-                    if (matrix && matrix.data && matrix.data.length > 0) {
-                        if(prod.boCauHinh === 'GIA_THIEP') {
-                            const filteredThiep = matrix.data.filter(d => d.Ma_SP.toLowerCase() === prod.code.toLowerCase());
-                            
-                            if (filteredThiep.length > 0) {
-                                // Hiển thị loại thiệp cố định dựa vào dữ liệu Ma_SP trên sheet
-                                let cardTypeName = filteredThiep[0].Loai_Thiep;
-                                radioSpace.innerHTML += `<div style="font-size:14px; font-weight:700; color:var(--emerald-dark); margin-bottom:10px;"><i class="fa-solid fa-tag"></i> Loại thiệp: ${cardTypeName}</div>`;
-                                
-                                buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiep.map(d => d.Kieu_In))], filteredThiep[0].Kieu_In);
-                                buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
+                    if (hasThiepConfig || prod.boCauHinh === 'GIA_THIEP') {
+                        const matrix = dynamicSheetsPhuMatrix["GIA_THIEP"];
+                        const filteredThiep = matrix.data.filter(d => d.Ma_SP.toLowerCase() === prod.code.toLowerCase());
+                        
+                        if (filteredThiep.length > 0) {
+                            // Chỉ hiển thị chọn Kiểu in và Loại giấy dựa theo Ma_SP, bỏ hoàn toàn phần chọn loại thiệp
+                            buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiep.map(d => d.Kieu_In))], filteredThiep[0].Kieu_In);
+                            buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
+                        }
+                    } else {
+                        const matrix = dynamicSheetsPhuMatrix[prod.boCauHinh];
+                        if (matrix && matrix.data && matrix.data.length > 0) {
+                            if(prod.boCauHinh === 'GIA_TEM_STICKER') {
+                                const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
+                                buildPopupRadioRow(radioSpace, "Single_Option", "Cán màng:", cleanH, cleanH[0]);
                             } else {
-                                radioSpace.innerHTML = `<div style="font-size:13px; color:#b25900;">Chưa cấu hình bảng giá cho mã sản phẩm này.</div>`;
-                            }
-                        } else if(prod.boCauHinh === 'GIA_TEM_STICKER') {
-                            const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
-                            buildPopupRadioRow(radioSpace, "Single_Option", "Cán màng:", cleanH, cleanH[0]);
-                        } else {
-                            const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
-                            if(cleanH.some(h => h.includes('_Mat_'))) {
-                                buildPopupRadioRow(radioSpace, "Card_Mat", "Số mặt in:", ["In_1_Mat", "In_2_Mat"], "In_1_Mat");
-                                buildPopupRadioRow(radioSpace, "Card_Man", "Cán màng:", ["Khong_Man", "Co_Man"], "Khong_Man");
-                            } else {
-                                buildPopupRadioRow(radioSpace, "Single_Option", "Tùy chọn phân loại:", cleanH, cleanH[0]);
+                                const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
+                                if(cleanH.some(h => h.includes('_Mat_'))) {
+                                    buildPopupRadioRow(radioSpace, "Card_Mat", "Số mặt in:", ["In_1_Mat", "In_2_Mat"], "In_1_Mat");
+                                    buildPopupRadioRow(radioSpace, "Card_Man", "Cán màng:", ["Khong_Man", "Co_Man"], "Khong_Man");
+                                } else {
+                                    buildPopupRadioRow(radioSpace, "Single_Option", "Tùy chọn phân loại:", cleanH, cleanH[0]);
+                                }
                             }
                         }
                     }
@@ -719,13 +718,16 @@
         }
 
         function calculatePopupDynamicPrice() {
-            if(!popupActiveProduct || !popupActiveProduct.boCauHinh) return;
-            const matrix = dynamicSheetsPhuMatrix[popupActiveProduct.boCauHinh]; 
+            if(!popupActiveProduct) return;
             let priceVal = popupActiveProduct.basePrice;
 
-            if (!matrix || !matrix.data || matrix.data.length === 0) return;
+            const matrixThiep = dynamicSheetsPhuMatrix["GIA_THIEP"];
+            const hasThiepConfig = matrixThiep && matrixThiep.data.some(d => d.Ma_SP.toLowerCase() === popupActiveProduct.code.toLowerCase());
 
-            if(popupActiveProduct.boCauHinh === 'GIA_THIEP') {
+            if (hasThiepConfig || popupActiveProduct.boCauHinh === 'GIA_THIEP') {
+                const matrix = dynamicSheetsPhuMatrix["GIA_THIEP"];
+                if (!matrix || !matrix.data) return;
+
                 let productCode = popupActiveProduct.code;
                 let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
@@ -737,7 +739,8 @@
                 } else {
                     priceVal = matched[selectedGiay];
                 }
-            } else {
+            } else if (popupActiveProduct.boCauHinh && dynamicSheetsPhuMatrix[popupActiveProduct.boCauHinh]) {
+                const matrix = dynamicSheetsPhuMatrix[popupActiveProduct.boCauHinh];
                 let row = matrix.data[0], mat = document.querySelector(`input[name="Card_Mat"]:checked`)?.value, man = document.querySelector(`input[name="Card_Man"]:checked`)?.value, sOpt = document.querySelector(`input[name="Single_Option"]:checked`)?.value;
                 if(mat && man) { 
                     let key = `${mat}_${man}`; 
