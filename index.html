@@ -470,6 +470,7 @@
 
         async function initSprint1HomePage() {
             try {
+                // Đảm bảo đợi tải xong bảng giá phụ trước khi khởi tạo sản phẩm
                 await Promise.all([
                     loadDynamicCategoryMenu(),
                     loadDynamicPriceMatrices()
@@ -496,14 +497,25 @@
                         let pCat = (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'KHÁC';
                         if (pCat.toLowerCase().includes('review')) return;
 
+                        let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
+                        let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
+
                         let pPrice = 0; 
                         if(row.c[7] && row.c[7].v) {
                             pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
+                        } else {
+                            // Nếu giá cơ bản ngoài danh sách trống nhưng thuộc GIA_THIEP, tự động lấy giá rẻ nhất của mã đó
+                            const matrixThiep = dynamicSheetsPhuMatrix["GIA_THIEP"];
+                            if (matrixThiep && matrixThiep.data) {
+                                let matchItems = matrixThiep.data.filter(d => d.Ma_SP.toLowerCase() === cleanCode.toLowerCase());
+                                if (matchItems.length > 0) {
+                                    let prices = matchItems.map(d => typeof d.Giay_Ford_180gsm === 'number' ? d.Giay_Ford_180gsm : 0).filter(val => val > 0);
+                                    if (prices.length > 0) pPrice = Math.min(...prices);
+                                }
+                            }
                         }
 
                         let pName = sanitizeText(titleProd);
-                        let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
-                        let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
 
                         globalStoreData.products.push({
                             sheetIndex: idx, 
