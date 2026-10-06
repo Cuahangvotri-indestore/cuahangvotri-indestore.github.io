@@ -219,10 +219,7 @@
             <div class="right-nav-box">
                 <nav>
                     <ul class="menu-categories" id="categoryMenuNav">
-                        <li class="menu-item" data-cat="home" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')">Home</li>
-                        <li class="menu-item" data-cat="Đồ len" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: Đồ len', 'category.html?cat=Đồ len')">Đồ len</li>
-                        <li class="menu-item" data-cat="In ấn" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: In ấn', 'category.html?cat=In ấn')">In ấn</li>
-                        <li class="menu-item" data-cat="Giấy" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: Giấy', 'category.html?cat=Giấy')">Giấy</li>
+                        <!-- Menu động từ sheet Danh_Muc -->
                     </ul>
                 </nav>
             </div>
@@ -353,7 +350,7 @@
 
         function sanitizeText(str) {
             if (!str) return '';
-            return String(str).replace(/["']/g, '').replace(/<[^>]*>?/gm, '');
+            return String(str).replace(/["']/g, '').replace(/<[^>]*>?/gm, '').replace(/\n/g, '<br>');
         }
 
         function toggleDropdown() { document.getElementById('customSortDropdown').classList.toggle('open'); }
@@ -385,8 +382,46 @@
             } catch (e) { return []; }
         }
 
+        async function loadDynamicCategoryMenu() {
+            try {
+                let menuHTML = `<li class="menu-item" data-cat="home" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')">Home</li>`;
+                const menuRows = await fetchSheetRows('Danh_Muc');
+                let categoriesList = [];
+
+                if (menuRows && menuRows.length > 0) {
+                    menuRows.forEach(row => {
+                        if (row && row.c) {
+                            let catName = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : '';
+                            let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
+                            let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
+
+                            if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && !status.includes('ẩn')) {
+                                categoriesList.push({ name: catName, order: order });
+                            }
+                        }
+                    });
+                }
+
+                categoriesList.sort((a, b) => a.order - b.order);
+
+                categoriesList.forEach(cat => {
+                    menuHTML += `<li class="menu-item" data-cat="${cat.name}" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: ${cat.name}', 'category.html?cat=${encodeURIComponent(cat.name)}')">${cat.name}</li>`;
+                });
+
+                const menuContainer = document.getElementById('categoryMenuNav');
+                if (menuContainer) {
+                    menuContainer.innerHTML = menuHTML;
+                    setActiveMenuState();
+                }
+            } catch (err) {
+                console.error("Lỗi tải menu danh mục động trang category:", err);
+            }
+        }
+
         async function initCategoryPage() {
             try {
+                await loadDynamicCategoryMenu();
+
                 const configRows = await fetchSheetRows('Cau_Hinh_Shop');
                 configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
                 if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
