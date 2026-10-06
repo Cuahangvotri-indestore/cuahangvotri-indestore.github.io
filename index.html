@@ -270,7 +270,6 @@
 
         async function loadDynamicPriceMatrices() {
             try {
-                // Tải bảng giá Thệp với cột Ma_SP ở index 6 (cột G)
                 const thiepRows = await fetchSheetRows('GIA_THIEP');
                 let thiepData = [];
                 thiepRows.forEach(row => {
@@ -427,7 +426,6 @@
             return linkStr;
         }
 
-        // CHỐNG CACHE GOOGLE SHEETS API
         async function fetchSheetRows(sheetName) {
             try {
                 const timestamp = new Date().getTime();
@@ -675,11 +673,10 @@
                     const matrix = dynamicSheetsPhuMatrix[prod.boCauHinh];
                     if (matrix && matrix.data && matrix.data.length > 0) {
                         if(prod.boCauHinh === 'GIA_THIEP') {
-                            // Lọc các dòng thiệp theo đúng Ma_SP trùng với mã sản phẩm (ví dụ IN-001)
                             const filteredThiep = matrix.data.filter(d => d.Ma_SP.toLowerCase() === prod.code.toLowerCase());
                             
                             if (filteredThiep.length > 0) {
-                                // Hiển thị tên loại thiệp cố định từ dữ liệu (không cần chọn loại thiệp nữa)
+                                // Hiển thị loại thiệp cố định dựa vào dữ liệu Ma_SP trên sheet
                                 let cardTypeName = filteredThiep[0].Loai_Thiep;
                                 radioSpace.innerHTML += `<div style="font-size:14px; font-weight:700; color:var(--emerald-dark); margin-bottom:10px;"><i class="fa-solid fa-tag"></i> Loại thiệp: ${cardTypeName}</div>`;
                                 
@@ -733,7 +730,6 @@
                 let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
 
-                // Tìm dòng khớp chính xác mã sản phẩm (Ma_SP) và Kiểu in
                 let matched = matrix.data.find(d => d.Ma_SP.toLowerCase() === productCode.toLowerCase() && d.Kieu_In.trim() === selectedKieuIn?.trim());
                 
                 if (!matched || !matched[selectedGiay] || matched[selectedGiay] === "Chưa có" || Number(matched[selectedGiay]) === 0) {
