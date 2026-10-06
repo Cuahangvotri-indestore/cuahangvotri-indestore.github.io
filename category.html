@@ -105,6 +105,13 @@
         .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .product-info { padding: 14px 18px 18px; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .product-title { font-size: 17px; margin: 0; font-weight: 700; color: var(--emerald-dark); line-height: 1.4; display: flex; align-items: center; justify-content: center; }
+        .product-price { 
+            font-size: 18px; font-weight: 700; color: var(--emerald-soft); background: rgba(255, 255, 255, 0.5); 
+            padding: 8px 20px; border-radius: 25px; display: inline-block; margin-top: auto; border: 1px solid var(--liquid-border); font-family: 'Comfortaa', sans-serif;
+        }
+        .badge-status { position: absolute; top: 15px; left: 15px; padding: 6px 16px; font-size: 12px; font-weight: 700; border-radius: 35px; z-index: 2; border: 1px solid var(--liquid-border); }
+        .badge-status.status-available { color: #0052cc; background: rgba(204, 224, 255, 0.75); backdrop-filter: blur(5px); }
+        .badge-status.status-preorder { color: #b25900; background: rgba(255, 239, 204, 0.7); backdrop-filter: blur(5px); }
 
         /* POPUP CHI TIẾT SẢN PHẨM / REVIEW */
         .popup-overlay { 
@@ -156,8 +163,18 @@
             white-space: pre-line; 
         }
 
+        .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 20px; padding: 16px; }
+        .radio-group-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .radio-options-flex { display: flex; flex-wrap: wrap; gap: 6px; }
+        .custom-radio-btn { 
+            display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255, 255, 255, 0.7); 
+            border: 1.5px solid var(--liquid-border); border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--emerald-dark); cursor: pointer; 
+        }
+
         .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
         .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 13px; border-radius: 16px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(31, 78, 69, 0.12); }
+        .btn-action-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 13px; padding: 11px; border-radius: 14px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
 
         footer { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-top: 1px solid var(--liquid-border); padding: 35px 24px; text-align: center; margin-top: auto; }
         .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
@@ -417,7 +434,7 @@
 
                     reviewRows.forEach((row, idx) => {
                         if (row && row.c && row.c[1] && row.c[1].v) {
-                            // Kiểm tra trạng thái từ cột H (Trang_Thai_RV), nếu chứa chữ "ẩn" thì bỏ qua không hiện
+                            // Cột H (Trang_Thai_RV): nếu chứa chữ "ẩn" thì bỏ qua không hiện
                             let statusRV = (row.c[7] && row.c[7].v) ? String(row.c[7].v).trim().toLowerCase() : 'hiện';
                             if (statusRV.includes('ẩn')) return;
 
@@ -505,6 +522,7 @@
                     return;
                 }
 
+                // Trang review: tuyệt đối không có nhãn tag (badge-status)
                 gridContainer.innerHTML = displayList.map(r => {
                     return `
                         <div class="product-card" onclick="openReviewDetailPopupByIndex(${r.sheetIndex})">
@@ -529,6 +547,7 @@
                     return;
                 }
 
+                // Trang sản phẩm thông thường: hiển thị đầy đủ nhãn tag và giá
                 gridContainer.innerHTML = displayList.map(p => {
                     const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                     return `
@@ -583,7 +602,7 @@
 
                     <div>
                         <span class="popup-section-title">Nội dung review</span>
-                        <div class="popup-desc-box">${rev.desc || "Bài review chi tiết sản phẩm."}</div>
+                        <div class="popup-desc-box">${sanitizeText(rev.desc) || "Bài review chi tiết sản phẩm."}</div>
                     </div>
 
                     <div class="popup-actions-wrapper">
