@@ -396,11 +396,8 @@
                             let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
                             let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
 
-                            // Lớp lọc kép: Chặn tuyệt đối nếu tên chứa 'IN 3D' hoặc trạng thái chứa 'ẩn'
-                            if (catName !== '' && 
-                                catName.toLowerCase() !== 'ten_danh_muc' && 
-                                !status.includes('ẩn') && 
-                                !catName.toUpperCase().includes('IN 3D')) {
+                            // Chỉ kiểm tra trạng thái Hiện / Ẩn từ cột trạng thái, không chặn cứng tên
+                            if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && !status.includes('ẩn')) {
                                 categoriesList.push({ name: catName, order: order });
                             }
                         }
