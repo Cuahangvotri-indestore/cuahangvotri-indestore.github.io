@@ -434,13 +434,17 @@
 
                     reviewRows.forEach((row, idx) => {
                         if (row && row.c && row.c[1] && row.c[1].v) {
-                            // Cột H (Trang_Thai_RV): nếu chứa chữ "ẩn" thì bỏ qua không hiện
+                            let titleRV = String(row.c[1].v).trim();
+                            // Bỏ qua dòng tiêu đề A5 (Ten_SP_RV)
+                            if (titleRV.toLowerCase() === 'ten_sp_rv' || titleRV === '') return;
+
+                            // Kiểm tra cột H (index 7) Trang_Thai_RV: nếu chứa chữ "ẩn" thì loại bỏ ngay lập tức
                             let statusRV = (row.c[7] && row.c[7].v) ? String(row.c[7].v).trim().toLowerCase() : 'hiện';
                             if (statusRV.includes('ẩn')) return;
 
                             globalStoreData.reviews.push({
                                 sheetIndex: idx,
-                                name: sanitizeText(row.c[1].v), // Ten_SP_RV (Cột B)
+                                name: sanitizeText(titleRV), // Ten_SP_RV (Cột B)
                                 category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'REVIEW LINK', // Danh_Muc (Cột C)
                                 img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), // Anh_RV (Cột D)
                                 detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', // Anh_RV_Chi_Tiet (Cột E)
@@ -522,7 +526,7 @@
                     return;
                 }
 
-                // Trang review: tuyệt đối không có nhãn tag (badge-status)
+                // Giao diện trang review: hoàn toàn sạch sẽ, không có nhãn tag hay giá
                 gridContainer.innerHTML = displayList.map(r => {
                     return `
                         <div class="product-card" onclick="openReviewDetailPopupByIndex(${r.sheetIndex})">
@@ -547,7 +551,7 @@
                     return;
                 }
 
-                // Trang sản phẩm thông thường: hiển thị đầy đủ nhãn tag và giá
+                // Giao diện sản phẩm thông thường: hiển thị đầy đủ nhãn tag và giá
                 gridContainer.innerHTML = displayList.map(p => {
                     const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                     return `
