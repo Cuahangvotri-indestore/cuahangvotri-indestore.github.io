@@ -225,7 +225,10 @@
         </div>
     </header>
 
-    <div class="filter-section" id="filterSortArea">
+    <div class="vision-container" id="vision-area"><p class="vision-text" id="vision-text-content"></p></div>
+    <div class="hero-banner" id="banner-root-area" style="display: none;"><div class="banner-wrapper"><div class="banner-slider-track" id="carousel-slider-track"></div></div></div>
+
+    <div class="filter-section">
         <div class="custom-dropdown" id="customSortDropdown">
             <div class="dropdown-trigger" onclick="toggleDropdown()"><span id="dropdownCurrentText">Sắp xếp: Mới nhất</span><span class="dropdown-arrow"></span></div>
             <ul class="dropdown-menu">
@@ -428,11 +431,13 @@
                 
                 productRows.forEach((row, idx) => {
                     if(row && row.c && row.c[1] && row.c[1].v) {
+                        let titleProd = String(row.c[1].v).trim();
+                        if (titleProd.toLowerCase() === 'ten_san_pham' || titleProd === '') return;
+
                         let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
                         if (statusVal === 'ẩn') return;
 
                         let pCat = (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'KHÁC';
-                        // Không hiện sản phẩm thuộc danh mục Review ở trang chủ
                         if (pCat.toLowerCase().includes('review')) return;
 
                         let pPrice = 0; 
@@ -440,7 +445,7 @@
                             pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
                         }
 
-                        let pName = sanitizeText(row.c[1].v);
+                        let pName = sanitizeText(titleProd);
                         let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
                         let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
 
