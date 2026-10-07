@@ -370,7 +370,7 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                // Thêm tham số chống cache thời gian thực (?t=...) để khắc phục triệt để lỗi web không cập nhật đúng dữ liệu mới nhất từ Excel
+                // Chống cache thời gian thực (?t=...) để cập nhật giá hoặc trạng thái ẩn/hiện mới nhất từ Excel ngay lập tức
                 const cacheBuster = new Date().getTime();
                 const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
                 const text = await response.text(); 
@@ -389,11 +389,11 @@
                     menuRows.forEach(row => {
                         if (row && row.c) {
                             let catName = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : '';
-                            let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
+                            let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : '';
                             let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
 
-                            // Chỉ kiểm tra trạng thái Hiện / Ẩn từ cột trạng thái, bỏ qua các dòng tiêu đề rỗng hoặc bị ẩn
-                            if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && !status.includes('ẩn')) {
+                            // Kiểm tra chuẩn từ dòng dữ liệu bắt đầu: chỉ lấy dòng có tên danh mục và Trang_Thai là "hiện" (bỏ qua dòng tiêu đề hoặc trạng thái là "ẩn")
+                            if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && status === 'hiện') {
                                 categoriesList.push({ name: catName, order: order });
                             }
                         }
@@ -638,7 +638,7 @@
                     
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
-                        // Lọc các dòng theo MA_SP của sản phẩm hiện tại, ẩn phần chọn loại thiệp thừa thãi
+                        // Lọc các dòng theo MA_SP của sản phẩm hiện tại, tự động bỏ chọn loại thiệp thừa thãi
                         let filteredThiepRows = matrix.data.filter(d => d.Ma_SP === prod.code);
                         if (filteredThiepRows.length === 0) {
                             filteredThiepRows = matrix.data; 
