@@ -1,5 +1,3 @@
-Link: https://cuahangvotri-indestore.github.io/index.html
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -380,7 +378,7 @@ Link: https://cuahangvotri-indestore.github.io/index.html
 
         async function fetchSheetRows(sheetName) {
             try {
-                const response = await fetch(`https://docs.google.com/spreadsheets/d/SPREADSHEETID/gviz/tq?sheet={sheetName}`);
+                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}`);
                 const text = await response.text(); return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
             } catch (e) { return []; }
         }
@@ -409,7 +407,7 @@ Link: https://cuahangvotri-indestore.github.io/index.html
                 categoriesList.sort((a, b) => a.order - b.order);
 
                 categoriesList.forEach(cat => {
-                    menuHTML += `<li class="menu-item" data-cat="${cat.name}" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: cat.name','category.html?cat={encodeURIComponent(cat.name)}')">${cat.name}</li>`;
+                    menuHTML += `<li class="menu-item" data-cat="${cat.name}" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: ${cat.name}', 'category.html?cat=${encodeURIComponent(cat.name)}')">${cat.name}</li>`;
                 });
 
                 const menuContainer = document.getElementById('categoryMenuNav');
@@ -494,10 +492,10 @@ Link: https://cuahangvotri-indestore.github.io/index.html
                         let targetLink = b.mapping.startsWith('http') || b.mapping.includes('.html') 
                             ? b.mapping 
                             : `category.html?cat=${encodeURIComponent(b.mapping)}`;
-                        actionAttr = `onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: b.mapping','{targetLink}')"`;
+                        actionAttr = `onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: ${b.mapping}', '${targetLink}')"`;
                     }
 
-                    return `<div class="banner-slide idx===0?'active':''"style="{cursorStyle}" actionAttr><imgsrc="{b.img}"></div>`;
+                    return `<div class="banner-slide ${idx===0?'active':''}" style="${cursorStyle}" ${actionAttr}><img src="${b.img}"></div>`;
                 }).join('');
 
                 document.getElementById('banner-root-area').style.display = 'block';
@@ -529,8 +527,8 @@ Link: https://cuahangvotri-indestore.github.io/index.html
                 const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                 return `
                     <div class="product-card" onclick="openProductDetailPopupByIndex(${p.sheetIndex})">
-                        <span class="badge-status badgeClass">{p.stock}</span>
-                        <div class="product-img-wrapper"><img class="product-img" src="p.img||'https://via.placeholder.com/400'"alt="{p.name}"></div>
+                        <span class="badge-status ${badgeClass}">${p.stock}</span>
+                        <div class="product-img-wrapper"><img class="product-img" src="${p.img || 'https://via.placeholder.com/400'}" alt="${p.name}"></div>
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
                             <div class="product-price">${Number(p.basePrice).toLocaleString('vi-VN')} đ</div>
@@ -563,7 +561,7 @@ Link: https://cuahangvotri-indestore.github.io/index.html
                 const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
                 let mainButtonHTML = "";
                 if (hasShopeeLink) {
-                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="prod.shopeeLink"target="blank"onclick="ghiNhatKyTruyCap('ClickShopee','{prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
+                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
                 }
 
                 scrollableBody.innerHTML = `
@@ -592,8 +590,8 @@ Link: https://cuahangvotri-indestore.github.io/index.html
                         ${mainButtonHTML}
                         ${(isPreorder || hasConfig) ? `
                         <div class="btn-action-sub-grid">
-                            <a class="btn-action-sub" href="formLink"target="blank"onclick="ghiNhatKyTruyCap('XinInfo','{prod.name}')"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
-                            <a class="btn-action-sub" href="shopZalo"target="blank"onclick="ghiNhatKyTruyCap('TuVanZalo','{prod.name}')"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
+                            <a class="btn-action-sub" href="${formLink}" target="_blank" onclick="ghiNhatKyTruyCap('Xin_Info', '${prod.name}')"><i class="fa-solid fa-file-pen"></i> Xin tí info</a>
+                            <a class="btn-action-sub" href="${shopZalo}" target="_blank" onclick="ghiNhatKyTruyCap('Tu_Van_Zalo', '${prod.name}')"><i class="fa-brands fa-square-zalo" style="color:#0068ff;"></i> Tư vấn Zalo</a>
                         </div>` : ''}
                     </div>
                 `;
@@ -644,7 +642,7 @@ Link: https://cuahangvotri-indestore.github.io/index.html
             wrapper.innerHTML = `<span class="radio-title-label">${groupTitle}</span>`;
             const flex = document.createElement('div'); flex.className = "radio-options-flex";
             elementsList.forEach(item => {
-                flex.innerHTML += `<label class="custom-radio-btn"><input type="radio" name="groupName"value="{item}" item===activeValue?'checked':''onchange="calculatePopupDynamicPrice()">{formatOptionToVietnamese(item)}</label>`;
+                flex.innerHTML += `<label class="custom-radio-btn"><input type="radio" name="${groupName}" value="${item}" ${item===activeValue?'checked':''} onchange="calculatePopupDynamicPrice()">${formatOptionToVietnamese(item)}</label>`;
             });
             wrapper.appendChild(flex); container.appendChild(wrapper);
         }
@@ -688,7 +686,7 @@ Link: https://cuahangvotri-indestore.github.io/index.html
 
         function buildPopupSliderDOM() { 
             const track = document.getElementById('popupImageViewportTrack');
-            if(track) track.innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item idx===0?'active':''"><imgclass="popup-main-image"src="{url}"></div>`).join(''); 
+            if(track) track.innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item ${idx===0?'active':''}"><img class="popup-main-image" src="${url}"></div>`).join(''); 
         }
 
         function renderPopupSliderEffects() {
@@ -735,5 +733,3 @@ Link: https://cuahangvotri-indestore.github.io/index.html
     </script>
 </body>
 </html>
-
-
