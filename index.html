@@ -164,7 +164,7 @@
         .popup-section-title { font-size: 12px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; display: block; }
         .popup-desc-box { 
             background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 16px; padding: 10px 14px; font-size: 14px; color: #4f6a65; line-height: 1.5; 
-            white-space: pre-line;
+            white-space: pre-line; /* Hỗ trợ xuống dòng chuẩn xác theo nội dung nhập từ Sheets */
         }
         .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 12px 18px; border-radius: 16px; }
         .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 24px; font-weight: 700; color: var(--emerald-dark); }
@@ -370,11 +370,10 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                // Thêm tham số chống cache thời gian thực (?t=...) để luôn cập nhật giá mới nhất từ Excel
+                // Thêm tham số chống cache thời gian thực (?t=...) để cập nhật giá ngay lập tức không bị cache
                 const cacheBuster = new Date().getTime();
                 const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
-                const text = await response.text(); 
-                return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
+                const text = await response.text(); return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
             } catch (e) { return []; }
         }
 
@@ -391,6 +390,7 @@
                             let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
                             let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
 
+                            // Chỉ kiểm tra trạng thái Hiện / Ẩn từ cột trạng thái, không chặn cứng tên
                             if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && !status.includes('ẩn')) {
                                 categoriesList.push({ name: catName, order: order });
                             }
@@ -417,7 +417,7 @@
             try {
                 await loadDynamicCategoryMenu();
 
-                // Nạp bảng giá GIA_THIEP từ sheet phụ
+                // Nạp bảng giá GIA_THIEP từ sheet phụ (hỗ trợ đọc cột Ma_SP ở cột thứ 7 - index 6)
                 const thiepRows = await fetchSheetRows('GIA_THIEP');
                 let thiepDataArr = [];
                 if (thiepRows && thiepRows.length > 0) {
@@ -636,7 +636,7 @@
                     
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
-                        // Lọc các dòng theo MA_SP của sản phẩm, bỏ hiển thị phần chọn loại thiệp thừa thãi
+                        // Lọc các dòng theo MA_SP của sản phẩm hiện tại, tự động bỏ chọn loại thiệp thừa thãi
                         let filteredThiepRows = matrix.data.filter(d => d.Ma_SP === prod.code);
                         if (filteredThiepRows.length === 0) {
                             filteredThiepRows = matrix.data; 
