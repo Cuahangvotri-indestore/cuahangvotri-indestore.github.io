@@ -370,7 +370,6 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                // Thêm tham số chống cache thời gian thực (?t=...) để cập nhật ngay lập tức các thay đổi từ Excel
                 const cacheBuster = new Date().getTime();
                 const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
                 const text = await response.text(); 
@@ -389,11 +388,9 @@
                     menuRows.forEach(row => {
                         if (row && row.c) {
                             let catName = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : '';
-                            // Đọc chính xác trạng thái ở cột B (index 1), ép về chữ thường để so sánh
                             let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : '';
                             let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
 
-                            // Rule chuẩn: Chỉ lấy danh mục có tên hợp lệ và Trang_Thai đúng bằng "hiện" (bỏ qua dòng tiêu đề hoặc trạng thái "ẩn")
                             if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && status === 'hiện') {
                                 categoriesList.push({ name: catName, order: order });
                             }
@@ -776,13 +773,6 @@
         function buildPopupSliderDOM() { 
             const track = document.getElementById('popupImageViewportTrack');
             if(track) track.innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item ${idx===0?'active':''}"><img class="popup-main-image" src="${url}"></div>`).join(''); 
-        }
-
-        function renderPopupSliderEffects() {
-            const slides = document.querySelectorAll('.popup-slide-item'); 
-            slides.forEach((s, idx) => idx === popupActiveImgIndex ? s.classList.add('active') : s.classList.remove('active'));
-            
-            val nextBtn = document.getElementById('btnNextPopupImg'); // Fixed syntax safely below
         }
 
         function renderPopupSliderEffects() {
