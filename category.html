@@ -167,6 +167,7 @@
 
         .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 20px; padding: 16px; }
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .radio-group-wrapper:last-child { margin-bottom: 0; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 6px; }
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255, 255, 255, 0.7); 
@@ -260,11 +261,13 @@
         let currentSortValue = 'default';
         let popupActiveItem = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
 
-        // Rút gọn bộ ma trận phụ tĩnh, chỉ tải dữ liệu thực tế từ sheet GIA_THIEP động
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": { headers: ["Mac_Dinh", "Khong_Man", "Co_Man"], data: [{ Mac_Dinh: "Khong_Man", Khong_Man: 26250, Co_Man: 31500 }] },
             "GIA_CARD": { headers: ["Mac_Dinh", "In_1_Mat_Khong_Man", "In_2_Mat_Khong_Man", "In_1_Mat_Co_Man", "In_2_Mat_Co_Man"], data: [{ Mac_Dinh: "In_1_Mat_Khong_Man", In_1_Mat_Khong_Man: 6800, In_2_Mat_Khong_Man: 9500, In_1_Mat_Co_Man: 12200, In_2_Mat_Co_Man: 20300 }] },
-            "GIA_THIEP": { headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"], data: [] }
+            "GIA_THIEP": {
+                headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"],
+                data: []
+            }
         };
 
         function getVisitorId() {
@@ -390,7 +393,6 @@
 
         async function initCategoryPage() {
             try {
-                // Nạp song song dữ liệu để tăng tốc độ load trang đáng kể
                 const [thiepRows, configRows, menuData] = await Promise.all([
                     fetchSheetRows('GIA_THIEP'),
                     fetchSheetRows('Cau_Hinh_Shop'),
@@ -406,13 +408,13 @@
                             let kieuIn = (row.c[2] && row.c[2].v) ? String(row.c[2].v).trim() : '';
                             
                             let val180 = (row.c[3] && row.c[3].v !== undefined && row.c[3].v !== null) ? row.c[3].v : 'Chưa có';
-                            if (val180 !== 'Chưa có') {
+                            if (val180 !== 'Chưa có' && val180 !== null) {
                                 let num = parseFloat(String(val180).replace(/[^0-9.-]+/g, ""));
                                 val180 = isNaN(num) ? 'Chưa có' : num;
                             }
 
                             let val210 = (row.c[4] && row.c[4].v !== undefined && row.c[4].v !== null) ? row.c[4].v : 'Chưa có';
-                            if (val210 !== 'Chưa có') {
+                            if (val210 !== 'Chưa có' && val210 !== null) {
                                 let num = parseFloat(String(val210).replace(/[^0-9.-]+/g, ""));
                                 val210 = isNaN(num) ? 'Chưa có' : num;
                             }
