@@ -162,9 +162,12 @@
             background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 16px; padding: 10px 14px; font-size: 14px; color: #4f6a65; line-height: 1.5; 
             white-space: pre-line; 
         }
+        .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 12px 18px; border-radius: 16px; }
+        .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 24px; font-weight: 700; color: var(--emerald-dark); }
 
         .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 20px; padding: 16px; }
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .radio-group-wrapper:last-child { margin-bottom: 0; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 6px; }
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255, 255, 255, 0.7); 
@@ -663,7 +666,7 @@
                 
                 ghiNhatKyTruyCap("Click_SanPham", prod.name);
 
-                popupActiveItem = prod; 
+                popupActiveProduct = prod; 
                 popupActiveImgIndex = 0;
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
@@ -887,8 +890,6 @@
                     .replace(/Giay Ford 210gsm/g, 'Giấy Ford 210gsm')
                     .replace(/Giay/g, 'Giấy'); 
         }
-        
-        window.onload = initCategoryPage;
     </script>
 </body>
 </html>
