@@ -389,7 +389,7 @@
             return rows;
         }
 
-        // Xóa cache thủ công khi bấm nút mờ ở footer
+        // Làm mới cache thủ công qua nút mờ ở footer
         function clearStoreCacheAndReload() {
             ['GIA_THIEP', 'Cau_Hinh_Shop', 'Danh_Muc', 'Danh_Sach_SanPham', 'List_Review'].forEach(s => {
                 localStorage.removeItem(`votri_sheet_cache_${s}`);
@@ -437,7 +437,7 @@
                 const currentCat = getCurrentCategoryFromURL();
                 const isReviewCat = currentCat.toLowerCase().includes('review');
 
-                // TẢI SONG SONG TẤT CẢ DỮ LIỆU QUA CACHE SIÊU TỐC (< 0.2s)
+                // TẢI SONG SONG TẤT CẢ DỮ LIỆU QUA CACHE SIÊU TỐC ĐẢM BẢO KHÔNG BỎ SÓT BẤT KỲ DANH MỤC NÀO NHƯ ĐỒ LEN
                 const [thiepRows, configRows, menuRows, dataRows] = await Promise.all([
                     fetchSheetRowsWithCache('GIA_THIEP'),
                     fetchSheetRowsWithCache('Cau_Hinh_Shop'),
@@ -805,7 +805,7 @@
             stopPopupAutoplay(); 
             const popupEl = document.getElementById('liquidProductPopup');
             if(popupEl) popupEl.classList.remove('open'); 
-            popupActiveProduct = null;
+            popupActiveItem = null;
             const track = document.getElementById('popupImageViewportTrack');
             if(track) track.innerHTML = '';
         }
