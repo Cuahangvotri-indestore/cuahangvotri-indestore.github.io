@@ -261,6 +261,7 @@
         let currentSortValue = 'default';
         let popupActiveItem = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
 
+        // Nhúng dữ liệu thỉnh thoảng dùng vào cấu trúc tĩnh giúp loại bỏ bớt lượt fetch mạng thừa
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": { headers: ["Mac_Dinh", "Khong_Man", "Co_Man"], data: [{ Mac_Dinh: "Khong_Man", Khong_Man: 26250, Co_Man: 31500 }] },
             "GIA_CARD": { headers: ["Mac_Dinh", "In_1_Mat_Khong_Man", "In_2_Mat_Khong_Man", "In_1_Mat_Co_Man", "In_2_Mat_Co_Man"], data: [{ Mac_Dinh: "In_1_Mat_Khong_Man", In_1_Mat_Khong_Man: 6800, In_2_Mat_Khong_Man: 9500, In_1_Mat_Co_Man: 12200, In_2_Mat_Co_Man: 20300 }] },
@@ -353,10 +354,9 @@
             } catch (e) { return []; }
         }
 
-        async function loadDynamicCategoryMenu() {
+        async function loadDynamicCategoryMenu(menuRows) {
             try {
                 let menuHTML = `<li class="menu-item" data-cat="home" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')">Home</li>`;
-                const menuRows = await fetchSheetRows('Danh_Muc');
                 let categoriesList = [];
 
                 if (menuRows && menuRows.length > 0) {
@@ -390,14 +390,20 @@
 
         async function initCategoryPage() {
             try {
-                // Tải đồng thời tất cả các sheet dữ liệu để tăng tốc tối đa
-                const [thiepRows, configRows, productRows, menuData] = await Promise.all([
+                // TẢI SONG SONG TẤT CẢ CÁC SHEET CÙNG MỘT LÚC BẰNG PROMISE.ALL ĐỂ GIẢM THỜI GIAN CHỜ XUỐNG DƯỚI 1 GIÂY
+                const currentCat = getCurrentCategoryFromURL();
+                const isReviewCat = currentCat.toLowerCase().includes('review');
+
+                let promises = [
                     fetchSheetRows('GIA_THIEP'),
                     fetchSheetRows('Cau_Hinh_Shop'),
-                    fetchSheetRows('Danh_Sach_SanPham'),
-                    loadDynamicCategoryMenu()
-                ]);
+                    fetchSheetRows('Danh_Muc'),
+                    isReviewCat ? fetchSheetRows('List_Review') : fetchSheetRows('Danh_Sach_SanPham')
+                ];
 
+                const [thiepRows, configRows, menuRows, dataRows] = await Promise.all(promises);
+
+                // Xử lý bảng giá thiệp
                 let thiepDataArr = [];
                 if (thiepRows && thiepRows.length > 0) {
                     thiepRows.forEach(row => {
@@ -428,22 +434,20 @@
                 }
                 sheetsPhuDataMatrix["GIA_THIEP"].data = thiepDataArr;
 
+                // Xử lý cấu hình shop
                 configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
                 if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
                 if(globalStoreData.config['Logo_Shop']) document.getElementById('shop-logo-box').innerHTML = `<img src="${parseDirectImageUrl(globalStoreData.config['Logo_Shop'])}" alt="Logo Shop">`;
                 
                 renderFooterSocials();
-                
-                const currentCat = getCurrentCategoryFromURL();
-                const isReviewCat = currentCat.toLowerCase().includes('review');
+                loadDynamicCategoryMenu(menuRows);
 
                 if (isReviewCat) {
                     const filterArea = document.getElementById('filterSortArea');
                     if (filterArea) filterArea.style.display = 'none';
 
-                    const reviewRows = await fetchSheetRows('List_Review');
                     globalStoreData.reviews = [];
-                    reviewRows.forEach((row, idx) => {
+                    dataRows.forEach((row, idx) => {
                         if (row && row.c && row.c[1] && row.c[1].v) {
                             let titleRV = String(row.c[1].v).trim();
                             if (titleRV.toLowerCase() === 'ten_sp_rv' || titleRV === '') return;
@@ -462,7 +466,7 @@
                     });
                 } else {
                     globalStoreData.products = [];
-                    productRows.forEach((row, idx) => {
+                    dataRows.forEach((row, idx) => {
                         if(row && row.c && row.c[1] && row.c[1].v) {
                             let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
                             if (statusVal === 'ẩn') return;
