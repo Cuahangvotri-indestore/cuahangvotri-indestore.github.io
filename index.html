@@ -181,6 +181,7 @@
         }
         .custom-radio-btn:hover { background: rgba(31, 78, 69, 0.06); border-color: var(--emerald-dark); }
         .custom-radio-btn input[type="radio"] { accent-color: var(--emerald-dark); width: 15px; height: 15px; cursor: pointer; }
+        .radio-title-label { font-size: 12px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; display: block; }
 
         .popup-actions-wrapper { border-top: 1px solid rgba(31, 78, 69, 0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
         .btn-action-main { text-decoration: none; text-align: center; font-weight: 700; font-size: 14px; padding: 13px; border-radius: 16px; background: var(--emerald-dark); color: #fff; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(31, 78, 69, 0.12); }
@@ -293,44 +294,23 @@
         function getDetailedDevice() {
             const ua = navigator.userAgent;
             let deviceName = "Desktop";
-            if (/iphone|ipad|ipod/i.test(ua)) {
-                deviceName = "iPhone / iOS";
-            } else if (/android/i.test(ua)) {
-                deviceName = "Android Phone";
-            } else if (/macintosh|mac os/i.test(ua)) {
-                deviceName = "Mac / Safari";
-            } else if (/windows/i.test(ua)) {
-                deviceName = "Windows PC";
-            }
+            if (/iphone|ipad|ipod/i.test(ua)) deviceName = "iPhone / iOS";
+            else if (/android/i.test(ua)) deviceName = "Android Phone";
+            else if (/macintosh|mac os/i.test(ua)) deviceName = "Mac / Safari";
+            else if (/windows/i.test(ua)) deviceName = "Windows PC";
             return getVisitorId() + " (" + deviceName + ")";
         }
 
         function ghiNhatKyTruyCap(hanhDong, chiTiet, callback) {
             var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
-            var data = {
-                time: new Date().toLocaleString("vi-VN"),
-                device: getDetailedDevice(),
-                action: hanhDong,
-                detail: chiTiet
-            };
-            fetch(webAppUrl, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            }).then(() => {
-                if (callback) callback();
-            }).catch(err => {
-                console.log("Lỗi ghi nhật ký:", err);
-                if (callback) callback();
-            });
+            var data = { time: new Date().toLocaleString("vi-VN"), device: getDetailedDevice(), action: hanhDong, detail: chiTiet };
+            fetch(webAppUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+            .then(() => { if (callback) callback(); }).catch(() => { if (callback) callback(); });
         }
 
         function trackAndNavigate(action, detail, url) {
-            ghiNhatKyTruyCap(action, detail, function() {
-                window.location.href = url;
-            });
-            setTimeout(function() { window.location.href = url; }, 400);
+            ghiNhatKyTruyCap(action, detail, () => { window.location.href = url; });
+            setTimeout(() => { window.location.href = url; }, 400);
         }
 
         window.addEventListener("DOMContentLoaded", function() {
@@ -378,10 +358,9 @@
             } catch (e) { return []; }
         }
 
-        async function loadDynamicCategoryMenu() {
+        async function loadDynamicCategoryMenu(menuRows) {
             try {
                 let menuHTML = `<li class="menu-item active" data-cat="home" onclick="trackAndNavigate('Truy_Cap_Trang', 'Trang Chủ', 'index.html')">Home</li>`;
-                const menuRows = await fetchSheetRows('Danh_Muc');
                 let categoriesList = [];
 
                 if (menuRows && menuRows.length > 0) {
@@ -399,7 +378,6 @@
                 }
 
                 categoriesList.sort((a, b) => a.order - b.order);
-
                 categoriesList.forEach(cat => {
                     menuHTML += `<li class="menu-item" data-cat="${cat.name}" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: ${cat.name}', 'category.html?cat=${encodeURIComponent(cat.name)}')">${cat.name}</li>`;
                 });
@@ -409,16 +387,20 @@
                     menuContainer.innerHTML = menuHTML;
                 }
             } catch (err) {
-                console.error("Lỗi tải menu danh mục động:", err);
+                console.error("Lỗi tải menu danh mục:", err);
             }
         }
 
         async function initSprint1HomePage() {
             try {
-                await loadDynamicCategoryMenu();
+                // TẢI SONG SONG TẤT CẢ CÁC SHEET CÙNG MỘT LÚC BẰNG PROMISE.ALL ĐỂ TỐC ĐỘ LOAD TRANG < 1 GIÂY
+                const [thiepRows, configRows, menuRows, productRows] = await Promise.all([
+                    fetchSheetRows('GIA_THIEP'),
+                    fetchSheetRows('Cau_Hinh_Shop'),
+                    fetchSheetRows('Danh_Muc'),
+                    fetchSheetRows('Danh_Sach_SanPham')
+                ]);
 
-                // Nạp bảng giá GIA_THIEP từ sheet phụ
-                const thiepRows = await fetchSheetRows('GIA_THIEP');
                 let thiepDataArr = [];
                 if (thiepRows && thiepRows.length > 0) {
                     thiepRows.forEach(row => {
@@ -456,16 +438,16 @@
                 }
                 sheetsPhuDataMatrix["GIA_THIEP"].data = thiepDataArr;
 
-                const configRows = await fetchSheetRows('Cau_Hinh_Shop');
                 configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
                 if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
                 if(globalStoreData.config['Logo_Shop']) document.getElementById('shop-logo-box').innerHTML = `<img src="${parseDirectImageUrl(globalStoreData.config['Logo_Shop'])}" alt="Logo Shop">`;
                 if(globalStoreData.config['Tam_Nhin']) { document.getElementById('vision-text-content').innerText = `"${globalStoreData.config['Tam_Nhin']}"`; document.getElementById('vision-area').style.display = 'block'; }
-                setupBannerCarousel(); renderFooterSocials();
-
-                const productRows = await fetchSheetRows('Danh_Sach_SanPham');
-                globalStoreData.products = [];
                 
+                loadDynamicCategoryMenu(menuRows);
+                setupBannerCarousel(); 
+                renderFooterSocials();
+
+                globalStoreData.products = [];
                 productRows.forEach((row, idx) => {
                     if(row && row.c && row.c[1] && row.c[1].v) {
                         let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
@@ -592,10 +574,7 @@
                 const scrollableBody = document.getElementById('popupScrollableBodyContent');
                 
                 const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
-                let mainButtonHTML = "";
-                if (hasShopeeLink) {
-                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
-                }
+                let mainButtonHTML = hasShopeeLink ? `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>` : "";
 
                 let defaultThiepPrice = prod.basePrice;
                 let defaultKieuIn = "";
@@ -604,7 +583,8 @@
 
                 if (prod.boCauHinh === 'GIA_THIEP') {
                     const matrix = sheetsPhuDataMatrix['GIA_THIEP'];
-                    let filteredThiepRows = matrix.data.filter(d => d.Ma_SP === prod.code);
+                    let cleanProdCode = String(prod.code || "").trim().toLowerCase();
+                    let filteredThiepRows = matrix.data.filter(d => String(d.Ma_SP || "").trim().toLowerCase() === cleanProdCode);
                     if (filteredThiepRows.length === 0) filteredThiepRows = matrix.data;
                     window.currentThiepFilteredData = filteredThiepRows;
 
@@ -624,7 +604,7 @@
 
                     if (!defaultKieuIn) defaultKieuIn = filteredThiepRows[0]?.Kieu_In;
 
-                    let matchedDefaultRow = filteredThiepRows.find(d => d.Kieu_In === defaultKieuIn);
+                    let matchedDefaultRow = filteredThiepRows.find(d => String(d.Kieu_In).trim().toLowerCase() === String(defaultKieuIn).trim().toLowerCase());
                     if (matchedDefaultRow && matchedDefaultRow[defaultGiay] !== undefined && matchedDefaultRow[defaultGiay] !== "Chưa có") {
                         defaultThiepPrice = matchedDefaultRow[defaultGiay];
                     }
@@ -672,8 +652,7 @@
                 
                 if(!hasConfig) {
                     if(checkBlock) checkBlock.style.display = 'none'; 
-                    const priceEl = document.getElementById('popupDynamicPrice');
-                    if(priceEl) priceEl.innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
+                    document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
                 } else {
                     if(checkBlock) checkBlock.style.display = 'block'; 
                     
@@ -728,7 +707,7 @@
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
 
                 let datasetToSearch = window.currentThiepFilteredData || matrix.data;
-                let matched = datasetToSearch.find(d => d.Kieu_In === selectedKieuIn);
+                let matched = datasetToSearch.find(d => String(d.Kieu_In).trim().toLowerCase() === String(selectedKieuIn).trim().toLowerCase());
                 
                 if (!matched || matched[selectedGiay] === undefined || matched[selectedGiay] === "Chưa có" || String(matched[selectedGiay]).trim() === "Chưa có") {
                     priceVal = "Chưa có";
@@ -747,11 +726,7 @@
 
             const priceEl = document.getElementById('popupDynamicPrice');
             if(priceEl) {
-                if (priceVal === "Chưa có" || String(priceVal).trim() === "Chưa có") {
-                    priceEl.innerText = "Chưa có";
-                } else {
-                    priceEl.innerText = Number(priceVal).toLocaleString('vi-VN') + " đ";
-                }
+                priceEl.innerText = (priceVal === "Chưa có" || String(priceVal).trim() === "Chưa có") ? "Chưa có" : Number(priceVal).toLocaleString('vi-VN') + " đ";
             }
         }
 
