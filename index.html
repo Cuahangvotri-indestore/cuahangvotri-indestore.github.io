@@ -427,8 +427,18 @@
                             let macDinh = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim() : '';
                             let kieuIn = (row.c[2] && row.c[2].v) ? String(row.c[2].v).trim() : '';
                             let kichThuoc = (row.c[3] && row.c[3].v) ? String(row.c[3].v).trim() : '';
-                            let g180 = (row.c[4] && row.c[4].v !== undefined && row.c[4].v !== null) ? row.c[4].v : 'Chưa có';
-                            let g210 = (row.c[5] && row.c[5].v !== undefined && row.c[5].v !== null) ? row.c[5].v : 'Chưa có';
+                            
+                            // Trích xuất chuẩn giá trị số sạch sẽ từ cột D (Giay_Ford_180gsm) và E (Giay_Ford_210gsm)
+                            let val180 = (row.c[4] && row.c[4].v !== undefined && row.c[4].v !== null) ? row.c[4].v : 'Chưa có';
+                            if (val180 !== 'Chưa có') {
+                                val180 = parseFloat(String(val180).replace(/[^0-9.-]+/g, "")) || 'Chưa có';
+                            }
+
+                            let val210 = (row.c[5] && row.c[5].v !== undefined && row.c[5].v !== null) ? row.c[5].v : 'Chưa có';
+                            if (val210 !== 'Chưa có') {
+                                val210 = parseFloat(String(val210).replace(/[^0-9.-]+/g, "")) || 'Chưa có';
+                            }
+
                             let maSp = (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : '';
 
                             if (kieuIn !== '' && kieuIn.toLowerCase() !== 'kieu_in') {
@@ -437,8 +447,8 @@
                                     Mac_Dinh: macDinh,
                                     Kieu_In: kieuIn,
                                     Kich_Thuoc: kichThuoc,
-                                    Giay_Ford_180gsm: g180,
-                                    Giay_Ford_210gsm: g210,
+                                    Giay_Ford_180gsm: val180,
+                                    Giay_Ford_210gsm: val210,
                                     Ma_SP: maSp
                                 });
                             }
@@ -588,6 +598,7 @@
                     mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
                 }
 
+                let thiepInfoHTML = "";
                 let defaultThiepPrice = prod.basePrice;
                 let defaultKieuIn = "";
                 let defaultGiay = "Giay_Ford_180gsm";
@@ -599,16 +610,26 @@
                     if (filteredThiepRows.length === 0) filteredThiepRows = matrix.data;
                     window.currentThiepFilteredData = filteredThiepRows;
 
-                    // Lấy tên loại thiệp chuẩn xác từ dòng đầu tiên của sản phẩm này (ví dụ: Bao thư ngang 17.6x12.6)
                     loaiThiepName = filteredThiepRows[0]?.Loai_Thiep || "";
 
-                    // Lấy chính xác dòng đầu tiên (ô tô vàng ở hàng 6) làm mặc định: Kiểu in dòng đầu tiên + Giấy Ford 180gsm
-                    let firstRow = filteredThiepRows[0];
-                    if (firstRow) {
-                        defaultKieuIn = firstRow.Kieu_In;
-                        if (firstRow.Giay_Ford_180gsm !== undefined && firstRow.Giay_Ford_180gsm !== "Chưa có") {
-                            defaultThiepPrice = firstRow.Giay_Ford_180gsm;
+                    // Đọc chính xác cấu hình từ cột Mac_Dinh (ví dụ: Giay_Ford_180gsm, Full màu vỏ 1 mặt + full màu ruột 1 mặt)
+                    let rowWithConfig = filteredThiepRows.find(d => d.Mac_Dinh && d.Mac_Dinh.includes(','));
+                    if (!rowWithConfig) rowWithConfig = filteredThiepRows[0];
+
+                    if (rowWithConfig && rowWithConfig.Mac_Dinh) {
+                        let parts = rowWithConfig.Mac_Dinh.split(',').map(s => s.trim());
+                        if (parts.length >= 2) {
+                            defaultGiay = parts[0]; 
+                            defaultKieuIn = parts[1]; 
                         }
+                    }
+
+                    if (!defaultKieuIn) defaultKieuIn = filteredThiepRows[0]?.Kieu_In;
+
+                    // Lấy giá mặc định chuẩn xác theo hàng 6 (ô tô vàng)
+                    let matchedDefaultRow = filteredThiepRows.find(d => d.Kieu_In === defaultKieuIn);
+                    if (matchedDefaultRow && matchedDefaultRow[defaultGiay] !== undefined && matchedDefaultRow[defaultGiay] !== "Chưa có") {
+                        defaultThiepPrice = matchedDefaultRow[defaultGiay];
                     }
                 }
 
