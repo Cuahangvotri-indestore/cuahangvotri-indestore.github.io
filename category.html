@@ -167,7 +167,6 @@
 
         .check-price-block { background: rgba(255,255,255,0.45); border: 1px solid var(--liquid-border); border-radius: 20px; padding: 16px; }
         .radio-group-wrapper { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        .radio-group-wrapper:last-child { margin-bottom: 0; }
         .radio-options-flex { display: flex; flex-wrap: wrap; gap: 6px; }
         .custom-radio-btn { 
             display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(255, 255, 255, 0.7); 
@@ -261,13 +260,11 @@
         let currentSortValue = 'default';
         let popupActiveItem = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
 
+        // Rút gọn bộ ma trận phụ tĩnh, chỉ tải dữ liệu thực tế từ sheet GIA_THIEP động
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": { headers: ["Mac_Dinh", "Khong_Man", "Co_Man"], data: [{ Mac_Dinh: "Khong_Man", Khong_Man: 26250, Co_Man: 31500 }] },
             "GIA_CARD": { headers: ["Mac_Dinh", "In_1_Mat_Khong_Man", "In_2_Mat_Khong_Man", "In_1_Mat_Co_Man", "In_2_Mat_Co_Man"], data: [{ Mac_Dinh: "In_1_Mat_Khong_Man", In_1_Mat_Khong_Man: 6800, In_2_Mat_Khong_Man: 9500, In_1_Mat_Co_Man: 12200, In_2_Mat_Co_Man: 20300 }] },
-            "GIA_THIEP": {
-                headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"],
-                data: []
-            }
+            "GIA_THIEP": { headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"], data: [] }
         };
 
         function getVisitorId() {
@@ -282,44 +279,23 @@
         function getDetailedDevice() {
             const ua = navigator.userAgent;
             let deviceName = "Desktop";
-            if (/iphone|ipad|ipod/i.test(ua)) {
-                deviceName = "iPhone / iOS";
-            } else if (/android/i.test(ua)) {
-                deviceName = "Android Phone";
-            } else if (/macintosh|mac os/i.test(ua)) {
-                deviceName = "Mac / Safari";
-            } else if (/windows/i.test(ua)) {
-                deviceName = "Windows PC";
-            }
+            if (/iphone|ipad|ipod/i.test(ua)) deviceName = "iPhone / iOS";
+            else if (/android/i.test(ua)) deviceName = "Android Phone";
+            else if (/macintosh|mac os/i.test(ua)) deviceName = "Mac / Safari";
+            else if (/windows/i.test(ua)) deviceName = "Windows PC";
             return getVisitorId() + " (" + deviceName + ")";
         }
 
         function ghiNhatKyTruyCap(hanhDong, chiTiet, callback) {
             var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
-            var data = {
-                time: new Date().toLocaleString("vi-VN"),
-                device: getDetailedDevice(),
-                action: hanhDong,
-                detail: chiTiet
-            };
-            fetch(webAppUrl, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            }).then(() => {
-                if (callback) callback();
-            }).catch(err => {
-                console.log("Lỗi ghi nhật ký:", err);
-                if (callback) callback();
-            });
+            var data = { time: new Date().toLocaleString("vi-VN"), device: getDetailedDevice(), action: hanhDong, detail: chiTiet };
+            fetch(webAppUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+            .then(() => { if (callback) callback(); }).catch(() => { if (callback) callback(); });
         }
 
         function trackAndNavigate(action, detail, url) {
-            ghiNhatKyTruyCap(action, detail, function() {
-                window.location.href = url;
-            });
-            setTimeout(function() { window.location.href = url; }, 400);
+            ghiNhatKyTruyCap(action, detail, () => { window.location.href = url; });
+            setTimeout(() => { window.location.href = url; }, 400);
         }
 
         function getCurrentCategoryFromURL() {
@@ -327,7 +303,7 @@
             return urlParams.get('cat') ? decodeURIComponent(urlParams.get('cat')).trim() : 'Chung';
         }
 
-        window.addEventListener("DOMContentLoaded", function() {
+        window.addEventListener("DOMContentLoaded", () => {
             const currentCat = getCurrentCategoryFromURL();
             const sessionKey = 'tracked_category_view_' + currentCat;
             if (!sessionStorage.getItem(sessionKey)) {
@@ -348,7 +324,10 @@
             document.getElementById('customSortDropdown').classList.remove('open');
             renderCategoryProducts();
         }
-        window.addEventListener('click', function(e) { const dropdown = document.getElementById('customSortDropdown'); if (dropdown && !dropdown.contains(e.target)) dropdown.classList.remove('open'); });
+        window.addEventListener('click', (e) => { 
+            const dropdown = document.getElementById('customSortDropdown'); 
+            if (dropdown && !dropdown.contains(e.target)) dropdown.classList.remove('open'); 
+        });
 
         function parseDirectImageUrl(rawUrl) {
             if (!rawUrl) return ''; const linkStr = String(rawUrl).trim();
@@ -395,7 +374,6 @@
                 }
 
                 categoriesList.sort((a, b) => a.order - b.order);
-
                 categoriesList.forEach(cat => {
                     menuHTML += `<li class="menu-item" data-cat="${cat.name}" onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: ${cat.name}', 'category.html?cat=${encodeURIComponent(cat.name)}')">${cat.name}</li>`;
                 });
@@ -406,14 +384,19 @@
                     setActiveMenuState();
                 }
             } catch (err) {
-                console.error("Lỗi tải menu danh mục động trang category:", err);
+                console.error("Lỗi tải menu danh mục:", err);
             }
         }
 
         async function initCategoryPage() {
             try {
-                // Nạp bảng giá GIA_THIEP từ sheet phụ
-                const thiepRows = await fetchSheetRows('GIA_THIEP');
+                // Nạp song song dữ liệu để tăng tốc độ load trang đáng kể
+                const [thiepRows, configRows, menuData] = await Promise.all([
+                    fetchSheetRows('GIA_THIEP'),
+                    fetchSheetRows('Cau_Hinh_Shop'),
+                    loadDynamicCategoryMenu()
+                ]);
+
                 let thiepDataArr = [];
                 if (thiepRows && thiepRows.length > 0) {
                     thiepRows.forEach(row => {
@@ -423,13 +406,13 @@
                             let kieuIn = (row.c[2] && row.c[2].v) ? String(row.c[2].v).trim() : '';
                             
                             let val180 = (row.c[3] && row.c[3].v !== undefined && row.c[3].v !== null) ? row.c[3].v : 'Chưa có';
-                            if (val180 !== 'Chưa có' && val180 !== null) {
+                            if (val180 !== 'Chưa có') {
                                 let num = parseFloat(String(val180).replace(/[^0-9.-]+/g, ""));
                                 val180 = isNaN(num) ? 'Chưa có' : num;
                             }
 
                             let val210 = (row.c[4] && row.c[4].v !== undefined && row.c[4].v !== null) ? row.c[4].v : 'Chưa có';
-                            if (val210 !== 'Chưa có' && val210 !== null) {
+                            if (val210 !== 'Chưa có') {
                                 let num = parseFloat(String(val210).replace(/[^0-9.-]+/g, ""));
                                 val210 = isNaN(num) ? 'Chưa có' : num;
                             }
@@ -437,23 +420,13 @@
                             let maSp = (row.c[5] && row.c[5].v) ? String(row.c[5].v).trim() : '';
 
                             if (kieuIn !== '' && kieuIn.toLowerCase() !== 'kieu_in') {
-                                thiepDataArr.push({
-                                    Loai_Thiep: loaiThiep,
-                                    Mac_Dinh: macDinh,
-                                    Kieu_In: kieuIn,
-                                    Giay_Ford_180gsm: val180,
-                                    Giay_Ford_210gsm: val210,
-                                    Ma_SP: maSp
-                                });
+                                thiepDataArr.push({ Loai_Thiep: loaiThiep, Mac_Dinh: macDinh, Kieu_In: kieuIn, Giay_Ford_180gsm: val180, Giay_Ford_210gsm: val210, Ma_SP: maSp });
                             }
                         }
                     });
                 }
                 sheetsPhuDataMatrix["GIA_THIEP"].data = thiepDataArr;
 
-                await loadDynamicCategoryMenu();
-
-                const configRows = await fetchSheetRows('Cau_Hinh_Shop');
                 configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
                 if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
                 if(globalStoreData.config['Logo_Shop']) document.getElementById('shop-logo-box').innerHTML = `<img src="${parseDirectImageUrl(globalStoreData.config['Logo_Shop'])}" alt="Logo Shop">`;
@@ -469,18 +442,15 @@
 
                     const reviewRows = await fetchSheetRows('List_Review');
                     globalStoreData.reviews = [];
-
                     reviewRows.forEach((row, idx) => {
                         if (row && row.c && row.c[1] && row.c[1].v) {
                             let titleRV = String(row.c[1].v).trim();
                             if (titleRV.toLowerCase() === 'ten_sp_rv' || titleRV === '') return;
-
                             let statusRV = (row.c[7] && row.c[7].v) ? String(row.c[7].v).trim().toLowerCase() : 'hiện';
                             if (statusRV.includes('ẩn')) return;
 
                             globalStoreData.reviews.push({
-                                sheetIndex: idx,
-                                name: sanitizeText(titleRV),
+                                sheetIndex: idx, name: sanitizeText(titleRV),
                                 category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'REVIEW LINK',
                                 img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''),
                                 detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '',
@@ -492,35 +462,24 @@
                 } else {
                     const productRows = await fetchSheetRows('Danh_Sach_SanPham');
                     globalStoreData.products = [];
-                    
                     productRows.forEach((row, idx) => {
                         if(row && row.c && row.c[1] && row.c[1].v) {
                             let statusVal = (row.c[10] && row.c[10].v) ? String(row.c[10].v).trim().toLowerCase() : 'hiện';
                             if (statusVal === 'ẩn') return;
-                            
                             let pCat = (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'KHÁC';
                             if (pCat.toLowerCase().includes('review')) return;
 
-                            let pPrice = 0; 
-                            if(row.c[7] && row.c[7].v) {
-                                pPrice = parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0;
-                            }
-
-                            let pName = sanitizeText(row.c[1].v);
+                            let pPrice = row.c[7] && row.c[7].v ? parseFloat(String(row.c[7].v).replace(/[^0-9.-]+/g, "")) || 0 : 0;
                             let rawCode = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : 'PROD_' + idx;
-                            let cleanCode = rawCode.replace(/[\s\uFEFF\xA0]+/g, '');
 
                             globalStoreData.products.push({
-                                sheetIndex: idx, 
-                                code: cleanCode, 
-                                name: pName, 
-                                category: pCat,
-                                img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), 
-                                detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', 
-                                desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '', 
-                                basePrice: pPrice, 
-                                shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '', 
-                                stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn', 
+                                sheetIndex: idx, code: rawCode.replace(/[\s\uFEFF\xA0]+/g, ''),
+                                name: sanitizeText(row.c[1].v), category: pCat,
+                                img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''),
+                                detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '',
+                                desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '',
+                                basePrice: pPrice, shopeeLink: (row.c[8] && row.c[8].v) ? String(row.c[8].v).trim() : '',
+                                stock: (row.c[9] && row.c[9].v) ? sanitizeText(row.c[9].v) : 'Có sẵn',
                                 boCauHinh: (row.c[11] && row.c[11].v) ? String(row.c[11].v).trim() : ''
                             });
                         }
@@ -536,14 +495,10 @@
 
         function setActiveMenuState() {
             const currentCat = getCurrentCategoryFromURL().toLowerCase();
-            const menuItems = document.querySelectorAll('#categoryMenuNav .menu-item');
-            
-            menuItems.forEach(item => {
+            document.querySelectorAll('#categoryMenuNav .menu-item').forEach(item => {
                 item.classList.remove('active');
                 const itemCat = (item.getAttribute('data-cat') || '').toLowerCase();
-                if (currentCat === 'chung' && itemCat === 'home') {
-                    item.classList.add('active');
-                } else if (itemCat === currentCat) {
+                if ((currentCat === 'chung' && itemCat === 'home') || itemCat === currentCat) {
                     item.classList.add('active');
                 }
             });
@@ -556,26 +511,17 @@
 
             if (isReviewCat) {
                 let displayList = [...globalStoreData.reviews];
-
                 if (displayList.length === 0) {
                     gridContainer.innerHTML = `<div class="empty-notice-box">Chưa có bài review nào ạ!</div>`;
                     return;
                 }
-
-                gridContainer.innerHTML = displayList.map(r => {
-                    return `
-                        <div class="product-card" onclick="openReviewDetailPopupByIndex(${r.sheetIndex})">
-                            <div class="product-img-wrapper"><img class="product-img" src="${r.img || 'https://via.placeholder.com/400'}" alt="${r.name}"></div>
-                            <div class="product-info">
-                                <h3 class="product-title">${r.name}</h3>
-                            </div>
-                        </div>`;
-                }).join('');
+                gridContainer.innerHTML = displayList.map(r => `
+                    <div class="product-card" onclick="openReviewDetailPopupByIndex(${r.sheetIndex})">
+                        <div class="product-img-wrapper"><img class="product-img" src="${r.img || 'https://via.placeholder.com/400'}" alt="${r.name}"></div>
+                        <div class="product-info"><h3 class="product-title">${r.name}</h3></div>
+                    </div>`).join('');
             } else {
-                let displayList = globalStoreData.products.filter(p => {
-                    if (currentCat === 'chung') return true;
-                    return p.category.toLowerCase() === currentCat.toLowerCase();
-                });
+                let displayList = globalStoreData.products.filter(p => currentCat === 'chung' || p.category.toLowerCase() === currentCat.toLowerCase());
 
                 if (currentSortValue === 'price-asc') displayList.sort((a, b) => a.basePrice - b.basePrice);
                 else if (currentSortValue === 'price-desc') displayList.sort((a, b) => b.basePrice - a.basePrice);
@@ -613,23 +559,14 @@
             try {
                 const rev = globalStoreData.reviews.find(r => r.sheetIndex === sheetIndex);
                 if(!rev) return;
-                
                 ghiNhatKyTruyCap("Click_Review", rev.name);
-
-                popupActiveItem = rev; 
-                popupActiveImgIndex = 0;
+                popupActiveItem = rev; popupActiveImgIndex = 0;
                 popupImagesArray = (rev.detailImgs && rev.detailImgs.trim() !== "") ? rev.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (rev.img ? [rev.img] : ['https://via.placeholder.com/400']);
 
-                const stickyTitleEl = document.getElementById('popupStickyTitle');
-                if(stickyTitleEl) stickyTitleEl.innerText = rev.name;
-
+                document.getElementById('popupStickyTitle').innerText = rev.name;
                 const scrollableBody = document.getElementById('popupScrollableBodyContent');
-                
                 const hasShopeeLink = (rev.shopeeLink && rev.shopeeLink.trim() !== "");
-                let mainButtonHTML = "";
-                if (hasShopeeLink) {
-                    mainButtonHTML = `<a class="btn-action-main" href="${rev.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee_Review', '${rev.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
-                }
+                let mainButtonHTML = hasShopeeLink ? `<a class="btn-action-main" href="${rev.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee_Review', '${rev.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>` : "";
 
                 scrollableBody.innerHTML = `
                     <div class="popup-image-container-wrapper">
@@ -637,37 +574,20 @@
                         <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                     <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-
-                    <div>
-                        <span class="popup-section-title">Nội dung review</span>
-                        <div class="popup-desc-box">${sanitizeText(rev.desc) || "Bài review chi tiết sản phẩm."}</div>
-                    </div>
-
-                    <div class="popup-actions-wrapper">
-                        ${mainButtonHTML}
-                    </div>
+                    <div><span class="popup-section-title">Nội dung review</span><div class="popup-desc-box">${sanitizeText(rev.desc) || "Bài review chi tiết sản phẩm."}</div></div>
+                    <div class="popup-actions-wrapper">${mainButtonHTML}</div>
                 `;
-
-                buildPopupSliderDOM(); 
-                renderPopupSliderEffects(); 
-                startPopupAutoplay();
-
-                const popupEl = document.getElementById('liquidProductPopup');
-                if(popupEl) popupEl.classList.add('open');
-            } catch (err) {
-                console.error("Lỗi khi mở popup review:", err);
-            }
+                buildPopupSliderDOM(); renderPopupSliderEffects(); startPopupAutoplay();
+                document.getElementById('liquidProductPopup').classList.add('open');
+            } catch (err) { console.error("Lỗi popup review:", err); }
         }
 
         function openProductDetailPopupByIndex(sheetIndex) {
             try {
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
-                
                 ghiNhatKyTruyCap("Click_SanPham", prod.name);
-
-                popupActiveProduct = prod; 
-                popupActiveImgIndex = 0;
+                popupActiveProduct = prod; popupActiveImgIndex = 0;
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
@@ -675,16 +595,10 @@
                 const isPreorder = prod.stock.toLowerCase().includes('đặt trước');
                 const hasConfig = (prod.boCauHinh && sheetsPhuDataMatrix[prod.boCauHinh]);
 
-                const stickyTitleEl = document.getElementById('popupStickyTitle');
-                if(stickyTitleEl) stickyTitleEl.innerText = prod.name;
-
+                document.getElementById('popupStickyTitle').innerText = prod.name;
                 const scrollableBody = document.getElementById('popupScrollableBodyContent');
-                
                 const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
-                let mainButtonHTML = "";
-                if (hasShopeeLink) {
-                    mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
-                }
+                let mainButtonHTML = hasShopeeLink ? `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>` : "";
 
                 let defaultThiepPrice = prod.basePrice;
                 let defaultKieuIn = "";
@@ -698,19 +612,15 @@
                     window.currentThiepFilteredData = filteredThiepRows;
 
                     loaiThiepName = filteredThiepRows[0]?.Loai_Thiep || "";
-
-                    let rowWithConfig = filteredThiepRows.find(d => d.Mac_Dinh && d.Mac_Dinh.includes(','));
-                    if (!rowWithConfig) rowWithConfig = filteredThiepRows[0];
+                    let rowWithConfig = filteredThiepRows.find(d => d.Mac_Dinh && d.Mac_Dinh.includes(',')) || filteredThiepRows[0];
 
                     if (rowWithConfig && rowWithConfig.Mac_Dinh) {
                         let parts = rowWithConfig.Mac_Dinh.split(',').map(s => s.trim());
                         if (parts.length >= 2) {
-                            if (parts[0].toLowerCase().includes('210')) defaultGiay = "Giay_Ford_210gsm";
-                            else defaultGiay = "Giay_Ford_180gsm";
-                            defaultKieuIn = parts[1]; 
+                            defaultGiay = parts[0].toLowerCase().includes('210') ? "Giay_Ford_210gsm" : "Giay_Ford_180gsm";
+                            defaultKieuIn = parts[1];
                         }
                     }
-
                     if (!defaultKieuIn) defaultKieuIn = filteredThiepRows[0]?.Kieu_In;
 
                     let matchedDefaultRow = filteredThiepRows.find(d => d.Kieu_In === defaultKieuIn);
@@ -725,23 +635,16 @@
                         <button class="popup-nav-btn" id="btnNextPopupImg"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                     <div class="popup-dots-row" id="popupImgDotsSpace"></div>
-
-                    <div>
-                        <span class="popup-section-title">Mô tả sản phẩm</span>
-                        <div class="popup-desc-box">${prod.desc || "Sản phẩm creative handmade tinh tế."}</div>
-                    </div>
-
+                    <div><span class="popup-section-title">Mô tả sản phẩm</span><div class="popup-desc-box">${prod.desc || "Sản phẩm creative handmade tinh tế."}</div></div>
                     <div class="popup-price-tag-row">
                         <span style="font-size:12px; font-weight:700;">GIÁ HIỂN THỊ:</span>
                         <span class="popup-price-number" id="popupDynamicPrice">0 đ</span>
                     </div>
-
                     <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
                         <span class="popup-section-title" id="checkPriceSectionTitle"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
                         ${loaiThiepName ? `<div class="radio-title-label" style="margin-top: 10px; margin-bottom: 12px; color: var(--emerald-dark);">Loại thiệp: ${loaiThiepName}</div>` : ''}
                         <div id="popupDynamicRadioSpace"></div>
                     </div>
-
                     <div class="popup-actions-wrapper" id="popupActionsWrapperContainer">
                         ${mainButtonHTML}
                         ${(isPreorder || hasConfig) ? `
@@ -752,20 +655,16 @@
                     </div>
                 `;
 
-                buildPopupSliderDOM(); 
-                renderPopupSliderEffects(); 
-                startPopupAutoplay();
+                buildPopupSliderDOM(); renderPopupSliderEffects(); startPopupAutoplay();
 
                 const checkBlock = document.getElementById('popupCheckGiaBlock');
                 const radioSpace = document.getElementById('popupDynamicRadioSpace');
                 
                 if(!hasConfig) {
                     if(checkBlock) checkBlock.style.display = 'none'; 
-                    const priceEl = document.getElementById('popupDynamicPrice');
-                    if(priceEl) priceEl.innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
+                    document.getElementById('popupDynamicPrice').innerText = Number(prod.basePrice).toLocaleString('vi-VN') + " đ";
                 } else {
                     if(checkBlock) checkBlock.style.display = 'block'; 
-                    
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
                         let filteredThiepRows = window.currentThiepFilteredData;
@@ -783,17 +682,10 @@
                             buildPopupRadioRow(radioSpace, "Single_Option", "Tùy chọn phân loại:", cleanH, cleanH[0]);
                         }
                     }
-
-                    const priceEl = document.getElementById('popupDynamicPrice');
-                    if(priceEl) {
-                        priceEl.innerText = (defaultThiepPrice === "Chưa có" ? "Chưa có" : Number(defaultThiepPrice).toLocaleString('vi-VN') + " đ");
-                    }
+                    document.getElementById('popupDynamicPrice').innerText = (defaultThiepPrice === "Chưa có" ? "Chưa có" : Number(defaultThiepPrice).toLocaleString('vi-VN') + " đ");
                 }
-                const popupEl = document.getElementById('liquidProductPopup');
-                if(popupEl) popupEl.classList.add('open');
-            } catch (err) {
-                console.error("Lỗi khi mở popup theo index:", err);
-            }
+                document.getElementById('liquidProductPopup').classList.add('open');
+            } catch (err) { console.error("Lỗi khi mở popup sản phẩm:", err); }
         }
 
         function buildPopupRadioRow(container, groupName, groupTitle, elementsList, activeValue) {
@@ -815,7 +707,6 @@
             if(popupActiveProduct.boCauHinh === 'GIA_THIEP') {
                 let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
-
                 let datasetToSearch = window.currentThiepFilteredData || matrix.data;
                 let matched = datasetToSearch.find(d => d.Kieu_In === selectedKieuIn);
                 
@@ -836,11 +727,7 @@
 
             const priceEl = document.getElementById('popupDynamicPrice');
             if(priceEl) {
-                if (priceVal === "Chưa có" || String(priceVal).trim() === "Chưa có") {
-                    priceEl.innerText = "Chưa có";
-                } else {
-                    priceEl.innerText = Number(priceVal).toLocaleString('vi-VN') + " đ";
-                }
+                priceEl.innerText = (priceVal === "Chưa có" || String(priceVal).trim() === "Chưa có") ? "Chưa có" : Number(priceVal).toLocaleString('vi-VN') + " đ";
             }
         }
 
@@ -871,11 +758,9 @@
         
         function closeProductPopup() { 
             stopPopupAutoplay(); 
-            const popupEl = document.getElementById('liquidProductPopup');
-            if(popupEl) popupEl.classList.remove('open'); 
+            document.getElementById('liquidProductPopup').classList.remove('open'); 
             popupActiveProduct = null;
-            const track = document.getElementById('popupImageViewportTrack');
-            if(track) track.innerHTML = '';
+            document.getElementById('popupImageViewportTrack').innerHTML = '';
         }
         
         function closeProductPopupOutside(e) { if(e.target.classList.contains('popup-overlay')) closeProductPopup(); }
