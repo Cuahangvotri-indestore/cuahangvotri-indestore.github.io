@@ -264,10 +264,7 @@
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": { headers: ["Mac_Dinh", "Khong_Man", "Co_Man"], data: [{ Mac_Dinh: "Khong_Man", Khong_Man: 26250, Co_Man: 31500 }] },
             "GIA_CARD": { headers: ["Mac_Dinh", "In_1_Mat_Khong_Man", "In_2_Mat_Khong_Man", "In_1_Mat_Co_Man", "In_2_Mat_Co_Man"], data: [{ Mac_Dinh: "In_1_Mat_Khong_Man", In_1_Mat_Khong_Man: 6800, In_2_Mat_Khong_Man: 9500, In_1_Mat_Co_Man: 12200, In_2_Mat_Co_Man: 20300 }] },
-            "GIA_THIEP": {
-                headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"],
-                data: []
-            }
+            "GIA_THIEP": { headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"], data: [] }
         };
 
         function getVisitorId() {
@@ -393,9 +390,11 @@
 
         async function initCategoryPage() {
             try {
-                const [thiepRows, configRows, menuData] = await Promise.all([
+                // Tải đồng thời tất cả các sheet dữ liệu để tăng tốc tối đa
+                const [thiepRows, configRows, productRows, menuData] = await Promise.all([
                     fetchSheetRows('GIA_THIEP'),
                     fetchSheetRows('Cau_Hinh_Shop'),
+                    fetchSheetRows('Danh_Sach_SanPham'),
                     loadDynamicCategoryMenu()
                 ]);
 
@@ -462,7 +461,6 @@
                         }
                     });
                 } else {
-                    const productRows = await fetchSheetRows('Danh_Sach_SanPham');
                     globalStoreData.products = [];
                     productRows.forEach((row, idx) => {
                         if(row && row.c && row.c[1] && row.c[1].v) {
@@ -589,7 +587,7 @@
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
                 ghiNhatKyTruyCap("Click_SanPham", prod.name);
-                popupActiveProduct = prod; popupActiveImgIndex = 0;
+                popupActiveItem = prod; popupActiveImgIndex = 0;
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
@@ -600,7 +598,7 @@
                 document.getElementById('popupStickyTitle').innerText = prod.name;
                 const scrollableBody = document.getElementById('popupScrollableBodyContent');
                 const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
-                let mainButtonHTML = hasShopeeLink ? `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>` : "";
+                let mainButtonHTML = hasShopeeLink ? `<a class="btn-action-main" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>` : "";
 
                 let defaultThiepPrice = prod.basePrice;
                 let defaultKieuIn = "";
@@ -702,11 +700,11 @@
         }
 
         function calculatePopupDynamicPrice() {
-            if(!popupActiveProduct || !popupActiveProduct.boCauHinh) return;
-            const matrix = sheetsPhuDataMatrix[popupActiveProduct.boCauHinh]; 
-            let priceVal = popupActiveProduct.basePrice;
+            if(!popupActiveItem || !popupActiveItem.boCauHinh) return;
+            const matrix = sheetsPhuDataMatrix[popupActiveItem.boCauHinh]; 
+            let priceVal = popupActiveItem.basePrice;
 
-            if(popupActiveProduct.boCauHinh === 'GIA_THIEP') {
+            if(popupActiveItem.boCauHinh === 'GIA_THIEP') {
                 let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
                 let datasetToSearch = window.currentThiepFilteredData || matrix.data;
@@ -760,9 +758,11 @@
         
         function closeProductPopup() { 
             stopPopupAutoplay(); 
-            document.getElementById('liquidProductPopup').classList.remove('open'); 
-            popupActiveProduct = null;
-            document.getElementById('popupImageViewportTrack').innerHTML = '';
+            const popupEl = document.getElementById('liquidProductPopup');
+            if(popupEl) popupEl.classList.remove('open'); 
+            popupActiveItem = null;
+            const track = document.getElementById('popupImageViewportTrack');
+            if(track) track.innerHTML = '';
         }
         
         function closeProductPopupOutside(e) { if(e.target.classList.contains('popup-overlay')) closeProductPopup(); }
