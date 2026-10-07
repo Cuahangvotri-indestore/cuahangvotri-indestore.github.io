@@ -610,7 +610,6 @@
 
                     loaiThiepName = filteredThiepRows[0]?.Loai_Thiep || "";
 
-                    // Đọc cấu hình mặc định từ dòng có cột Mac_Dinh (ví dụ: Giay_Ford_180gsm, Full màu vỏ 1 mặt + full màu ruột 1 mặt)
                     let rowWithConfig = filteredThiepRows.find(d => d.Mac_Dinh && d.Mac_Dinh.includes(','));
                     if (!rowWithConfig) rowWithConfig = filteredThiepRows[0];
 
@@ -650,7 +649,7 @@
 
                     <div class="check-price-block" id="popupCheckGiaBlock" style="display: none;">
                         <span class="popup-section-title" id="checkPriceSectionTitle"><i class="fa-solid fa-calculator"></i> Check giá tùy chọn</span>
-                        ${loaiThiepName ? `<div style="margin-bottom: 12px; font-family: 'Comfortaa', sans-serif; font-size: 15px; font-weight: 700; color: var(--emerald-dark);">Loại thiệp: ${loaiThiepName}</div>` : ''}
+                        ${loaiThiepName ? `<div class="radio-title-label" style="margin-top: 10px; margin-bottom: 12px; color: var(--emerald-dark);">Loại thiệp: ${loaiThiepName}</div>` : ''}
                         <div id="popupDynamicRadioSpace"></div>
                     </div>
 
