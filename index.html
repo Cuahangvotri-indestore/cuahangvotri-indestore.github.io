@@ -370,7 +370,7 @@
             const cacheKey = `votri_sheet_cache_${sheetName}`;
             const cacheTimeKey = `votri_sheet_time_${sheetName}`;
             const now = new Date().getTime();
-            const twelveHours = 12 * 60 * 60 * 1000;
+            const twelveHours = 30 * 60 * 1000;
 
             let cachedData = localStorage.getItem(cacheKey);
             let cachedTime = localStorage.getItem(cacheTimeKey);
