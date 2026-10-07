@@ -370,15 +370,11 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                // Chống cache thời gian thực (?t=...) và bỏ qua 4 dòng đầu (hàng 1 đến hàng 4), lấy từ hàng 5 (index 4 trong mảng Gviz nếu có, hoặc lọc bỏ các dòng rỗng/tiêu đề ngoài vùng A5)
+                // Thêm tham số chống cache thời gian thực (?t=...) để luôn cập nhật giá mới nhất từ Excel
                 const cacheBuster = new Date().getTime();
                 const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
                 const text = await response.text(); 
-                const json = JSON.parse(text.substr(47).slice(0, -2));
-                const allRows = json.table.rows || [];
-                
-                // Do các sheet luôn bắt đầu bảng title từ dòng A5 (tức index 4 trong mảng 0-based), ta bỏ qua các dòng từ 0 đến 3 (4 dòng đầu) để quét chuẩn từ hàng 5 trở đi
-                return allRows.slice(4);
+                return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
             } catch (e) { return []; }
         }
 
@@ -421,7 +417,7 @@
             try {
                 await loadDynamicCategoryMenu();
 
-                // Tải bảng giá GIA_THIEP từ sheet phụ (bắt đầu từ dòng A5)
+                // Nạp bảng giá GIA_THIEP từ sheet phụ
                 const thiepRows = await fetchSheetRows('GIA_THIEP');
                 let thiepDataArr = [];
                 if (thiepRows && thiepRows.length > 0) {
@@ -640,7 +636,7 @@
                     
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
-                        // Lọc các dòng theo MA_SP của sản phẩm hiện tại, tự động bỏ chọn loại thiệp thừa
+                        // Lọc các dòng theo MA_SP của sản phẩm, bỏ hiển thị phần chọn loại thiệp thừa thãi
                         let filteredThiepRows = matrix.data.filter(d => d.Ma_SP === prod.code);
                         if (filteredThiepRows.length === 0) {
                             filteredThiepRows = matrix.data; 
