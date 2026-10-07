@@ -370,10 +370,12 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                // Thêm tham số chống cache thời gian thực (?t=...) để cập nhật giá ngay lập tức không bị cache
+                // Thêm tham số chống cache thời gian thực (?t=...) để khắc phục triệt để lỗi web không cập nhật đúng dữ liệu mới nhất từ Excel
                 const cacheBuster = new Date().getTime();
                 const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
-                const text = await response.text(); return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
+                const text = await response.text(); 
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                return json.table.rows || [];
             } catch (e) { return []; }
         }
 
@@ -390,7 +392,7 @@
                             let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
                             let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
 
-                            // Chỉ kiểm tra trạng thái Hiện / Ẩn từ cột trạng thái, không chặn cứng tên
+                            // Chỉ kiểm tra trạng thái Hiện / Ẩn từ cột trạng thái, bỏ qua các dòng tiêu đề rỗng hoặc bị ẩn
                             if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && !status.includes('ẩn')) {
                                 categoriesList.push({ name: catName, order: order });
                             }
@@ -417,7 +419,7 @@
             try {
                 await loadDynamicCategoryMenu();
 
-                // Nạp bảng giá GIA_THIEP từ sheet phụ (hỗ trợ đọc cột Ma_SP ở cột thứ 7 - index 6)
+                // Nạp bảng giá GIA_THIEP từ sheet phụ
                 const thiepRows = await fetchSheetRows('GIA_THIEP');
                 let thiepDataArr = [];
                 if (thiepRows && thiepRows.length > 0) {
@@ -636,7 +638,7 @@
                     
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
-                        // Lọc các dòng theo MA_SP của sản phẩm hiện tại, tự động bỏ chọn loại thiệp thừa thãi
+                        // Lọc các dòng theo MA_SP của sản phẩm hiện tại, ẩn phần chọn loại thiệp thừa thãi
                         let filteredThiepRows = matrix.data.filter(d => d.Ma_SP === prod.code);
                         if (filteredThiepRows.length === 0) {
                             filteredThiepRows = matrix.data; 
