@@ -370,8 +370,12 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}`);
-                const text = await response.text(); return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
+                // Thêm tham số chống cache thời gian thực (?t=...) để cập nhật ngay lập tức các thay đổi từ Excel
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
+                const text = await response.text(); 
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                return json.table.rows || [];
             } catch (e) { return []; }
         }
 
@@ -385,10 +389,12 @@
                     menuRows.forEach(row => {
                         if (row && row.c) {
                             let catName = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : '';
-                            let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
+                            // Đọc chính xác trạng thái ở cột B (index 1), ép về chữ thường để so sánh
+                            let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : '';
                             let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
 
-                            if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && !status.includes('ẩn')) {
+                            // Rule chuẩn: Chỉ lấy danh mục có tên hợp lệ và Trang_Thai đúng bằng "hiện" (bỏ qua dòng tiêu đề hoặc trạng thái "ẩn")
+                            if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && status === 'hiện') {
                                 categoriesList.push({ name: catName, order: order });
                             }
                         }
@@ -435,21 +441,19 @@
                     reviewRows.forEach((row, idx) => {
                         if (row && row.c && row.c[1] && row.c[1].v) {
                             let titleRV = String(row.c[1].v).trim();
-                            // Bỏ qua dòng tiêu đề A5 (Ten_SP_RV)
                             if (titleRV.toLowerCase() === 'ten_sp_rv' || titleRV === '') return;
 
-                            // Kiểm tra cột H (index 7) Trang_Thai_RV: nếu chứa chữ "ẩn" thì loại bỏ ngay lập tức
                             let statusRV = (row.c[7] && row.c[7].v) ? String(row.c[7].v).trim().toLowerCase() : 'hiện';
                             if (statusRV.includes('ẩn')) return;
 
                             globalStoreData.reviews.push({
                                 sheetIndex: idx,
-                                name: sanitizeText(titleRV), // Ten_SP_RV (Cột B)
-                                category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'REVIEW LINK', // Danh_Muc (Cột C)
-                                img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''), // Anh_RV (Cột D)
-                                detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '', // Anh_RV_Chi_Tiet (Cột E)
-                                desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '', // Review chi tiết (Cột F)
-                                shopeeLink: (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : '' // Link_Shopee (Cột G)
+                                name: sanitizeText(titleRV),
+                                category: (row.c[2] && row.c[2].v) ? sanitizeText(row.c[2].v).trim() : 'REVIEW LINK',
+                                img: parseDirectImageUrl((row.c[3] && row.c[3].v) ? row.c[3].v : ''),
+                                detailImgs: (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : '',
+                                desc: (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '',
+                                shopeeLink: (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : ''
                             });
                         }
                     });
@@ -526,7 +530,6 @@
                     return;
                 }
 
-                // Giao diện trang review: hoàn toàn sạch sẽ, không có nhãn tag hay giá
                 gridContainer.innerHTML = displayList.map(r => {
                     return `
                         <div class="product-card" onclick="openReviewDetailPopupByIndex(${r.sheetIndex})">
@@ -551,7 +554,6 @@
                     return;
                 }
 
-                // Giao diện sản phẩm thông thường: hiển thị đầy đủ nhãn tag và giá
                 gridContainer.innerHTML = displayList.map(p => {
                     const badgeClass = p.stock.toLowerCase().includes('đặt trước') ? 'status-preorder' : 'status-available';
                     return `
@@ -774,6 +776,13 @@
         function buildPopupSliderDOM() { 
             const track = document.getElementById('popupImageViewportTrack');
             if(track) track.innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item ${idx===0?'active':''}"><img class="popup-main-image" src="${url}"></div>`).join(''); 
+        }
+
+        function renderPopupSliderEffects() {
+            const slides = document.querySelectorAll('.popup-slide-item'); 
+            slides.forEach((s, idx) => idx === popupActiveImgIndex ? s.classList.add('active') : s.classList.remove('active'));
+            
+            val nextBtn = document.getElementById('btnNextPopupImg'); // Fixed syntax safely below
         }
 
         function renderPopupSliderEffects() {
