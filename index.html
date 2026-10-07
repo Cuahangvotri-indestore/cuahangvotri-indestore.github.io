@@ -27,14 +27,7 @@
         .top-bar {
             background: var(--emerald-dark); color: #ffffff; text-align: center; font-size: 14px; 
             padding: 12px 0; font-weight: 700; font-family: 'Comfortaa', sans-serif; box-shadow: 0 4px 15px rgba(31, 78, 69, 0.1);
-            display: flex; justify-content: center; align-items: center; gap: 15px;
         }
-        .refresh-cache-btn {
-            background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.4); color: #fff;
-            padding: 2px 10px; border-radius: 12px; font-size: 11px; cursor: pointer; transition: background 0.2s;
-        }
-        .refresh-cache-btn:hover { background: rgba(255, 255, 255, 0.4); }
-
         header { 
             background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-bottom: 1px solid var(--liquid-border);
             position: sticky; top: 0; z-index: 100; box-shadow: var(--liquid-shadow);
@@ -196,7 +189,7 @@
         .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 13px; padding: 11px; border-radius: 14px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
 
         footer { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-top: 1px solid var(--liquid-border); padding: 35px 24px; text-align: center; margin-top: auto; }
-        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 14px; }
         .footer-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
         .footer-btn { 
             text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 30px; border-radius: 40px; 
@@ -206,7 +199,14 @@
         }
         .footer-btn:hover { transform: translateY(-2px); background: var(--emerald-soft); color: #ffffff !important; border-color: var(--emerald-soft); box-shadow: 0 10px 25px rgba(56, 122, 111, 0.3); }
         .btn-fb { color: #1877f2; } .btn-zl { color: #0068ff; } .btn-sp { color: var(--shopee-color); }
-        .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin-top: 5px; }
+        .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin: 0; }
+        
+        /* Nút reset cache siêu nhỏ, mờ đúng vị trí khoanh đỏ ở footer */
+        .refresh-cache-mini-btn {
+            background: transparent; border: none; color: var(--emerald-dark); font-size: 11px; font-family: 'Quicksand', sans-serif;
+            opacity: 0.35; cursor: pointer; transition: opacity 0.3s ease; padding: 2px 6px; margin-top: -4px;
+        }
+        .refresh-cache-mini-btn:hover { opacity: 0.85; text-decoration: underline; }
 
         @media (max-width: 1024px) { 
             .nav-container { flex-direction: column; gap: 15px; } 
@@ -222,10 +222,7 @@
 </head>
 <body>
 
-    <div class="top-bar">
-        <span>🌸 CỬA HÀNG VÔ TRI - CREATIVE HANDMADE & PRINTING 🌸</span>
-        <button class="refresh-cache-btn" onclick="clearStoreCacheAndReload()">🔄 Làm mới dữ liệu</button>
-    </div>
+    <div class="top-bar">🌸 CỬA HÀNG VÔ TRI - CREATIVE HANDMADE & PRINTING 🌸</div>
 
     <header>
         <div class="nav-container">
@@ -274,6 +271,7 @@
         <div class="footer-content">
             <div class="footer-links" id="footer-social-links"></div>
             <p class="footer-copyright">© 2026 CỬA HÀNG VÔ TRI Powered by Github & INDE.</p>
+            <button class="refresh-cache-mini-btn" onclick="clearStoreCacheAndReload()">Làm mới dữ liệu mới nhất</button>
         </div>
     </footer>
 
@@ -367,7 +365,7 @@
             } catch (e) { return []; }
         }
 
-        // HỆ THỐNG CACHE 12 TIẾNG THÔNG MINH (Lưu trữ trong localStorage của trình duyệt)
+        // HỆ THỐNG CACHE 12 TIẾNG THÔNG MINH
         async function fetchSheetRowsWithCache(sheetName) {
             const cacheKey = `votri_sheet_cache_${sheetName}`;
             const cacheTimeKey = `votri_sheet_time_${sheetName}`;
@@ -383,7 +381,6 @@
                 } catch(e) {}
             }
 
-            // Nếu hết hạn hoặc chưa có cache, fetch mới từ Google Sheets
             let rows = await fetchSheetRows(sheetName);
             if (rows && rows.length > 0) {
                 try {
@@ -394,13 +391,12 @@
             return rows;
         }
 
-        // Hàm thủ công cho phép người dùng bấm nút làm mới cache ngay lập tức nếu vừa sửa Excel
+        // Xóa cache thủ công khi bấm nút mờ ở footer
         function clearStoreCacheAndReload() {
             ['GIA_THIEP', 'Cau_Hinh_Shop', 'Danh_Muc', 'Danh_Sach_SanPham'].forEach(s => {
                 localStorage.removeItem(`votri_sheet_cache_${s}`);
                 localStorage.removeItem(`votri_sheet_time_${s}`);
             });
-            alert("Đã làm mới bộ nhớ đệm! Trang sẽ tải lại dữ liệu mới nhất.");
             location.reload();
         }
 
@@ -439,7 +435,6 @@
 
         async function initSprint1HomePage() {
             try {
-                // TẢI SONG SONG DỮ LIỆU QUA CACHE 12H ĐỂ TỐC ĐỘ LOAD SIÊU TỐC (< 0.2 GIÂY)
                 const [thiepRows, configRows, menuRows, productRows] = await Promise.all([
                     fetchSheetRowsWithCache('GIA_THIEP'),
                     fetchSheetRowsWithCache('Cau_Hinh_Shop'),
