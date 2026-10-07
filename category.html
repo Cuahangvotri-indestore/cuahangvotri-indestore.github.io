@@ -181,7 +181,7 @@
         .btn-action-sub { text-decoration: none; text-align: center; font-weight: 700; font-size: 13px; padding: 11px; border-radius: 14px; background: #ffffff; color: var(--emerald-dark); border: 1px solid var(--liquid-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; }
 
         footer { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(var(--blur-value)); border-top: 1px solid var(--liquid-border); padding: 35px 24px; text-align: center; margin-top: auto; }
-        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .footer-content { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 14px; }
         .footer-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
         .footer-btn { 
             text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 30px; border-radius: 40px; 
@@ -191,7 +191,14 @@
         }
         .footer-btn:hover { transform: translateY(-2px); background: var(--emerald-soft); color: #ffffff !important; border-color: var(--emerald-soft); box-shadow: 0 10px 25px rgba(56, 122, 111, 0.3); }
         .btn-fb { color: #1877f2; } .btn-zl { color: #0068ff; } .btn-sp { color: var(--shopee-color); }
-        .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin-top: 5px; }
+        .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin: 0; }
+        
+        /* Nút làm mới dữ liệu siêu nhỏ, mờ ở footer */
+        .refresh-cache-mini-btn {
+            background: transparent; border: none; color: var(--emerald-dark); font-size: 11px; font-family: 'Quicksand', sans-serif;
+            opacity: 0.35; cursor: pointer; transition: opacity 0.3s ease; padding: 2px 6px; margin-top: -4px;
+        }
+        .refresh-cache-mini-btn:hover { opacity: 0.85; text-decoration: underline; }
 
         @media (max-width: 1024px) { 
             .nav-container { flex-direction: column; gap: 15px; } 
@@ -252,6 +259,7 @@
         <div class="footer-content">
             <div class="footer-links" id="footer-social-links"></div>
             <p class="footer-copyright">© 2026 CỬA HÀNG VÔ TRI Powered by Github & INDE.</p>
+            <button class="refresh-cache-mini-btn" onclick="clearStoreCacheAndReload()">Làm mới dữ liệu mới nhất</button>
         </div>
     </footer>
 
@@ -261,11 +269,13 @@
         let currentSortValue = 'default';
         let popupActiveItem = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
 
-        // Nhúng dữ liệu thỉnh thoảng dùng vào cấu trúc tĩnh giúp loại bỏ bớt lượt fetch mạng thừa
         const sheetsPhuDataMatrix = {
             "GIA_TEM_STICKER": { headers: ["Mac_Dinh", "Khong_Man", "Co_Man"], data: [{ Mac_Dinh: "Khong_Man", Khong_Man: 26250, Co_Man: 31500 }] },
             "GIA_CARD": { headers: ["Mac_Dinh", "In_1_Mat_Khong_Man", "In_2_Mat_Khong_Man", "In_1_Mat_Co_Man", "In_2_Mat_Co_Man"], data: [{ Mac_Dinh: "In_1_Mat_Khong_Man", In_1_Mat_Khong_Man: 6800, In_2_Mat_Khong_Man: 9500, In_1_Mat_Co_Man: 12200, In_2_Mat_Co_Man: 20300 }] },
-            "GIA_THIEP": { headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"], data: [] }
+            "GIA_THIEP": {
+                headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"],
+                data: []
+            }
         };
 
         function getVisitorId() {
@@ -304,7 +314,7 @@
             return urlParams.get('cat') ? decodeURIComponent(urlParams.get('cat')).trim() : 'Chung';
         }
 
-        window.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener("DOMContentLoaded", function() {
             const currentCat = getCurrentCategoryFromURL();
             const sessionKey = 'tracked_category_view_' + currentCat;
             if (!sessionStorage.getItem(sessionKey)) {
@@ -346,12 +356,46 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                const cacheBuster = new Date().getTime();
-                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
+                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}`);
                 const text = await response.text(); 
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 return json.table.rows || [];
             } catch (e) { return []; }
+        }
+
+        // CACHE THÔNG MINH 12 TIẾNG
+        async function fetchSheetRowsWithCache(sheetName) {
+            const cacheKey = `votri_sheet_cache_${sheetName}`;
+            const cacheTimeKey = `votri_sheet_time_${sheetName}`;
+            const now = new Date().getTime();
+            const twelveHours = 12 * 60 * 60 * 1000;
+
+            let cachedData = localStorage.getItem(cacheKey);
+            let cachedTime = localStorage.getItem(cacheTimeKey);
+
+            if (cachedData && cachedTime && (now - parseInt(cachedTime) < twelveHours)) {
+                try {
+                    return JSON.parse(cachedData);
+                } catch(e) {}
+            }
+
+            let rows = await fetchSheetRows(sheetName);
+            if (rows && rows.length > 0) {
+                try {
+                    localStorage.setItem(cacheKey, JSON.stringify(rows));
+                    localStorage.setItem(cacheTimeKey, now.toString());
+                } catch(e) {}
+            }
+            return rows;
+        }
+
+        // Xóa cache thủ công khi bấm nút mờ ở footer
+        function clearStoreCacheAndReload() {
+            ['GIA_THIEP', 'Cau_Hinh_Shop', 'Danh_Muc', 'Danh_Sach_SanPham', 'List_Review'].forEach(s => {
+                localStorage.removeItem(`votri_sheet_cache_${s}`);
+                localStorage.removeItem(`votri_sheet_time_${s}`);
+            });
+            location.reload();
         }
 
         async function loadDynamicCategoryMenu(menuRows) {
@@ -390,20 +434,17 @@
 
         async function initCategoryPage() {
             try {
-                // TẢI SONG SONG TẤT CẢ CÁC SHEET CÙNG MỘT LÚC BẰNG PROMISE.ALL ĐỂ GIẢM THỜI GIAN CHỜ XUỐNG DƯỚI 1 GIÂY
                 const currentCat = getCurrentCategoryFromURL();
                 const isReviewCat = currentCat.toLowerCase().includes('review');
 
-                let promises = [
-                    fetchSheetRows('GIA_THIEP'),
-                    fetchSheetRows('Cau_Hinh_Shop'),
-                    fetchSheetRows('Danh_Muc'),
-                    isReviewCat ? fetchSheetRows('List_Review') : fetchSheetRows('Danh_Sach_SanPham')
-                ];
+                // TẢI SONG SONG TẤT CẢ DỮ LIỆU QUA CACHE SIÊU TỐC (< 0.2s)
+                const [thiepRows, configRows, menuRows, dataRows] = await Promise.all([
+                    fetchSheetRowsWithCache('GIA_THIEP'),
+                    fetchSheetRowsWithCache('Cau_Hinh_Shop'),
+                    fetchSheetRowsWithCache('Danh_Muc'),
+                    isReviewCat ? fetchSheetRowsWithCache('List_Review') : fetchSheetRowsWithCache('Danh_Sach_SanPham')
+                ]);
 
-                const [thiepRows, configRows, menuRows, dataRows] = await Promise.all(promises);
-
-                // Xử lý bảng giá thiệp
                 let thiepDataArr = [];
                 if (thiepRows && thiepRows.length > 0) {
                     thiepRows.forEach(row => {
@@ -434,7 +475,6 @@
                 }
                 sheetsPhuDataMatrix["GIA_THIEP"].data = thiepDataArr;
 
-                // Xử lý cấu hình shop
                 configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
                 if(globalStoreData.config['Background_Shop']) document.body.style.backgroundImage = `url('${parseDirectImageUrl(globalStoreData.config['Background_Shop'])}')`;
                 if(globalStoreData.config['Logo_Shop']) document.getElementById('shop-logo-box').innerHTML = `<img src="${parseDirectImageUrl(globalStoreData.config['Logo_Shop'])}" alt="Logo Shop">`;
@@ -591,7 +631,7 @@
                 const prod = globalStoreData.products.find(p => p.sheetIndex === sheetIndex);
                 if(!prod) return;
                 ghiNhatKyTruyCap("Click_SanPham", prod.name);
-                popupActiveItem = prod; popupActiveImgIndex = 0;
+                popupActiveProduct = prod; popupActiveImgIndex = 0;
                 popupImagesArray = (prod.detailImgs && prod.detailImgs.trim() !== "") ? prod.detailImgs.split(',').map(url => parseDirectImageUrl(url.trim())) : (prod.img ? [prod.img] : ['https://via.placeholder.com/400']);
 
                 const shopZalo = globalStoreData.config['Link_Zalo'] || "#";
@@ -602,7 +642,7 @@
                 document.getElementById('popupStickyTitle').innerText = prod.name;
                 const scrollableBody = document.getElementById('popupScrollableBodyContent');
                 const hasShopeeLink = (prod.shopeeLink && prod.shopeeLink.trim() !== "");
-                let mainButtonHTML = hasShopeeLink ? `<a class="btn-action-main" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>` : "";
+                let mainButtonHTML = hasShopeeLink ? `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>` : "";
 
                 let defaultThiepPrice = prod.basePrice;
                 let defaultKieuIn = "";
@@ -611,7 +651,8 @@
 
                 if (prod.boCauHinh === 'GIA_THIEP') {
                     const matrix = sheetsPhuDataMatrix['GIA_THIEP'];
-                    let filteredThiepRows = matrix.data.filter(d => d.Ma_SP === prod.code);
+                    let cleanProdCode = String(prod.code || "").trim().toLowerCase();
+                    let filteredThiepRows = matrix.data.filter(d => String(d.Ma_SP || "").trim().toLowerCase() === cleanProdCode);
                     if (filteredThiepRows.length === 0) filteredThiepRows = matrix.data;
                     window.currentThiepFilteredData = filteredThiepRows;
 
@@ -627,7 +668,7 @@
                     }
                     if (!defaultKieuIn) defaultKieuIn = filteredThiepRows[0]?.Kieu_In;
 
-                    let matchedDefaultRow = filteredThiepRows.find(d => d.Kieu_In === defaultKieuIn);
+                    let matchedDefaultRow = filteredThiepRows.find(d => String(d.Kieu_In).trim().toLowerCase() === String(defaultKieuIn).trim().toLowerCase());
                     if (matchedDefaultRow && matchedDefaultRow[defaultGiay] !== undefined && matchedDefaultRow[defaultGiay] !== "Chưa có") {
                         defaultThiepPrice = matchedDefaultRow[defaultGiay];
                     }
@@ -704,15 +745,15 @@
         }
 
         function calculatePopupDynamicPrice() {
-            if(!popupActiveItem || !popupActiveItem.boCauHinh) return;
-            const matrix = sheetsPhuDataMatrix[popupActiveItem.boCauHinh]; 
-            let priceVal = popupActiveItem.basePrice;
+            if(!popupActiveProduct || !popupActiveProduct.boCauHinh) return;
+            const matrix = sheetsPhuDataMatrix[popupActiveProduct.boCauHinh]; 
+            let priceVal = popupActiveProduct.basePrice;
 
-            if(popupActiveItem.boCauHinh === 'GIA_THIEP') {
+            if(popupActiveProduct.boCauHinh === 'GIA_THIEP') {
                 let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
                 let datasetToSearch = window.currentThiepFilteredData || matrix.data;
-                let matched = datasetToSearch.find(d => d.Kieu_In === selectedKieuIn);
+                let matched = datasetToSearch.find(d => String(d.Kieu_In).trim().toLowerCase() === String(selectedKieuIn).trim().toLowerCase());
                 
                 if (!matched || matched[selectedGiay] === undefined || matched[selectedGiay] === "Chưa có" || String(matched[selectedGiay]).trim() === "Chưa có") {
                     priceVal = "Chưa có";
@@ -764,7 +805,7 @@
             stopPopupAutoplay(); 
             const popupEl = document.getElementById('liquidProductPopup');
             if(popupEl) popupEl.classList.remove('open'); 
-            popupActiveItem = null;
+            popupActiveProduct = null;
             const track = document.getElementById('popupImageViewportTrack');
             if(track) track.innerHTML = '';
         }
