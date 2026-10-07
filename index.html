@@ -164,7 +164,7 @@
         .popup-section-title { font-size: 12px; font-weight: 700; color: var(--emerald-soft); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; display: block; }
         .popup-desc-box { 
             background: rgba(255,255,255,0.4); border: 1px solid var(--liquid-border); border-radius: 16px; padding: 10px 14px; font-size: 14px; color: #4f6a65; line-height: 1.5; 
-            white-space: pre-line; /* Hỗ trợ xuống dòng chuẩn xác theo nội dung nhập từ Sheets */
+            white-space: pre-line;
         }
         .popup-price-tag-row { display: flex; align-items: center; gap: 10px; background: rgba(31, 78, 69, 0.05); border: 1px solid rgba(31, 78, 69, 0.06); padding: 12px 18px; border-radius: 16px; }
         .popup-price-number { font-family: 'Comfortaa', sans-serif; font-size: 24px; font-weight: 700; color: var(--emerald-dark); }
@@ -276,16 +276,8 @@
             "GIA_TEM_STICKER": { headers: ["Mac_Dinh", "Khong_Man", "Co_Man"], data: [{ Mac_Dinh: "Khong_Man", Khong_Man: 26250, Co_Man: 31500 }] },
             "GIA_CARD": { headers: ["Mac_Dinh", "In_1_Mat_Khong_Man", "In_2_Mat_Khong_Man", "In_1_Mat_Co_Man", "In_2_Mat_Co_Man"], data: [{ Mac_Dinh: "In_1_Mat_Khong_Man", In_1_Mat_Khong_Man: 6800, In_2_Mat_Khong_Man: 9500, In_1_Mat_Co_Man: 12200, In_2_Mat_Co_Man: 20300 }] },
             "GIA_THIEP": {
-                headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Kich_Thuoc", "Giay_Ford_180gsm", "Giay_Ford_210gsm"],
-                data: [
-                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "Giay_Ford_180gsm | Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3200, Giay_Ford_210gsm: 3300 },
-                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3500, Giay_Ford_210gsm: 3700 },
-                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 2 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3700, Giay_Ford_210gsm: 3900 },
-                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 3 mặt 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 3900, Giay_Ford_210gsm: 4000 },
-                    { Loai_Thiep: "Bao thư 12.5x18.5", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 3 mặt 1 mặt", Kich_Thuoc: "Bao thư 12.5x18.5", Giay_Ford_180gsm: 4200, Giay_Ford_210gsm: 4400 },
-                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "Giay_Ford_180gsm | Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kieu_In: "Full màu vỏ 1 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: 3600, Giay_Ford_210gsm: 4000 },
-                    { Loai_Thiep: "Thiệp Passport 9 X 20", Mac_Dinh: "", Kieu_In: "Full màu vỏ 2 mặt + full màu ruột 1 mặt", Kich_Thuoc: "Thiệp Passport 9 X 20", Giay_Ford_180gsm: 3800, Giay_Ford_210gsm: 4200 }
-                ]
+                headers: ["Loai_Thiep", "Mac_Dinh", "Kieu_In", "Kich_Thuoc", "Giay_Ford_180gsm", "Giay_Ford_210gsm", "Ma_SP"],
+                data: []
             }
         };
 
@@ -378,8 +370,15 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}`);
-                const text = await response.text(); return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
+                // Chống cache thời gian thực (?t=...) và bỏ qua 4 dòng đầu (hàng 1 đến hàng 4), lấy từ hàng 5 (index 4 trong mảng Gviz nếu có, hoặc lọc bỏ các dòng rỗng/tiêu đề ngoài vùng A5)
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
+                const text = await response.text(); 
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                const allRows = json.table.rows || [];
+                
+                // Do các sheet luôn bắt đầu bảng title từ dòng A5 (tức index 4 trong mảng 0-based), ta bỏ qua các dòng từ 0 đến 3 (4 dòng đầu) để quét chuẩn từ hàng 5 trở đi
+                return allRows.slice(4);
             } catch (e) { return []; }
         }
 
@@ -396,7 +395,6 @@
                             let status = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim().toLowerCase() : 'hiện';
                             let order = (row.c[2] && row.c[2].v) ? parseInt(row.c[2].v) || 99 : 99;
 
-                            // Chỉ kiểm tra trạng thái Hiện / Ẩn từ cột trạng thái, không chặn cứng tên
                             if (catName !== '' && catName.toLowerCase() !== 'ten_danh_muc' && !status.includes('ẩn')) {
                                 categoriesList.push({ name: catName, order: order });
                             }
@@ -422,6 +420,36 @@
         async function initSprint1HomePage() {
             try {
                 await loadDynamicCategoryMenu();
+
+                // Tải bảng giá GIA_THIEP từ sheet phụ (bắt đầu từ dòng A5)
+                const thiepRows = await fetchSheetRows('GIA_THIEP');
+                let thiepDataArr = [];
+                if (thiepRows && thiepRows.length > 0) {
+                    thiepRows.forEach(row => {
+                        if (row && row.c) {
+                            let loaiThiep = (row.c[0] && row.c[0].v) ? String(row.c[0].v).trim() : '';
+                            let macDinh = (row.c[1] && row.c[1].v) ? String(row.c[1].v).trim() : '';
+                            let kieuIn = (row.c[2] && row.c[2].v) ? String(row.c[2].v).trim() : '';
+                            let kichThuoc = (row.c[3] && row.c[3].v) ? String(row.c[3].v).trim() : '';
+                            let g180 = (row.c[4] && row.c[4].v !== undefined && row.c[4].v !== null) ? row.c[4].v : 'Chưa có';
+                            let g210 = (row.c[5] && row.c[5].v !== undefined && row.c[5].v !== null) ? row.c[5].v : 'Chưa có';
+                            let maSp = (row.c[6] && row.c[6].v) ? String(row.c[6].v).trim() : '';
+
+                            if (kieuIn !== '' && kieuIn.toLowerCase() !== 'kieu_in') {
+                                thiepDataArr.push({
+                                    Loai_Thiep: loaiThiep,
+                                    Mac_Dinh: macDinh,
+                                    Kieu_In: kieuIn,
+                                    Kich_Thuoc: kichThuoc,
+                                    Giay_Ford_180gsm: g180,
+                                    Giay_Ford_210gsm: g210,
+                                    Ma_SP: maSp
+                                });
+                            }
+                        }
+                    });
+                }
+                sheetsPhuDataMatrix["GIA_THIEP"].data = thiepDataArr;
 
                 const configRows = await fetchSheetRows('Cau_Hinh_Shop');
                 configRows.forEach(row => { if(row && row.c && row.c[0] && row.c[1]) globalStoreData.config[row.c[0].v] = row.c[1].v; });
@@ -612,8 +640,15 @@
                     
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
-                        buildPopupRadioRow(radioSpace, "Loai_Thiep", "Chọn loại thiệp:", [...new Set(matrix.data.map(d => d.Loai_Thiep))], matrix.data[0].Loai_Thiep);
-                        buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(matrix.data.map(d => d.Kieu_In))], matrix.data[0].Kieu_In);
+                        // Lọc các dòng theo MA_SP của sản phẩm hiện tại, tự động bỏ chọn loại thiệp thừa
+                        let filteredThiepRows = matrix.data.filter(d => d.Ma_SP === prod.code);
+                        if (filteredThiepRows.length === 0) {
+                            filteredThiepRows = matrix.data; 
+                        }
+                        
+                        window.currentThiepFilteredData = filteredThiepRows;
+
+                        buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiepRows.map(d => d.Kieu_In))], filteredThiepRows[0]?.Kieu_In);
                         buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
                     } else if(prod.boCauHinh === 'GIA_TEM_STICKER') {
                         const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
@@ -653,11 +688,11 @@
             let priceVal = popupActiveProduct.basePrice;
 
             if(popupActiveProduct.boCauHinh === 'GIA_THIEP') {
-                let selectedThiep = document.querySelector(`input[name="Loai_Thiep"]:checked`)?.value;
                 let selectedKieuIn = document.querySelector(`input[name="Kieu_In"]:checked`)?.value;
                 let selectedGiay = document.querySelector(`input[name="Loai_Giay"]:checked`)?.value;
 
-                let matched = matrix.data.find(d => d.Loai_Thiep === selectedThiep && d.Kieu_In === selectedKieuIn);
+                let datasetToSearch = window.currentThiepFilteredData || matrix.data;
+                let matched = datasetToSearch.find(d => d.Kieu_In === selectedKieuIn);
                 
                 if (!matched || !matched[selectedGiay] || String(matched[selectedGiay]).trim() === "Chưa có") {
                     priceVal = "Chưa có";
