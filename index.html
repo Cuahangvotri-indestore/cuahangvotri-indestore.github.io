@@ -370,7 +370,6 @@
 
         async function fetchSheetRows(sheetName) {
             try {
-                // Thêm tham số chống cache thời gian thực (?t=...) để dữ liệu Google Sheets luôn cập nhật mới nhất
                 const cacheBuster = new Date().getTime();
                 const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&t=${cacheBuster}`);
                 const text = await response.text(); 
@@ -589,9 +588,10 @@
                     mainButtonHTML = `<a class="btn-action-main" id="btnPopupMainBuy" href="${prod.shopeeLink}" target="_blank" onclick="ghiNhatKyTruyCap('Click_Shopee', '${prod.name}')"><i class="fa-solid fa-bag-shopping"></i> MUA TRÊN SHOPEE</a>`;
                 }
 
-                // Nếu là GIA_THIEP, lọc các dòng khớp với MA_SP của sản phẩm để lấy tên Loại Thiệp và giá từ ô tô vàng (Giay_Ford_180gsm + Kiểu in mặc định)
                 let thiepInfoHTML = "";
                 let defaultThiepPrice = prod.basePrice;
+                let defaultKieuIn = "";
+                let defaultGiay = "Giay_Ford_180gsm";
 
                 if (prod.boCauHinh === 'GIA_THIEP') {
                     const matrix = sheetsPhuDataMatrix['GIA_THIEP'];
@@ -604,10 +604,24 @@
                         thiepInfoHTML = `<div><span class="popup-section-title">Loại thiệp</span><div class="popup-desc-box" style="font-weight:700; color:var(--emerald-dark);">${loaiThiepName}</div></div>`;
                     }
 
-                    // Tìm giá mặc định từ ô tô vàng: Kiểu in "Full màu vỏ 1 mặt + full màu ruột 1 mặt" + Giấy Ford 180gsm
-                    let defaultMatch = filteredThiepRows.find(d => d.Kieu_In.toLowerCase().includes("1 mặt + full màu ruột 1 mặt") || d.Kieu_In === filteredThiepRows[0]?.Kieu_In);
-                    if (defaultMatch && defaultMatch.Giay_Ford_180gsm !== undefined && defaultMatch.Giay_Ford_180gsm !== "Chưa có") {
-                        defaultThiepPrice = defaultMatch.Giay_Ford_180gsm;
+                    // Đọc cấu hình mặc định từ cột Mac_Dinh (ví dụ: Giay_Ford_180gsm, Full màu vỏ 1 mặt + full màu ruột 1 mặt)
+                    let rowWithConfig = filteredThiepRows.find(d => d.Mac_Dinh && d.Mac_Dinh.includes(','));
+                    if (!rowWithConfig) rowWithConfig = filteredThiepRows[0];
+
+                    if (rowWithConfig && rowWithConfig.Mac_Dinh) {
+                        let parts = rowWithConfig.Mac_Dinh.split(',').map(s => s.trim());
+                        if (parts.length >= 2) {
+                            defaultGiay = parts[0]; // ví dụ: Giay_Ford_180gsm
+                            defaultKieuIn = parts[1]; // ví dụ: Full màu vỏ 1 mặt + full màu ruột 1 mặt
+                        }
+                    }
+
+                    if (!defaultKieuIn) defaultKieuIn = filteredThiepRows[0]?.Kieu_In;
+
+                    // Lấy giá tương ứng với cấu hình mặc định từ hàng chứa defaultKieuIn
+                    let matchedDefaultRow = filteredThiepRows.find(d => d.Kieu_In === defaultKieuIn);
+                    if (matchedDefaultRow && matchedDefaultRow[defaultGiay] !== undefined && matchedDefaultRow[defaultGiay] !== "Chưa có") {
+                        defaultThiepPrice = matchedDefaultRow[defaultGiay];
                     }
                 }
 
@@ -662,8 +676,8 @@
                     const matrix = sheetsPhuDataMatrix[prod.boCauHinh];
                     if(prod.boCauHinh === 'GIA_THIEP') {
                         let filteredThiepRows = window.currentThiepFilteredData;
-                        buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiepRows.map(d => d.Kieu_In))], filteredThiepRows[0]?.Kieu_In);
-                        buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), 'Giay_Ford_180gsm');
+                        buildPopupRadioRow(radioSpace, "Kieu_In", "Chọn kiểu in:", [...new Set(filteredThiepRows.map(d => d.Kieu_In))], defaultKieuIn);
+                        buildPopupRadioRow(radioSpace, "Loai_Giay", "Chọn loại giấy:", matrix.headers.filter(h => h.startsWith('Giay_')), defaultGiay);
                     } else if(prod.boCauHinh === 'GIA_TEM_STICKER') {
                         const cleanH = matrix.headers.filter(h => h !== 'Mac_Dinh');
                         buildPopupRadioRow(radioSpace, "Single_Option", "Cán màng:", cleanH, cleanH[0]);
@@ -677,7 +691,6 @@
                         }
                     }
 
-                    // Gán giá khởi tạo bằng giá ô tô vàng
                     const priceEl = document.getElementById('popupDynamicPrice');
                     if(priceEl) {
                         priceEl.innerText = (defaultThiepPrice === "Chưa có" ? "Chưa có" : Number(defaultThiepPrice).toLocaleString('vi-VN') + " đ");
