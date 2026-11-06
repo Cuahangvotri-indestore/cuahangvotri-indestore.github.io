@@ -201,7 +201,6 @@
         .btn-fb { color: #1877f2; } .btn-zl { color: #0068ff; } .btn-sp { color: var(--shopee-color); }
         .footer-copyright { font-family: 'Comfortaa', sans-serif; font-size: 13px; font-weight: 700; color: var(--emerald-dark); opacity: 0.8; letter-spacing: 0.5px; margin: 0; }
         
-        /* Nút reset cache siêu nhỏ, mờ đúng vị trí khoanh đỏ ở footer */
         .refresh-cache-mini-btn {
             background: transparent; border: none; color: var(--emerald-dark); font-size: 11px; font-family: 'Quicksand', sans-serif;
             opacity: 0.35; cursor: pointer; transition: opacity 0.3s ease; padding: 2px 6px; margin-top: -4px;
@@ -231,9 +230,7 @@
             </div>
             <div class="right-nav-box">
                 <nav>
-                    <ul class="menu-categories" id="categoryMenuNav">
-                        <!-- Menu động từ sheet Danh_Muc -->
-                    </ul>
+                    <ul class="menu-categories" id="categoryMenuNav"></ul>
                 </nav>
             </div>
         </div>
@@ -277,6 +274,9 @@
 
     <script>
         const SPREADSHEET_ID = '1PPmMOIynpRpP7ygb7OpS6GWuIuu8WslWOQgu_gfwHe0'; 
+        const FIREBASE_DB_URL = "https://cuahangvotri-db-default-rtdb.asia-southeast1.firebasedatabase.app/";
+        let __firebaseMasterPromise = null;
+
         let globalStoreData = { products: [], config: {} };
         let currentSlideIndex = 0, slideInterval, totalSlidesCount = 0, currentSortValue = 'default';
         let popupActiveProduct = null, popupActiveImgIndex = 0, popupImagesArray = [], popupAutoplayInterval = null; 
@@ -312,13 +312,13 @@
         function ghiNhatKyTruyCap(hanhDong, chiTiet, callback) {
             var webAppUrl = "https://script.google.com/macros/s/AKfycbzDlq96FFxkKAzs9ELxqUhA0rzcCJCb8G4UdCwDeXa_y1NoYSywt0KAlxEZT2jW4wc7Kg/exec";
             var data = { time: new Date().toLocaleString("vi-VN"), device: getDetailedDevice(), action: hanhDong, detail: chiTiet };
-            fetch(webAppUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+            fetch(webAppUrl, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
             .then(() => { if (callback) callback(); }).catch(() => { if (callback) callback(); });
         }
 
         function trackAndNavigate(action, detail, url) {
-            ghiNhatKyTruyCap(action, detail, () => { window.location.href = url; });
-            setTimeout(() => { window.location.href = url; }, 400);
+            ghiNhatKyTruyCap(action, detail);
+            window.location.href = url;
         }
 
         window.addEventListener("DOMContentLoaded", function() {
@@ -327,6 +327,7 @@
                 sessionStorage.setItem(sessionKey, 'true');
                 ghiNhatKyTruyCap("Truy_Cap_Trang", "Trang Chủ");
             }
+            initSprint1HomePage();
         });
 
         function sanitizeText(str) {
@@ -346,7 +347,7 @@
             if (!rawUrl) return ''; const linkStr = String(rawUrl).trim();
             if (linkStr.startsWith('images/')) {
                 const base = window.location.origin + window.location.pathname;
-                return base.endsWith('index.html') ? base.replace('index.html', '') + linkStr : base + '/' + linkStr;
+                return base.endsWith('index.html') ? base.replace('index.html', '') + linkStr : base.replace(/\/$/, '') + '/' + linkStr;
             }
             if (linkStr.includes('drive.google.com')) {
                 let fileId = ''; const dMatch = linkStr.match(/\/d\/([^/]+)/); const idMatch = linkStr.match(/id=([^&]+)/);
@@ -365,34 +366,25 @@
             } catch (e) { return []; }
         }
 
-        // HỆ THỐNG CACHE 12 TIẾNG THÔNG MINH
-        async function fetchSheetRowsWithCache(sheetName) {
-            const cacheKey = `votri_sheet_cache_${sheetName}`;
-            const cacheTimeKey = `votri_sheet_time_${sheetName}`;
-            const now = new Date().getTime();
-            const twelveHours = 30 * 60 * 1000;
-
-            let cachedData = localStorage.getItem(cacheKey);
-            let cachedTime = localStorage.getItem(cacheTimeKey);
-
-            if (cachedData && cachedTime && (now - parseInt(cachedTime) < twelveHours)) {
-                try {
-                    return JSON.parse(cachedData);
-                } catch(e) {}
+        async function getMasterStoreData() {
+            if (!__firebaseMasterPromise) {
+                __firebaseMasterPromise = fetch(FIREBASE_DB_URL + "store_data.json", { cache: "no-cache" })
+                    .then(res => res.ok ? res.json() : null)
+                    .catch(() => null);
             }
-
-            let rows = await fetchSheetRows(sheetName);
-            if (rows && rows.length > 0) {
-                try {
-                    localStorage.setItem(cacheKey, JSON.stringify(rows));
-                    localStorage.setItem(cacheTimeKey, now.toString());
-                } catch(e) {}
-            }
-            return rows;
+            return __firebaseMasterPromise;
         }
 
-        // Xóa cache thủ công khi bấm nút mờ ở footer
+        async function fetchSheetRowsWithCache(sheetName) {
+            const masterData = await getMasterStoreData();
+            if (masterData && masterData[sheetName]) {
+                return masterData[sheetName];
+            }
+            return await fetchSheetRows(sheetName);
+        }
+
         function clearStoreCacheAndReload() {
+            __firebaseMasterPromise = null;
             ['GIA_THIEP', 'Cau_Hinh_Shop', 'Danh_Muc', 'Danh_Sach_SanPham'].forEach(s => {
                 localStorage.removeItem(`votri_sheet_cache_${s}`);
                 localStorage.removeItem(`votri_sheet_time_${s}`);
@@ -551,7 +543,7 @@
                         actionAttr = `onclick="trackAndNavigate('Truy_Cap_Trang', 'Danh mục: ${b.mapping}', '${targetLink}')"`;
                     }
 
-                    return `<div class="banner-slide ${idx===0?'active':''}" style="${cursorStyle}" ${actionAttr}><img src="${b.img}"></div>`;
+                    return `<div class="banner-slide ${idx === 0 ? 'active' : ''}" style="${cursorStyle}" ${actionAttr}><img src="${b.img}"></div>`;
                 }).join('');
 
                 document.getElementById('banner-root-area').style.display = 'block';
@@ -733,7 +725,7 @@
             wrapper.innerHTML = `<span class="radio-title-label">${groupTitle}</span>`;
             const flex = document.createElement('div'); flex.className = "radio-options-flex";
             elementsList.forEach(item => {
-                flex.innerHTML += `<label class="custom-radio-btn"><input type="radio" name="${groupName}" value="${item}" ${item===activeValue?'checked':''} onchange="calculatePopupDynamicPrice()">${formatOptionToVietnamese(item)}</label>`;
+                flex.innerHTML += `<label class="custom-radio-btn"><input type="radio" name="${groupName}" value="${item}" ${item === activeValue ? 'checked' : ''} onchange="calculatePopupDynamicPrice()">${formatOptionToVietnamese(item)}</label>`;
             });
             wrapper.appendChild(flex); container.appendChild(wrapper);
         }
@@ -773,7 +765,7 @@
 
         function buildPopupSliderDOM() { 
             const track = document.getElementById('popupImageViewportTrack');
-            if(track) track.innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item ${idx===0?'active':''}"><img class="popup-main-image" src="${url}"></div>`).join(''); 
+            if(track) track.innerHTML = popupImagesArray.map((url, idx) => `<div class="popup-slide-item ${idx === 0 ? 'active' : ''}"><img class="popup-main-image" src="${url}"></div>`).join(''); 
         }
 
         function renderPopupSliderEffects() {
@@ -786,7 +778,7 @@
                 nextBtn.onclick = (e) => { e.stopPropagation(); popupActiveImgIndex = (popupActiveImgIndex + 1) % popupImagesArray.length; renderPopupSliderEffects(); };
             }
             const dotsSpace = document.getElementById('popupImgDotsSpace');
-            if(dotsSpace) dotsSpace.innerHTML = popupImagesArray.length > 1 ? popupImagesArray.map((_, idx) => `<span class="popup-dot ${idx===popupActiveImgIndex?'active':''}"></span>`).join('') : '';
+            if(dotsSpace) dotsSpace.innerHTML = popupImagesArray.length > 1 ? popupImagesArray.map((_, idx) => `<span class="popup-dot ${idx === popupActiveImgIndex ? 'active' : ''}"></span>`).join('') : '';
         }
 
         function startPopupAutoplay() { 
@@ -817,8 +809,6 @@
                     .replace(/Giay Ford 210gsm/g, 'Giấy Ford 210gsm')
                     .replace(/Giay/g, 'Giấy'); 
         }
-        
-        window.onload = initSprint1HomePage;
     </script>
 </body>
 </html>
